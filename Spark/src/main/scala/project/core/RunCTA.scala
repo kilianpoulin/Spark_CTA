@@ -67,16 +67,16 @@ object RunCTA extends App {
   var myRDDVect = matrixToRDD(mat)
   myRDDVect.collect().foreach(println)
 
-    var numIterations = 0
+  var numIterations = 0
 
 
-    // perform KMeans
-    var clusters = KMeans.train(myRDDVect, CluNum, numIterations)
+  // perform KMeans
+  var clusters = KMeans.train(myRDDVect, CluNum, numIterations)
 
 
-    // Print clusters centers
-    println("--------- CENTER OF EACH CLUSTER -------------------")
-    clusters.clusterCenters.foreach(println)
+  // Print clusters centers
+  println("--------- CENTER OF EACH CLUSTER -------------------")
+  clusters.clusterCenters.foreach(println)
 
 
     // Evaluate clustering by computing Within Set Sum of Squared Errors
