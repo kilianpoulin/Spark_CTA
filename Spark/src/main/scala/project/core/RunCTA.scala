@@ -48,17 +48,26 @@ object RunCTA extends App {
   // ----------------------------------------------------
   // Clustering stage
   // ------------------------------------------------------------
+  println("-------------- Entering clustering stage (K-Means) --------------")
   // perform K-Means
   var parsedData = tensorRDD.map(s => s._2) // get an RDD of DenseMatrices
+  //var parsedData2: RDD[DenseMatrix] = parsedData.asInstanceOf[RDD[DenseMatrix]]
+  //var vectData = matrixRDDToVectorRDD(parsedData)
+
+  //parsedData.saveAsTextFile("randomfile")
+  parsedData.foreach(println)
+  //vectData.collect().foreach(println)
 
   // testing to create a dense matrix
   // 1.0  1.0
   // 2.0  1.0
   // 4.0  3.0
   // 5.0  4.0
-  val myArray = Array[Double](1.0, 2.0, 4.0, 5.0, 1.0, 1.0, 3.0, 4.0)
-  var mat = new DenseMatrix(4, 2, myArray)
+  //val myArray = Array[Double](1.0, 2.0, 4.0, 5.0, 1.0, 1.0, 3.0, 4.0)
+  //var mat = new DenseMatrix(4, 2, myArray)
   //print(mat)
+
+  /*
 
   // converting matrix into RDD[Vector]
   // [1.0, 2.0]
@@ -91,7 +100,7 @@ object RunCTA extends App {
       foo.toDF.show()*/
 
 
-      //tensorRDD.take(120).foreach(println)
+      //tensorRDD.take(120).foreach(println)*/
   println("CTA Success !!!!!")
 
 }

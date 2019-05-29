@@ -14,6 +14,7 @@ import Tensor.{convertBytes2Tuple, sc}
 import org.apache.spark.rdd._
 import org.apache.spark.broadcast.Broadcast
 import javacode._
+import scala.collection.mutable.ArrayBuffer
 import breeze.numerics._
 
 
@@ -61,7 +62,7 @@ object Tensor {
   // Convert bytes array to tuple2( blockSubIndex, DenseVector )
   //-----------------------------------------------------------------------------------------------------------------
   private def convertBytes2Tuple( bytesArray: Array[Byte], tensorDims: Int )
-  : ( CM.ArraySeq[Int], DenseMatrix[Double] ) =
+  : ( CM.ArraySeq[Int], DMatrix) =
   {
     val byteBuffer = ByteBuffer.wrap( bytesArray )
 
@@ -74,13 +75,14 @@ object Tensor {
     // Get tensor block content
     val doubleBuffer = byteBuffer.asDoubleBuffer()
     val vectorSize = doubleBuffer.remaining()
+    println("vector size = " + vectorSize)
     val doubleArray = new Array[Double]( vectorSize )
     for( i <- 0 until vectorSize  )
       doubleArray(i) = doubleBuffer.get()
 
     // Create a dense matrix and size is vectorSize*1
     //*val outVector = new DenseVector( doubleArray )
-    val outMatrix = new DenseMatrix( vectorSize, 1, doubleArray )
+    val outMatrix = new DMatrix( vectorSize, 1, doubleArray )
 
     //*( blockSubIndex.toList, outMatrix )
     ( blockSubIndex, outMatrix )
@@ -140,7 +142,7 @@ object Tensor {
   //-----------------------------------------------------------------------------------------------------------------
   // Read tensor block
   //-----------------------------------------------------------------------------------------------------------------
-  def readTensorBlock ( inPath: String, blockRanks: Array[Int] , rddPartitionSize: String): RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] =
+  def readTensorBlock ( inPath: String, blockRanks: Array[Int] , rddPartitionSize: String): RDD[ (CM.ArraySeq[Int], DMatrix) ] =
   {
     val tensorDims = blockRanks.length
 
@@ -162,20 +164,30 @@ object Tensor {
     val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Tuple( bytes.getBytes, tensorDims ) }
 
     blockRDD
-
   }
 
 
   //-----------------------------------------------------------------------------------------------------------------
   // Convert RDD[DenseMatrix] into RDD[Vector]
   //-----------------------------------------------------------------------------------------------------------------
- /* def matrixRDDToVectorRDD(m: RDD[DMatrix]) : RDD[MVector] = {
+  def matrixRDDToVectorRDD(m: RDD[DMatrix]) : RDD[MVector] = {
     var vect = null
+    //var arraybuff: ArrayBuffer[RDD[MVector]] = ArrayBuffer()
+    var rddvect: RDD[MVector] = null
     var nbMatrices = m.count()
-    for(i <- 0 until nbMatrices){
-      vect =
+
+    println("number of matrices = " + nbMatrices)
+    for(i <- 0 until nbMatrices.toInt){
+      println("i = " + i)
+      var test = m.take(i.toInt)
+      println("error here ")
+      m.collect().foreach(println)
+      var vect = matrixToRDD(test(0))
+      //arraybuff += vect
+      rddvect = rddvect ++ vect
     }
-  }*/
+    rddvect
+  }
 
   def matrixToRDD(m: DMatrix): RDD[MVector] = {
     val columns = m.toArray.grouped(m.numRows)
