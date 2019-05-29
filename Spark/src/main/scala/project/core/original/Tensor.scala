@@ -121,7 +121,7 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Read tensor block
   //-----------------------------------------------------------------------------------------------------------------
-  def readTensorBlock ( inPath: String, blockRanks: Array[Int] , rddPartitionSize: String): RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] =
+  def readTensorBlock ( inPath: String, blockRanks: Array[Int] , rddPartitionSize: String): RDD[ (CM.ArraySeq[Int], DMatrix) ] =
   {
     val tensorDims = blockRanks.length
 
@@ -144,11 +144,11 @@ object Tensor
 
     //blockRDD.map(s => s._2).map(_.toDenseVector).foreach(println)
     //blockRDD.map(s => s._2).map(x => x + 2.0).foreach(println)
-    val countres = blockRDD.map(s => s._2).flatMap{
+    /*val countres = blockRDD.map(s => s._2).flatMap{
       case x if x != 0 => Some(x)
     }.count()
-    println("countres = " + countres)
-    println("count = " + blockRDD.map(s => s._2).map(_.toDenseVector).count())
+    println("countres = " + countres)*/
+   // println("count = " + blockRDD.map(s => s._2).map(_.toDenseVector).count())
     blockRDD
 
   }
@@ -405,7 +405,7 @@ object Tensor
   // Convert bytes array to tuple2( blockSubIndex, DenseVector )
   //-----------------------------------------------------------------------------------------------------------------
   private def convertBytes2Tuple( bytesArray: Array[Byte], tensorDims: Int )
-  : ( CM.ArraySeq[Int], DenseMatrix[Double] ) =
+  : ( CM.ArraySeq[Int], DMatrix ) =
   {
     val byteBuffer = ByteBuffer.wrap( bytesArray )
 
@@ -424,7 +424,7 @@ object Tensor
 
     // Create a dense matrix and size is vectorSize*1
     //*val outVector = new DenseVector( doubleArray )
-    val outMatrix = new DenseMatrix( vectorSize, 1, doubleArray )
+    val outMatrix = new DMatrix( vectorSize, 1, doubleArray )
 
     //*( blockSubIndex.toList, outMatrix )
     ( blockSubIndex, outMatrix )

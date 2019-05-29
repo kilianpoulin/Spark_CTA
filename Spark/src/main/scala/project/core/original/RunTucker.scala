@@ -12,21 +12,31 @@ import org.apache.spark.sql.SparkSession
 /**
   * Created by root on 2016/2/1.
   */
-object RunTucker {
+object RunTucker extends App{
 
 
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
+
+
+  // Set Spark context
+  val conf = new SparkConf()
+    .setAppName("TensorTucker").setMaster("local[*]")
+
+  val sc = new SparkContext( conf )
+  TensorTucker.setSparkContext( sc )
+  Tensor.setSparkContext( sc )
+
 
   val Spark = SparkSession
     .builder()
     .appName("CTA Algorithm")
     .getOrCreate()
 
-  import Spark.implicits._
 
-  def main (args: Array[String]): Unit =
-  {
+
+
+  import Spark.implicits._
     // Default variable
     var tensorPath = "data/donkey_spark/"
     var approxPath = ""
@@ -70,19 +80,13 @@ object RunTucker {
     // Section to do tensor Tucker approximation
     //******************************************************************************************************************
 
-    // Set Spark context
-    val conf = new SparkConf()
-      .setAppName("TensorTucker").setMaster("local[*]")
-    val sc = new SparkContext( conf )
-    TensorTucker.setSparkContext( sc )
-    Tensor.setSparkContext( sc )
-
     // Read tensor header
     val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
     // Read tensor block and transform into RDD
     println("------------- OK 1 --------------------------------")
 
-    val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
+    //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
+    val tensorRDD = Tensor.readTensorBlock( "data/test_file", tensorInfo.blockRank , rddPartitionSize)
     tensorRDD.persist( MEMORY_AND_DISK )
     println("------------- OK 2 --------------------------------")
 
@@ -92,22 +96,30 @@ object RunTucker {
 
     // convert RDD to Dataframe
     //val mydmat = DMatrix(parsedData.collect())
-    val mydmat = parsedData.collect()
+    //val mydmat = parsedData.map(x => DMatrix(x))
     
-
+    val mydmat: DMatrix = parsedData.first()
+    //println(mydmat)
     var vectData = matrixToRDD(mydmat)
-    var clusters = KMeans.train(vectData, 2, 10)
+    vectData.collect().foreach(println)
+    println("printing data")
+    vectData.foreach(println)
+
+    println(" ======= printing clusters centers ======= ")
+    var clusters = KMeans.train(vectData, 5, 10)
     clusters.clusterCenters.foreach(println)
 
     println(" ======= END CLUSTERING ==========")
 
+}
 
     //println(tensorRDD)
     //tensorRDD.foreach(println)
-    println("number rows = " + tensorRDD.count())
-    return
+    //println("number rows = " + tensorRDD.count())
+    //return
 
     // Run tensor Tucker approximation
+/*
     val( coreRDD, coreInfo, bcBasisMatrixArray, iterRecord ) =
       TensorTucker.deComp ( tensorRDD, tensorInfo, deCompSeq, coreRank, maxIter, epsilon )
 
@@ -120,12 +132,12 @@ object RunTucker {
     // Save basis matrices
     Tensor.saveBasisMatrices( approxPath + "Basis/", bcBasisMatrixArray, deCompSeq )
 
-
+*/
 
     //******************************************************************************************************************
     // Section to do tensor Tucker reconstruction
     //******************************************************************************************************************
-
+  /*
     // Reconstruct input tensor
     if( reconstFlag == 1 )
     {
@@ -138,7 +150,4 @@ object RunTucker {
 
     // Shut down Spark context
     sc.stop
-
-  }
-
-}
+    */
