@@ -415,16 +415,26 @@ object Tensor
     for( i <- 0 until tensorDims )
       blockSubIndex(i) = byteBuffer.getInt()
 
+    println("size of block sub index = " + blockSubIndex.size)
+
+    println("size of byte buffer = " + byteBuffer.asDoubleBuffer().remaining())
     // Get tensor block content
     val doubleBuffer = byteBuffer.asDoubleBuffer()
     val vectorSize = doubleBuffer.remaining()
+    println("vector size = " + vectorSize)
     val doubleArray = new Array[Double]( vectorSize )
-    for( i <- 0 until vectorSize  )
-      doubleArray(i) = doubleBuffer.get()
+    for( i <- 0 until vectorSize){
+      //print(byteBuffer.getDouble())
+      /*if(i % 2 == 0) {
+        doubleArray(i / 2) = doubleBuffer.get()
+        println(doubleArray(i / 2))
+      }*/
+    }
 
     // Create a dense matrix and size is vectorSize*1
     //*val outVector = new DenseVector( doubleArray )
     val outMatrix = new DMatrix( vectorSize, 1, doubleArray )
+
 
     //*( blockSubIndex.toList, outMatrix )
     ( blockSubIndex, outMatrix )

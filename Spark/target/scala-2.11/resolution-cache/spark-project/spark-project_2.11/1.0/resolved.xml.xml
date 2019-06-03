@@ -4,7 +4,7 @@
 		module="spark-project_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20190528035220"
+		publication="20190603065310"
 	>
 		<description>
 		Spark Project
@@ -37,6 +37,9 @@
 		<dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.6.5" conf="compile->default(compile)"/>
 		<dependency org="com.google.code.gson" name="gson" rev="2.7" conf="compile->default(compile)"/>
 		<dependency org="org.apache.spark" name="spark-mllib_2.11" rev="2.4.0" conf="compile->default(compile)"/>
+		<dependency org="com.github.fommil.netlib" name="all" rev="1.1.1" conf="compile->default(compile)">
+			<artifact name="all" type="pom" ext="pom" conf="pom"/>
+		</dependency>
 		<dependency org="org.scalanlp" name="breeze_2.11" rev="0.11.2" conf="compile->default(compile)"/>
 		<dependency org="org.scalanlp" name="breeze-natives_2.11" rev="0.11.2" conf="compile->default(compile)"/>
 		<dependency org="org.scalanlp" name="breeze-viz_2.11" rev="0.11.2" conf="compile->default(compile)"/>

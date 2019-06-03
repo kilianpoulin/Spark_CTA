@@ -12,6 +12,8 @@ libraryDependencies += "com.google.code.gson" % "gson" % "2.7"
 
 //libraryDependencies += "org.apache.spark" %% "spark-mllib" % "2.1.0"
 libraryDependencies += "org.apache.spark" %% "spark-mllib" % "2.4.0"
+
+libraryDependencies ++= Seq("com.github.fommil.netlib" % "all" % "1.1.1" pomOnly())
 //libraryDependencies += "org.apache.spark" %% "spark-ml" % "2.1.0"
 /*
 libraryDependencies ++= Seq(

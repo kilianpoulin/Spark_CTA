@@ -1,0 +1,4 @@
+TensorDims 2
+TensorRank 4,4
+BlockRank 2,2
+BlockNumber 2,2

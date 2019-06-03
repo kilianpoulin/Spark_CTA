@@ -81,36 +81,43 @@ object RunTucker extends App{
     //******************************************************************************************************************
 
     // Read tensor header
-    val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
+    //val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
+    val tensorInfo = Tensor.readTensorHeader("data/matrix/header/part-00000" )
     // Read tensor block and transform into RDD
     println("------------- OK 1 --------------------------------")
 
-    //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
-    val tensorRDD = Tensor.readTensorBlock( "data/test_file", tensorInfo.blockRank , rddPartitionSize)
+
+    //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00011", tensorInfo.blockRank , rddPartitionSize)
+    val tensorRDD = Tensor.readTensorBlock( "data/matrix/block/part-00000BIS", tensorInfo.blockRank , rddPartitionSize)
     tensorRDD.persist( MEMORY_AND_DISK )
     println("------------- OK 2 --------------------------------")
 
     println(" ======= BEGIN CLUSTERING ========")
 
+    println(" ==== what are the IDS in ArraySeq[Int]")
+    tensorRDD.map(s => s._1).foreach(println)
+
     var parsedData = tensorRDD.map(s => s._2) // get an RDD of DenseMatrices
+    parsedData.collect().foreach(println)
 
     // convert RDD to Dataframe
     //val mydmat = DMatrix(parsedData.collect())
     //val mydmat = parsedData.map(x => DMatrix(x))
-    
+
+  /*
     val mydmat: DMatrix = parsedData.first()
     //println(mydmat)
     var vectData = matrixToRDD(mydmat)
-    vectData.collect().foreach(println)
+    //vectData.collect().foreach(println)
     println("printing data")
-    vectData.foreach(println)
+    //vectData.foreach(println)
 
     println(" ======= printing clusters centers ======= ")
     var clusters = KMeans.train(vectData, 5, 10)
     clusters.clusterCenters.foreach(println)
 
     println(" ======= END CLUSTERING ==========")
-
+    */
 }
 
     //println(tensorRDD)
