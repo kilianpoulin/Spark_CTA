@@ -1,0 +1,4 @@
+Spark/.idea/modules/Spark Project.iml
+Spark/target/scala-2.11/resolution-cache
+Spark/target/streams/$global/$global/dumpStructure/$global/streams/out
+Spark/target/streams/$global/updateClassifiers/$global/streams/out

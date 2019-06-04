@@ -133,14 +133,20 @@ object Tensor
     FileInputFormat.setInputPaths( hadoopJobConf, blockPath )
     val recordSize = ( blockRanks.product * 8 ) + ( tensorDims * 4 )
     println("record size = " + recordSize)
-    val recordSize2 = 2918527
     MyFixedLengthInputFormat.setRecordLength( hadoopJobConf, recordSize )
 
     // Read tensor block data from HDFS and convert to tuple2( blockSubIndex, DenseVector ) format
     val bytesRdd = sc.hadoopRDD( hadoopJobConf, classOf[MyFixedLengthInputFormat], classOf[LongWritable],
       classOf[BytesWritable] )
+    //println("count = " + sc.textFile(blockPath).count())
+    //val testrdd = sc.textFile(blockPath).flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_+_)
+    //println("count = " + testrdd.count())
+
+    //val bytesRdd: RDD[String] = sc.textFile(blockPath)
+    //bytesRdd.collect().foreach(println)
 
     val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Tuple( bytes.getBytes, tensorDims ) }
+    //blockRDD.foreach(println)
 
     //blockRDD.map(s => s._2).map(_.toDenseVector).foreach(println)
     //blockRDD.map(s => s._2).map(x => x + 2.0).foreach(println)
@@ -188,6 +194,25 @@ object Tensor
       hadoopJobConf, None )
   }
 
+  //-----------------------------------------------------------------------------------------------------------------
+  // Save tensor block
+  //-----------------------------------------------------------------------------------------------------------------
+  def saveTmpBlock ( ) =
+  {
+    val myArray = Array[Double](1.0, 2.0, 4.0, 5.0, 1.0, 1.0, 3.0, 4.0)
+    var mat = new DenseMatrix[Double](4, 2, myArray)
+    val tensorRDD = sc.parallelize(Seq(mat))
+    // Set Hadoop configuration
+    val hadoopJobConf = new JobConf( sc.hadoopConfiguration )
+    val savePath = "data/block/"
+
+    val saveRDD = tensorRDD.map{ case( tensorVector ) =>
+      convertTuple2Bytes( tensorVector ) }
+
+    saveRDD.saveAsTextFile(savePath)
+    //saveRDD.saveAsHadoopFile( savePath, classOf[BytesWritable], classOf[BytesWritable], classOf[BinaryOutputFormat],
+     // hadoopJobConf, None )
+  }
 
   //-----------------------------------------------------------------------------------------------------------------
   // Save Basis matrices
@@ -415,20 +440,17 @@ object Tensor
     for( i <- 0 until tensorDims )
       blockSubIndex(i) = byteBuffer.getInt()
 
-    println("size of block sub index = " + blockSubIndex.size)
+    //println("size of block sub index = " + blockSubIndex.size)
 
-    println("size of byte buffer = " + byteBuffer.asDoubleBuffer().remaining())
+    //println("size of byte buffer = " + byteBuffer.asDoubleBuffer().remaining())
     // Get tensor block content
     val doubleBuffer = byteBuffer.asDoubleBuffer()
     val vectorSize = doubleBuffer.remaining()
-    println("vector size = " + vectorSize)
+    //println("vector size = " + vectorSize)
     val doubleArray = new Array[Double]( vectorSize )
     for( i <- 0 until vectorSize){
-      //print(byteBuffer.getDouble())
-      /*if(i % 2 == 0) {
-        doubleArray(i / 2) = doubleBuffer.get()
-        println(doubleArray(i / 2))
-      }*/
+      doubleArray(i) = doubleBuffer.get()
+      //println("element " + i + " = " + doubleArray(i))
     }
 
     // Create a dense matrix and size is vectorSize*1
@@ -446,6 +468,26 @@ object Tensor
   def convertTuple2Bytes( blockSubIndex: CM.ArraySeq[Int], tensorMatrix: DenseMatrix[Double] )
   : ( BytesWritable, BytesWritable ) =
   {
+    // Set key bytebuffer and put block subindex
+    val keyBuffer = ByteBuffer.allocate( 4 * blockSubIndex.length )
+    keyBuffer.asIntBuffer().put( blockSubIndex.toArray )
+
+    // Set value bytebuffer and put tensor vector
+    //*val valueBuffer = ByteBuffer.allocate( 8 * tensorVector.length )
+    //*valueBuffer.asDoubleBuffer().put( tensorVector.data )
+    val valueBuffer = ByteBuffer.allocate( 8 * tensorMatrix.size )
+    valueBuffer.asDoubleBuffer().put( tensorMatrix.data )
+
+    ( new BytesWritable( keyBuffer.array() ), new BytesWritable( valueBuffer.array() ) )
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Convert tuple2( blockSubIndex, DenseVector ) tp bytes array
+  //-----------------------------------------------------------------------------------------------------------------
+  def convertTuple2Bytes( tensorMatrix: DenseMatrix[Double] )
+  : ( BytesWritable, BytesWritable ) =
+  {
+    var blockSubIndex = CM.ArraySeq(0,0)
     // Set key bytebuffer and put block subindex
     val keyBuffer = ByteBuffer.allocate( 4 * blockSubIndex.length )
     keyBuffer.asIntBuffer().put( blockSubIndex.toArray )
@@ -864,4 +906,11 @@ object Tensor
     val vectors = rows.map(row => Vectors.dense(row.toArray))
     sc.parallelize(vectors)
   }
+
+  /*def TestmatrixToRDD(m: DMatrix, columns: Int, rows: Int): RDD[MVector] = {
+    val columns = m.toArray.grouped(m.numRows)
+    val rows = columns.toSeq.transpose
+    val vectors = rows.map(row => Vectors.dense(row.toArray))
+    sc.parallelize(vectors)
+  }*/
 }

@@ -79,7 +79,7 @@ object RunTucker extends App{
     //******************************************************************************************************************
     // Section to do tensor Tucker approximation
     //******************************************************************************************************************
-
+    //saveTmpBlock()
     // Read tensor header
     //val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
     val tensorInfo = Tensor.readTensorHeader("data/matrix/header/part-00000" )
@@ -87,18 +87,44 @@ object RunTucker extends App{
     println("------------- OK 1 --------------------------------")
 
 
-    //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00011", tensorInfo.blockRank , rddPartitionSize)
-    val tensorRDD = Tensor.readTensorBlock( "data/matrix/block/part-00000BIS", tensorInfo.blockRank , rddPartitionSize)
-    tensorRDD.persist( MEMORY_AND_DISK )
+    //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
+    //val tensorRDD = Tensor.readTensorBlock( "data/donkey_spark_test/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
+    val tensorRDD = Tensor.readTensorBlock( "data/matrix/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
+
+  tensorRDD.persist( MEMORY_AND_DISK )
     println("------------- OK 2 --------------------------------")
 
     println(" ======= BEGIN CLUSTERING ========")
 
     println(" ==== what are the IDS in ArraySeq[Int]")
-    tensorRDD.map(s => s._1).foreach(println)
+    //tensorRDD.map(s => s._1).foreach(println)
 
-    var parsedData = tensorRDD.map(s => s._2) // get an RDD of DenseMatrices
-    parsedData.collect().foreach(println)
+    var tensorMat = tensorRDD.map(s => s._2).take(1)
+  //tensorMat.foreach(println)
+
+    // Create vectors in one block
+    // we know that each block i of size 2*3
+    // the 3rd element create a vector with the 4th
+    var newmatvect = tensorMat(0).toArray
+    //matrixToRDD(tensorMat(0))
+    //newmatvect.foreach(println)
+
+
+    // a real 2D DenseMatrix
+    val newmat = new DMatrix(tensorInfo.blockRank(1), tensorInfo.blockRank(0), newmatvect)
+  //println(newmat)
+
+    // convert it to an RDD Vector
+    val finalvects = matrixToRDD(newmat)
+    finalvects.foreach(println)
+
+    println(" ======= printing clusters centers ======= ")
+    var clusters = KMeans.train(finalvects, 2, 10)
+    clusters.clusterCenters.foreach(println)
+
+    //var parsedData = tensorRDD.map(s => s._2) // get an RDD of DenseMatrices
+    //parsedData.collect().foreach(println)
+
 
     // convert RDD to Dataframe
     //val mydmat = DMatrix(parsedData.collect())
