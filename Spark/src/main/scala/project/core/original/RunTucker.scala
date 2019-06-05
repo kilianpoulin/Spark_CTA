@@ -89,7 +89,7 @@ object RunTucker extends App{
 
     //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
     //val tensorRDD = Tensor.readTensorBlock( "data/donkey_spark_test/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
-    val tensorRDD = Tensor.readTensorBlock( "data/matrix/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
+    val tensorRDD = Tensor.readTensorBlock( "data/matrix/block/part-00001", tensorInfo.blockRank, rddPartitionSize)
 
   tensorRDD.persist( MEMORY_AND_DISK )
     println("------------- OK 2 --------------------------------")
