@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20190603120712"/>
+		date="20190606005128"/>
 	<dependencies>
 		<module organisation="org.scalanlp" name="breeze-viz_2.11">
 			<revision name="0.11.2" status="release" pubdate="20150326181052" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://scalanlp.org/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="190">
@@ -118,9 +118,9 @@
 					</artifact>
 				</artifacts>
 			</revision>
-			<revision name="1.1.1" status="release" pubdate="20131015213053" resolver="public" artresolver="public" evicted="latest-revision" evicted-reason="" homepage="" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="-1">
+			<revision name="1.1.1" status="release" pubdate="20131015213053" resolver="sbt-chain" artresolver="sbt-chain" evicted="latest-revision" evicted-reason="" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="-1">
 				<license name="BSD 3 Clause" url="http://opensource.org/licenses/BSD-3-Clause"/>
-				<metadata-artifact status="successful" details="" size="4269" time="688" location="/home/kilian/.ivy2/cache/com.github.fommil.netlib/all/ivy-1.1.1.xml" searched="true" original-local-location="/home/kilian/.ivy2/cache/com.github.fommil.netlib/all/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/github/fommil/netlib/all/1.1.1/all-1.1.1.pom"/>
+				<metadata-artifact status="no" details="" size="8022" time="0" location="/home/kilian/.ivy2/cache/com.github.fommil.netlib/all/ivy-1.1.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/github/fommil/netlib/all/1.1.1/all-1.1.1.pom"/>
 				<evicted-by rev="1.1.2"/>
 				<caller organisation="spark-project" name="spark-project_2.11" conf="compile-internal, compile, provided, optional" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="1.0"/>
 				<artifacts>

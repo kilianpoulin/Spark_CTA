@@ -1,63 +1,88 @@
+package project.core.original
+
 import java.io.File
 import java.lang.Math.{pow, sqrt}
 
+import org.apache.spark.ml.clustering.KMeansModel
+import org.apache.spark.rdd.RDD
+
 import scala.annotation.tailrec
 import scala.util.Random
+import org.apache.spark.mllib.linalg.Vector
 
-case class Point(x: Double, y: Double, z: Double) {
-  def distanceTo(that: Point) = sqrt(pow(this.x - that.x, 2) + pow(this.y - that.y, 2) + pow(this.z - that.z, 2))
+  case class VData (vect: Vector) {
+  // for the following functions, v is the vector and c the centroid
+  def distanceTo(vect2: Vector) = sqrt(pow(v(0) - c(0), 2) + pow(v(1) - c(1), 2) + pow(v(2) - c(2), 2))
 
-  def sum(that: Point) = Point(this.x + that.x, this.y + that.y, this.z + that.z)
+  def sum(vect2: Vector) = VData(Vector(v(0) + c(0), v(1) + c(1), v(2) + c(3)))
 
-  def divideBy(number: Int) = Point(this.x / number, this.y / number, this.z / number)
+  def divideBy(vect2: Vector, number: Double) = VData(v(0) / number, v(1) / number, v(2) / number)
 
-  override def toString = s"$x,$y,$z"
 }
 
-object KMeansClustering {
+class KMeansClustering (
+                         private var k: Int,
+                         private var maxIterations: Int,
+                         private var initializationSteps: Int,
+                         //private var epsilon: Double,
+                         private var tensorDim: Int) extends Serializable {
 
-  val K = 4
 
-  def main(args: Array[String]) {
-    val points = read("input.txt")
-    val clusters = buildClusters(points, createRandomCentroids(points))
+
+  def train(
+             data: RDD[Vector],
+             k: Int,
+             maxIterations: Int,
+             initializationMode: String,
+             seed: Long): KMeansModel = {
+    new KMeansClustering().setK(k)
+      .setSeed(seed)
+      .run(data)
+  }
+
+
+  /**
+  * Set the number of clusters to create (k).
+    *
+  * @note It is possible for fewer than k clusters to
+  * be returned, for example, if there are fewer than k distinct points to cluster. Default: 2.
+  */
+  def setK(k: Int): this.type = {
+    require(k > 0,
+      s"Number of clusters must be positive but got ${k}")
+    this.k = k
+    this
+  }
+
+  def run(data: RDD[Vector]){
+    val clusters = buildClusters(data, createRandomCentroids(data))
     clusters.foreach({
       case (centroid, members) =>
         members.foreach({ member => println(s"Centroid: $centroid Member: $member") })
     })
   }
 
-  def read(path: String): List[Point] = {
-    scala.io.Source
-      .fromFile(new File(path))
-      .getLines()
-      .map(_.split("\\t"))
-      .map({ tokens => Point(tokens(0).toDouble, tokens(1).toDouble, tokens(2).toDouble) })
-      .toList
-  }
-
-  def createRandomCentroids(points: List[Point]): Map[Point, List[Point]] = {
+  def createRandomCentroids(data: RDD[Vector]): Map[Vector, RDD[Vector]] = {
     val randomIndices = collection.mutable.HashSet[Int]()
     val random = new Random()
-    while (randomIndices.size < K) {
-      randomIndices += random.nextInt(points.size)
+    while (randomIndices.size < k) {
+      randomIndices += random.nextInt(data.count().toInt)
     }
 
-    points
+    data
       .zipWithIndex
-      .filter({ case (_, index) => randomIndices.contains(index) })
+      .filter({ case (_, index) => randomIndices.contains(index.toInt) })
       .map({ case (point, _) => (point, Nil) })
-      .toMap
   }
 
   @tailrec
-  def buildClusters(points: List[Point], prevClusters: Map[Point, List[Point]]): Map[Point, List[Point]] = {
-    val nextClusters = points.map({ point =>
-      val byDistanceToPoint = new Ordering[Point] {
-        override def compare(p1: Point, p2: Point) = p1.distanceTo(point) compareTo p2.distanceTo(point)
+  def buildClusters(data: RDD[Vector], prevClusters: Map[Vector, RDD[Vector]]): Map[Vector, RDD[VData]] = {
+    val nextClusters = data.map({ vect =>
+      val byDistanceToPoint = new Ordering[Vector] {
+        override def compare(v1: VData, v2: VData) = v1.distanceTo(vect) compareTo v2.distanceTo(vect)
       }
 
-      (point, prevClusters.keys min byDistanceToPoint)
+      (vect, prevClusters.keys min byDistanceToPoint)
     }).groupBy({ case (_, centroid) => centroid })
       .map({ case (centroid, pointsToCentroids) =>
         val points = pointsToCentroids.map({ case (point, _) => point })
@@ -67,11 +92,11 @@ object KMeansClustering {
     if (prevClusters != nextClusters) {
       val nextClustersWithBetterCentroids = nextClusters.map({
         case (centroid, members) =>
-          val (sum, count) = members.foldLeft((Point(0, 0, 0), 0))({ case ((acc, c), curr) => (acc sum curr, c + 1) })
+          val (sum, count) = members.foldLeft((Vector(0, 0, 0), 0))({ case ((acc, c), curr) => (acc sum curr, c + 1) })
           (sum divideBy count, members)
       })
 
-      buildClusters(points, nextClustersWithBetterCentroids)
+      buildClusters(data, nextClustersWithBetterCentroids)
     } else {
       prevClusters
     }
