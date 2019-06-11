@@ -89,6 +89,7 @@ class KMeansClustering (
       // so we will choose k vectors in the dataset
       randomIndices += random.nextInt(data.count().toInt)
     }
+
     val tmpRDD = sc.parallelize(Vector(null))
 
     println("nb vect = " +data.count())
@@ -100,17 +101,13 @@ class KMeansClustering (
     // we add another element to these vectors : which will be the vector of the cluster
     // thus, each cluster is an RDD / map containing a pair (Vector : centroid, Vector: cluster values)
     //
-    /*
-    data
+    val myclusters = data
       .zipWithIndex
       .filter({ case (_, index) => randomIndices.contains(index.toInt) })
-      .map({ case (point, _) => (point, tmpRDD) })
-      .collectAsMap().foreach(println)
-    data
-      .zipWithIndex
-      .filter({ case (_, index) => randomIndices.contains(index.toInt) })
-      .map({ case (point, _) => (point, tmpRDD) })
-      .collectAsMap()*/
+      .map({ case (centroid, _) => (centroid, tmpRDD) })
+    // .collectAsMap()
+
+    myclusters.foreach(println)
   }
   /*
 
