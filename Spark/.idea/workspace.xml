@@ -2,43 +2,46 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae2fdefd-1c9e-446b-87f0-5c0f22f442f3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/DistanceMeasure.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering2.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/MLUtils.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/Spark Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/Spark Project.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/TestKMeans.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-optional.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-provided.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-scala-tool.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-compile-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-compile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-optional.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-provided.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-runtime-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-scala-tool.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-test-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project_2.11-test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project_2.11/1.0/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project_2.11/1.0/resolved.xml.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project_2.11/1.0/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project_2.11/1.0/resolved.xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/$global/dumpStructure/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/$global/dumpStructure/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/original/DistanceMeasure.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering2.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/original/MLUtils.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$$anonfun$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$delayedInit$body.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker$delayedInit$body.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/RunTucker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$linear2Sub$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$linear2Sub$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$linear2Sub$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$linear2Sub$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorRefold$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorRefold$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorUnfold$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorUnfold$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorUnfold$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorUnfold$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorUnfold$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$localTensorUnfold$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$3$$anonfun$apply$mcVI$sp$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$computePartialCovMatrix$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMMMany$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMMMany$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMMMany$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMMMany$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMMMany$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMMMany$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMultiDimMMMany$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMultiDimMMMany$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMultiDimMMMany$2$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMultiDimMMMany$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$project$core$original$Tensor$$localMultiDimMMMany$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$$anonfun$readTensorHeader$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/original/Tensor.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/project/project/target/" />
@@ -82,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="681">
-              <caret line="75" column="7" selection-start-line="75" selection-start-column="7" selection-end-line="75" selection-end-column="7" />
+            <state relative-caret-position="252">
+              <caret line="122" column="23" selection-start-line="122" selection-start-column="23" selection-end-line="122" selection-end-column="23" />
               <folding>
                 <element signature="e#31#70#0" expanded="true" />
               </folding>
@@ -95,31 +98,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
-              <folding>
-                <element signature="e#75#97#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.sbt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="13" column="68" selection-start-line="13" selection-start-column="68" selection-end-line="13" selection-end-column="68" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret lean-forward="true" />
+            <state relative-caret-position="177">
+              <caret line="595" column="18" selection-start-line="595" selection-start-column="18" selection-end-line="595" selection-end-column="18" />
               <folding>
                 <element signature="e#75#92#0" expanded="true" />
               </folding>
@@ -130,20 +112,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret line="61" column="3" lean-forward="true" selection-start-line="61" selection-start-column="3" selection-end-line="61" selection-end-column="3" />
-              <folding>
-                <element signature="e#31#74#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering2.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="20" column="1" lean-forward="true" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+            <state relative-caret-position="225">
+              <caret line="113" column="3" selection-start-line="113" selection-start-column="3" selection-end-line="113" selection-end-column="3" />
               <folding>
                 <element signature="e#31#50#0" expanded="true" />
               </folding>
@@ -152,25 +122,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/DistanceMeasure.scala">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TestKMeans.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="124" column="48" selection-start-line="124" selection-start-column="46" selection-end-line="124" selection-end-column="48" />
+            <state relative-caret-position="-16">
+              <caret line="47" column="33" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
               <folding>
-                <element signature="e#31#71#0" expanded="true" />
+                <element signature="e#31#50#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/MLUtils.scala">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
-              <folding>
-                <element signature="e#31#62#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="153">
+              <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.sbt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="13" column="68" selection-start-line="13" selection-start-column="68" selection-end-line="13" selection-end-column="68" />
             </state>
           </provider>
         </entry>
@@ -198,15 +174,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>matrixRDD</find>
-      <find>spark</find>
-      <find>[Double</find>
-      <find>convertBy</find>
-      <find>matrixTo</find>
-      <find>readte</find>
-      <find>readtnsor</find>
-      <find>convertbytes2Tup</find>
-      <find>convertbyte</find>
       <find>@Since(&quot;2.4.0&quot;)</find>
       <find>@Since(&quot;2.1.0&quot;)</find>
       <find>instrume</find>
@@ -228,6 +195,15 @@
       <find>for</find>
       <find>de</find>
       <find>setK</find>
+      <find>vect</find>
+      <find>arrayseq</find>
+      <find>linear</find>
+      <find>unfold</find>
+      <find>matrices</find>
+      <find>block</find>
+      <find>Rdd</find>
+      <find>concatrdds</find>
+      <find>sc</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -265,20 +241,21 @@
         <option value="$PROJECT_DIR$/src/main/scala/project/core/Tensor.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/javacode/MyMapReduceFixedLengthRecordReader.java" />
         <option value="$PROJECT_DIR$/data/donkey_spark/header/part-00000" />
-        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/RunCTA.scala" />
         <option value="$PROJECT_DIR$/build.sbt" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/BLAS.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/Utils.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansBlock.scala" />
         <option value="$PROJECT_DIR$/data/matrix/header/part-00000" />
-        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/MLUtils.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/DistanceMeasure.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/KMeansClustering2.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering2.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/TestKMeans.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala" />
       </list>
     </option>
   </component>
@@ -302,7 +279,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -347,16 +323,6 @@
             </path>
             <path>
               <item name="Spark Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Spark" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="original" type="462c0819:PsiDirectoryNode" />
-              <item name="javacode" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Spark Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
@@ -364,11 +330,12 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1559785473046" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560240846169" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -458,22 +425,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test (1)" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="com.tp.spark.core.Test" />
-      <module name="Spark Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.tp.spark.core.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+    <configuration name="TestArgs" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="project.core.original.RunTucker" />
+      <option name="PROGRAM_PARAMETERS" value="--TensorPath data/matrix/" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestArgs" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="project.core.original.RunTucker" />
-      <option name="PROGRAM_PARAMETERS" value="--TensorPath data/matrix/" />
+    <configuration name="TestKMeans" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="project.core.original.TestKMeans" />
+      <module name="Spark Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="project.core.original.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -484,15 +451,15 @@
       <item itemvalue="Application.RunCTA" />
       <item itemvalue="Application.RunTucker" />
       <item itemvalue="Application.Tensor" />
-      <item itemvalue="Application.Test (1)" />
+      <item itemvalue="Application.TestKMeans" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.RunTucker" />
+        <item itemvalue="Application.TestKMeans" />
         <item itemvalue="Application.RunCTA" />
         <item itemvalue="Application.AnalyzeData" />
         <item itemvalue="Application.Tensor" />
-        <item itemvalue="Application.Test (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -583,11 +550,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="900" extended-state="6" />
+    <frame x="67" y="25" width="1613" height="920" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.47989625" visible="true" weight="0.1278362" />
-      <window_info id="Structure" order="1" sideWeight="0.52010375" side_tool="true" visible="true" weight="0.1278362" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48080808" visible="true" weight="0.1263561" />
+      <window_info id="Structure" order="1" sideWeight="0.5191919" side_tool="true" visible="true" weight="0.1263561" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -611,12 +578,12 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="right" id="Maven" order="3" weight="0.32982844" />
-      <window_info anchor="right" id="sbt" order="4" weight="0.32982844" />
-      <window_info anchor="right" id="Capture Analysis" order="5" />
-      <window_info anchor="right" id="Gradle" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
-      <window_info anchor="right" id="Ant Build" order="9" weight="0.24958494" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Gradle" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+      <window_info anchor="right" id="Ant Build" order="8" weight="0.24958494" />
+      <window_info anchor="right" id="sbt" order="9" side_tool="true" weight="0.32929164" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13724405" />
@@ -657,7 +624,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/TensorTucker.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/KMeansClustering.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/Test.scala">
       <provider selected="true" editor-type-id="text-editor">
@@ -774,14 +740,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/matrix/block/part-00000">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="26" selection-start-column="26" selection-end-column="26" />
-        </state>
-      </provider>
       <provider editor-type-id="LargeFileEditor">
         <state>
           <caret column="1280000" selection-end-column="1280000" />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="26" selection-start-column="26" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -805,6 +771,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/build.sbt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="13" column="68" selection-start-line="13" selection-start-column="68" selection-end-line="13" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/DistanceMeasure.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="31" column="21" selection-start-line="31" selection-start-column="21" selection-end-line="31" selection-end-column="21" />
+          <folding>
+            <element signature="e#31#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/MLUtils.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="10" column="37" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data/test_file">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -812,79 +809,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TestKMeans.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="681">
-          <caret line="75" column="7" selection-start-line="75" selection-start-column="7" selection-end-line="75" selection-end-column="7" />
+        <state relative-caret-position="-16">
+          <caret line="47" column="33" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
           <folding>
-            <element signature="e#31#70#0" expanded="true" />
+            <element signature="e#31#50#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.sbt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="13" column="68" selection-start-line="13" selection-start-column="68" selection-end-line="13" selection-end-column="68" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
-          <folding>
-            <element signature="e#75#97#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="153">
+          <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/MLUtils.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
+        <state relative-caret-position="225">
+          <caret line="113" column="3" selection-start-line="113" selection-start-column="3" selection-end-line="113" selection-end-column="3" />
           <folding>
-            <element signature="e#31#62#0" expanded="true" />
+            <element signature="e#31#50#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
+        <state relative-caret-position="177">
+          <caret line="595" column="18" selection-start-line="595" selection-start-column="18" selection-end-line="595" selection-end-column="18" />
           <folding>
             <element signature="e#75#92#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/DistanceMeasure.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/RunTucker.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="124" column="48" selection-start-line="124" selection-start-column="46" selection-end-line="124" selection-end-column="48" />
+        <state relative-caret-position="252">
+          <caret line="122" column="23" selection-start-line="122" selection-start-column="23" selection-end-line="122" selection-end-column="23" />
           <folding>
-            <element signature="e#31#71#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="61" column="3" lean-forward="true" selection-start-line="61" selection-start-column="3" selection-end-line="61" selection-end-column="3" />
-          <folding>
-            <element signature="e#31#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/KMeansClustering2.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="20" column="1" lean-forward="true" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
-          <folding>
-            <element signature="e#31#50#0" expanded="true" />
+            <element signature="e#31#70#0" expanded="true" />
           </folding>
         </state>
       </provider>

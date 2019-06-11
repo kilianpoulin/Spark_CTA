@@ -17,7 +17,7 @@ import scala.annotation.tailrec
 import scala.collection.{mutable => CM}
 import javacode._
 import org.apache.spark.mllib.linalg.{Vectors, DenseMatrix => DMatrix, Vector => MVector}
-
+import breeze.linalg.{DenseMatrix => BMatrix}
 
 object Tensor
 {
@@ -504,6 +504,111 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Perform local tensor unfold
   //-----------------------------------------------------------------------------------------------------------------
+  def localTensorUnfold( tensorMatrixTmp: DMatrix, unfoldDim: Int, tensorRank: Array[Int] )
+  : DenseMatrix[Double] =
+  {
+    val tensorDims = tensorRank.length
+    var unfoldMatrix: DenseMatrix[Double] = null
+    val unfoldRank = new Array[Int](2)
+    val tensorMatrix = new DenseMatrix[Double](tensorMatrixTmp.numRows, tensorMatrixTmp.numCols, tensorMatrixTmp.values)
+    if( unfoldDim == 0 )                   // For first dimension
+    {
+      unfoldRank(0) = tensorRank(0)
+      unfoldRank(1) = tensorRank(1)
+      for( i <- 2 until tensorDims )
+      {
+        unfoldRank(1) = unfoldRank(1) * tensorRank(i)
+      }
+      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false )
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) )
+    }
+    else if( unfoldDim == tensorDims - 1 ) // For last dimension
+    {
+      unfoldRank(0) = tensorRank(0)
+      unfoldRank(1) = tensorRank(unfoldDim)
+      for( i <- 1 to tensorDims - 2 )
+      {
+        unfoldRank(0) = unfoldRank(0) * tensorRank(i)
+      }
+      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
+
+    }
+    else                                   // For others dimension
+    {
+      unfoldRank(0) = tensorRank(0)
+      unfoldRank(1) = 1
+      for( i <- 1 until tensorDims )
+      {
+        if( i < unfoldDim )
+          unfoldRank(0) = unfoldRank(0) * tensorRank(i)
+        else
+          unfoldRank(1) = unfoldRank(1) * tensorRank(i)
+      }
+      val temp = tensorRank.product / tensorRank(unfoldDim)
+
+      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+      //*                           .reshape( tensorRank(unfoldDim), temp, false )
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
+        .reshape( tensorRank(unfoldDim), temp, false )
+    }
+
+    unfoldMatrix
+  }
+
+  def blockTensorAsMatrices(linearTensor: DMatrix, tensorRank: Array[Int]): RDD[DenseMatrix[Double]] ={
+    val tensorDims = tensorRank.length
+    var unfoldTensor: RDD[Vector[Double]] = null
+    val unfoldRank = new Array[Int](tensorRank.length - 2)
+    val tmpValues: Array[Double] = new Array[Double](tensorRank(0) * tensorRank(1))
+
+    // number of matrices is the product of ranks except the first 2
+    for(i <- 2 until tensorRank.length){
+      unfoldRank(i - 2) = tensorRank(i)
+    }
+
+    var unfoldMatrices: Array[BMatrix[Double]] = new Array[BMatrix[Double]](unfoldRank.product)
+
+    for(k <- 0 to unfoldRank.product - 1; j <- 0 to (tensorRank(0) * tensorRank(1)) - 1){
+      // create series of 2D Matrices
+      tmpValues(0) = linearTensor.apply(j, 0)
+      //tmpValues(z) = linearTensor(k)
+        //println("i = " + i + "   " + linearSub(i, tensorRank))
+      //println(tensorRank(0) * tensorRank(1) + " and " + tmpValues.length)
+      if(j == (tensorRank(0) * tensorRank(1)) - 1) {
+        unfoldMatrices(k) = new BMatrix(tensorRank(0), tensorRank(1), tmpValues)
+        //var listMatrices = sc.parallelize(Seq(unfoldMatrix))
+      }
+
+    }
+
+    sc.parallelize(unfoldMatrices)
+  }
+
+  def blockTensorAsVectors(tensorMatrices: RDD[BMatrix[Double]]): RDD[MVector] ={
+    val tmpRdd: Array[RDD[MVector]] = new Array[RDD[MVector]](tensorMatrices.count().toInt)
+
+
+    for(k <- 1 to tensorMatrices.count.toInt){
+      val densemat = tensorMatrices.take(k)
+      //val mat: B = new DenseMatrix(densemat(0).rows, densemat(0).cols, densemat(0).values)
+      //densemat(0).rows, densemat(0).cols, densemat(0).values)
+      tmpRdd(k - 1) = matrixToRDD(densemat(0))
+    }
+    val fullRdd: RDD[MVector] = concatRDDs(tmpRdd, 0)
+    fullRdd
+  }
+
+  def concatRDDs(r: Array[RDD[MVector]], index: Int): RDD[MVector] = {
+    if(index == r.length - 1)
+      r(index)
+    else
+      r(index) ++ concatRDDs(r, index + 1)
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Perform local tensor unfold
+  //-----------------------------------------------------------------------------------------------------------------
   def localTensorUnfold( tensorMatrix: DenseMatrix[Double], unfoldDim: Int, tensorRank: Array[Int] )
   : DenseMatrix[Double] =
   {
@@ -900,8 +1005,8 @@ object Tensor
     covMatrix
   }
 
-  def matrixToRDD(m: DMatrix): RDD[MVector] = {
-    val columns = m.toArray.grouped(m.numRows)
+  def matrixToRDD(m: BMatrix[Double]): RDD[MVector] = {
+    val columns = m.toArray.grouped(m.rows)
     val rows = columns.toSeq.transpose
     val vectors = rows.map(row => Vectors.dense(row.toArray))
     sc.parallelize(vectors)
@@ -912,5 +1017,30 @@ object Tensor
     val rows = columns.toSeq.transpose
     val vectors = rows.map(row => Vectors.dense(row.toArray))
     sc.parallelize(vectors)
+  }*/
+
+  def linearSub(index: Int, totalRank: Array[Int]): CM.ArraySeq[Int] = {
+    require(index < totalRank.product, s"Linear index out of range")
+    val dims = totalRank.length
+    val subIndex = new CM.ArraySeq[Int]( dims )
+
+    subIndex(0) = index
+    for(dim <- 0 until dims - 1)
+    {
+      subIndex(dim + 1) = subIndex(dim) / totalRank(dim)
+      subIndex(dim) = subIndex(dim) % totalRank(dim)
+    }
+    subIndex
+  }
+/*
+  // returns array of ID
+  def tensor2Vects(v: RDD[MVector], tensorRanks: Array[Int]): RDD[MVector] = {
+    val tensor = null
+    for(dim <- 0 until tensorRanks.length - 1){
+      for(nb <-0 until tensorRanks(dim) * tensorRanks(dim + 1) by tensorRanks(dim)
+      val ids = Vector(null)
+
+
+    }
   }*/
 }

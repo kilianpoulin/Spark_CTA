@@ -8,6 +8,7 @@ import org.apache.spark.rdd._
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.mllib.linalg.{Vectors, DenseMatrix => DMatrix, Vector => MVector}
 import org.apache.spark.sql.SparkSession
+import project.core.original.KMeansClustering
 
 /**
   * Created by root on 2016/2/1.
@@ -82,14 +83,14 @@ object RunTucker extends App{
     //saveTmpBlock()
     // Read tensor header
     //val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
-    val tensorInfo = Tensor.readTensorHeader("data/matrix/header/part-00000" )
+    val tensorInfo = Tensor.readTensorHeader("data/ConvertedData/header/part-00000" )
     // Read tensor block and transform into RDD
     println("------------- OK 1 --------------------------------")
 
 
     //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
     //val tensorRDD = Tensor.readTensorBlock( "data/donkey_spark_test/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
-    val tensorRDD = Tensor.readTensorBlock( "data/matrix/block/part-00001", tensorInfo.blockRank, rddPartitionSize)
+    val tensorRDD = Tensor.readTensorBlock( "data/ConvertedData/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
 
   tensorRDD.persist( MEMORY_AND_DISK )
     println("------------- OK 2 --------------------------------")
@@ -100,27 +101,51 @@ object RunTucker extends App{
     //tensorRDD.map(s => s._1).foreach(println)
 
     var tensorMat = tensorRDD.map(s => s._2).take(1)
-  //tensorMat.foreach(println)
+    //tensorMat.foreach(println)
+
+    //val fulltensor = tensor2Vects(matrixToRDD(tensorMat(0)), tensorInfo.tensorRank)
+/*
+  println("initial count " + tensorMat(0).numRows)
+    var tens = localTensorUnfold( tensorMat(0), 0, tensorInfo.blockRank )
+  println("final count  " + tens.size)
+*/
+  // get all 2D Matrices
+  val RDDMatrix = blockTensorAsMatrices( tensorMat(0), tensorInfo.blockRank )
+
+  println("OK")
+  // Tranform matrices into RDD[Vector]
+  val RDDVectors = blockTensorAsVectors(RDDMatrix)
+
+  println("size array of rdd vectors = " + RDDVectors.count())
+
+  println("------------------------------- CLUSTERING ------------------------ ")
+  val test = new KMeansClustering(sc, 3, 5, tensorInfo.tensorDims)
+  test.train(RDDVectors)
 
     // Create vectors in one block
-    // we know that each block i of size 2*3
-    // the 3rd element create a vector with the 4th
-    var newmatvect = tensorMat(0).toArray
+    // we know that each block i of size 71*71*31*31
+    //var newmatvect = tensorMat(0).toArray
     //matrixToRDD(tensorMat(0))
     //newmatvect.foreach(println)
 
-
     // a real 2D DenseMatrix
-    val newmat = new DMatrix(tensorInfo.blockRank(1), tensorInfo.blockRank(0), newmatvect)
-  //println(newmat)
+    //val newmat = new DMatrix(tensorInfo.blockRank(1), tensorInfo.blockRank(0), newmatvect.take(tensorInfo.blockRank(0) * tensorInfo.blockRank(1)))
+    //println(newmat)
 
     // convert it to an RDD Vector
-    val finalvects = matrixToRDD(newmat)
-    finalvects.foreach(println)
+    //val finalvects = matrixToRDD(newmat)
+
+    // convert linear to 4D coor
+   //println(linear2Sub(180, tensorInfo.tensorRank))
+
+    //val test = new KMeansClustering(sc, 3, 5, tensorInfo.tensorDims)
+    //test.train(finalvects)
+
+    /*finalvects.foreach(println)
 
     println(" ======= printing clusters centers ======= ")
     var clusters = KMeans.train(finalvects, 2, 10)
-    clusters.clusterCenters.foreach(println)
+    clusters.clusterCenters.foreach(println)*/
 
     //var parsedData = tensorRDD.map(s => s._2) // get an RDD of DenseMatrices
     //parsedData.collect().foreach(println)
