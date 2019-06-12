@@ -13,12 +13,8 @@ import project.core.original.KMeansClustering
 /**
   * Created by root on 2016/2/1.
   */
-object RunTucker extends App{
 
-
-  Logger.getLogger("org").setLevel(Level.OFF)
-  Logger.getLogger("akka").setLevel(Level.OFF)
-
+object MySpark{
 
   // Set Spark context
   val conf = new SparkConf()
@@ -35,9 +31,19 @@ object RunTucker extends App{
     .getOrCreate()
 
 
-
-
   import Spark.implicits._
+}
+object RunTucker extends App{
+
+
+  Logger.getLogger("org").setLevel(Level.OFF)
+  Logger.getLogger("akka").setLevel(Level.OFF)
+
+
+
+
+
+
     // Default variable
     var tensorPath = "data/donkey_spark/"
     var approxPath = ""
@@ -90,7 +96,7 @@ object RunTucker extends App{
 
     //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
     //val tensorRDD = Tensor.readTensorBlock( "data/donkey_spark_test/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
-    val tensorRDD = Tensor.readTensorBlock( "data/ConvertedData/block/part-00002", tensorInfo.blockRank, rddPartitionSize)
+    val tensorRDD = Tensor.readTensorBlock( "data/ConvertedData/block/part-00011", tensorInfo.blockRank, rddPartitionSize)
 
   tensorRDD.persist( MEMORY_AND_DISK )
     println("------------- OK 2 --------------------------------")
@@ -119,7 +125,7 @@ object RunTucker extends App{
   println("size array of rdd vectors = " + RDDVectors.count())
 
   println("------------------------------- CLUSTERING ------------------------ ")
-  val test = new KMeansClustering(sc, 3, 5, tensorInfo.tensorDims)
+  val test = new KMeansClustering(3, 5, tensorInfo.tensorDims)
   test.train(RDDVectors)
 
     // Create vectors in one block

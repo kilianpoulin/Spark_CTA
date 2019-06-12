@@ -82,7 +82,7 @@ object Tensor
   def readTensorHeader ( inPath: String ): TensorInfo =
   {
     val headerPath = inPath
-    val argArray = sc.textFile( headerPath ).collect()
+    val argArray = MySpark.sc.textFile( headerPath ).collect()
     var tensorDims: Int = 0
 
     var line = argArray(0).split(" ")
@@ -175,7 +175,7 @@ object Tensor
     infoArray(2) = "BlockRank" + " " + tensorInfo.blockRank.mkString(",")
     infoArray(3) = "BlockNumber" + " " + tensorInfo.blockNum.mkString(",")
 
-    sc.parallelize( infoArray, 1 ).saveAsTextFile( savePath )
+    MySpark.sc.parallelize( infoArray, 1 ).saveAsTextFile( savePath )
   }
 
   //-----------------------------------------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ object Tensor
   def saveTensorBlock ( tensorPath: String, tensorRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] ) =
   {
     // Set Hadoop configuration
-    val hadoopJobConf = new JobConf( sc.hadoopConfiguration )
+    val hadoopJobConf = new JobConf( MySpark.sc.hadoopConfiguration )
     val savePath = tensorPath + "block/"
 
     val saveRDD = tensorRDD.map{ case( blockSubIndex, tensorVector ) =>
@@ -201,9 +201,9 @@ object Tensor
   {
     val myArray = Array[Double](1.0, 2.0, 4.0, 5.0, 1.0, 1.0, 3.0, 4.0)
     var mat = new DenseMatrix[Double](4, 2, myArray)
-    val tensorRDD = sc.parallelize(Seq(mat))
+    val tensorRDD = MySpark.sc.parallelize(Seq(mat))
     // Set Hadoop configuration
-    val hadoopJobConf = new JobConf( sc.hadoopConfiguration )
+    val hadoopJobConf = new JobConf( MySpark.sc.hadoopConfiguration )
     val savePath = "data/block/"
 
     val saveRDD = tensorRDD.map{ case( tensorVector ) =>
@@ -221,7 +221,7 @@ object Tensor
                           dimSeq: Array[Int] ) =
   {
     // Set Hadoop configuration
-    val hadoopJobConf = new JobConf( sc.hadoopConfiguration )
+    val hadoopJobConf = new JobConf( MySpark.sc.hadoopConfiguration )
     val savePath = basisPath
 
     // Get basis matrices from broadcast variable and convert it into bytes array
@@ -238,8 +238,8 @@ object Tensor
     }
 
     // Parallelize bytes array and write to HDFS
-    //*val saveRDD = sc.parallelize( bytesArray )
-    val saveRDD = sc.parallelize( matrixArray, matrixNum )
+    //*val saveRDD = MySpark.sc.parallelize( bytesArray )
+    val saveRDD = MySpark.sc.parallelize( matrixArray, matrixNum )
       .map{ case( dim, matrix ) => convertMatrix2Bytes( dim, matrix ) }
     saveRDD.saveAsHadoopFile( savePath, classOf[BytesWritable], classOf[BytesWritable], classOf[BinaryOutputFormat],
       hadoopJobConf, None )
@@ -364,7 +364,7 @@ object Tensor
     //*  val temp = List( Vectors.dense( covMatrix( ::, i ).toArray ) )
     //*  rowVectorList = temp ++ rowVectorList
     //*}
-    //*val rowMatrixRDD = new RowMatrix( sc.parallelize( rowVectorList ) )
+    //*val rowMatrixRDD = new RowMatrix( MySpark.sc.parallelize( rowVectorList ) )
     //*
     //*// Do SVD from MLlib
     //*val svd = rowMatrixRDD.computeSVD( extRank, false, 0 )
@@ -573,16 +573,16 @@ object Tensor
       // create series of 2D Matrices
       tmpValues(0) = linearTensor.apply(j, 0)
       //tmpValues(z) = linearTensor(k)
-        //println("i = " + i + "   " + linearSub(i, tensorRank))
+      //println("i = " + 6620 + "   " + linearSub(6620, tensorRank) + " " + linearTensor.apply(6620, 0))
       //println(tensorRank(0) * tensorRank(1) + " and " + tmpValues.length)
       if(j == (tensorRank(0) * tensorRank(1)) - 1) {
         unfoldMatrices(k) = new BMatrix(tensorRank(0), tensorRank(1), tmpValues)
-        //var listMatrices = sc.parallelize(Seq(unfoldMatrix))
+        //var listMatrices = MySpark.sc.parallelize(Seq(unfoldMatrix))
       }
 
     }
 
-    sc.parallelize(unfoldMatrices)
+    MySpark.sc.parallelize(unfoldMatrices)
   }
 
   def blockTensorAsVectors(tensorMatrices: RDD[BMatrix[Double]]): RDD[MVector] ={
@@ -1009,14 +1009,14 @@ object Tensor
     val columns = m.toArray.grouped(m.rows)
     val rows = columns.toSeq.transpose
     val vectors = rows.map(row => Vectors.dense(row.toArray))
-    sc.parallelize(vectors)
+    MySpark.sc.parallelize(vectors)
   }
 
   /*def TestmatrixToRDD(m: DMatrix, columns: Int, rows: Int): RDD[MVector] = {
     val columns = m.toArray.grouped(m.numRows)
     val rows = columns.toSeq.transpose
     val vectors = rows.map(row => Vectors.dense(row.toArray))
-    sc.parallelize(vectors)
+    MySpark.sc.parallelize(vectors)
   }*/
 
   def linearSub(index: Int, totalRank: Array[Int]): CM.ArraySeq[Int] = {

@@ -12,6 +12,7 @@ import scala.util.Random
 import org.apache.spark.mllib.linalg.Vector
 import breeze.linalg.{sum, zipValues, DenseVector => BVector}
 import org.apache.spark.SparkContext
+import org.apache.spark.internal.Logging
 import org.apache.spark.ml.linalg.DenseVector
 import org.apache.spark.sql.functions.udf
 import org.apache.spark.sql._
@@ -31,19 +32,54 @@ import scala.collection.mutable
 
 }
 
-case class VData(v: Vector){
-  def distanceTo() =
+case class VData(v: Vector) extends BVector[Double](v.toArray){
+  def distanceTo(that: VData) = {
+    sqrt((that.toArray zip this.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
+  }
 }*/
 
+
+/*
+object VData{
+  implicit class MyVector[T](val underlying: Vector) extends AnyVal {
+    def +(that: Vector)(implicit x: scala.math.Numeric[T]): Vector = {
+      import x._
+      underlying.zip(that).map{
+        case (a,b) => a + b
+      }
+    }
+  }
+}*/
+
+/*
+implicit class VData[Double](v1: Vector){
+  def distanceTo(v2: Vector) = sqrt((v1.toArray zip v2.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
+}
+*/
 class KMeansClustering (
-                        sc: SparkContext,
                          private var k: Int,
                          private var maxIterations: Int,
                          //private var initializationSteps: Int,
                          //private var epsilon: Double,
                          private var tensorDim: Int) extends Serializable {
+/*
+  case class VData(v: Vector) extends BVector[Double](v.toArray){
+    def distanceTo(that: VData) = {
+      sqrt((that.toArray zip this.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
+    }
+  }*/
 
 
+    //implicit def toMyVector[T](that: Vector): VData[T] = new VData(that)
+
+  @transient case class VData(@transient v1: Vector) extends Serializable {
+    @transient val distanceTo = (v2: Vector) =>  sqrt((v1.toArray zip v2.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
+    /*def distanceTo(v2: Vector): Double = {
+      sqrt((v1.toArray zip v2.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
+    }*/
+  }
+
+  @transient implicit def distancecalc(@transient v: Vector): VData = VData(v)
 
   def train(
              data: RDD[Vector]
@@ -60,13 +96,13 @@ class KMeansClustering (
 
   }*/
   //val distanceTo = udf((v1: Vector, v2: Vector) => sqrt((v1.toArray zip v2.toArray).map { case (x,y) => pow(x - y, 2) }.sum))
-
+/*
   //val newudf = df.withColumn("newudf", distanceTo(df("oldCol")))
   def distanceTo(u: Vector, v: Vector) = {
     val r = scala.util.Random
     r.nextInt()
     //sqrt((u.toArray zip v.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
-  }
+  }*/
 
 
   //val distanceTo = udf(calcDistance(v1, v2))
@@ -87,12 +123,17 @@ class KMeansClustering (
 
     // Step 1 : create k clusters with random values as centroids
 
-    createRandomCentroids(data)
-    buildClusters(data, createRandomCentroids(data))
-    /*val clusters = buildClusters(data, createRandomCentroids(data))
-    clusters.foreach({
+    //val newdata = data.map(v => new VData(v))
+   // data.foreach(println)
+    //createRandomCentroids(newdata)
+    val clusters = buildClusters(data, createRandomCentroids(data))
+    /*val clusters = buildClusters(data, createRandomCentroids(data))*/
+
+    println("------------------------- Clustering result ----------------------")
+    clusters.map({ case(centroid, members) => members.size}).foreach(println)
+   /*clusters.foreach({
       case (centroid, members) =>
-        members.foreach({ member => println(s"Centroid: $centroid Member: $member") })
+        members.foreach({ member => println(s"Centroid: $centroid Member: $members") })
     })*/
 
     // Step 2 : Calculate partial distances
@@ -101,7 +142,7 @@ class KMeansClustering (
   }
 
   // should return Map[Vector, RDD[Vector]]
-  def createRandomCentroids(data: RDD[Vector]): scala.collection.Map[(Int, BVector[Double]), RDD[BVector[Double]]] = {
+  def createRandomCentroids(data: RDD[Vector]): scala.collection.Map[Int, (Vector, RDD[Vector])] = {
   //: scala.collection.Map[Vector, RDD[Vector]] = {
     val randomIndices = collection.mutable.HashSet[Int]()
     val random = new Random()
@@ -112,74 +153,64 @@ class KMeansClustering (
     }
 
     val vect = Vector()
-    val tmpRDD: RDD[BVector[Double]] = sc.parallelize(vect)
+    val tmpRDD: RDD[Vector] = MySpark.sc.parallelize(vect)
 
     println("nb vect = " +data.count())
 
     val myvect = data.zipWithIndex.filter({case (_, index) => randomIndices.contains(index.toInt)}).map({ case (vect, _) => (vect, tmpRDD)}).map(s => s._1).take(1)
-    println("sum : " + sum(myvect(0).toArray))
+    //println("sum : " + sum(myvect(0)))
 
     // now we find these vectors in the dataset using their ID, previously randomly selected
     // we add another element to these vectors : which will be the vector of the cluster
     // thus, each cluster is an RDD / map containing a pair (Vector : centroid, Vector: cluster values)
     //
+    //
+    /*
     val centroids : Array[BVector[Double]] = new Array[BVector[Double]](3)
     centroids(0) = new BVector[Double](Array[Double](1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1))
     centroids(1) = new BVector[Double](Array[Double](2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.2))
     centroids(2) = new BVector[Double](Array[Double](3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.3))
-
+*/
     val myclusters = data
       .zipWithIndex
       .filter({ case (_, index) => randomIndices.contains(index.toInt) })
-      .map({ case (centroid, index) => ((index.toInt, centroids(Random.nextInt(3))), tmpRDD) }).collect()
-     // .map({ case (centroid, _) => (centroid, tmpRDD) }).collect()
-      //.collectAsMap()
+      .map({ case (centroid, index) => (index.toInt, (centroid, tmpRDD)) }).collectAsMap()
 
-    myclusters.foreach(println)
-    println("nb of myclusters = " + myclusters.length)
+
+    //myclusters.foreach(println)
+    //println("nb of myclusters = " + myclusters.length)
     //myclusters.zipWithIndex.toMap
-    myclusters.toMap
+    //myclusters.toMap
+    myclusters
   }
 
 
   // returns Map[Vector, RDD[Vector]]
   //@tailrec
-  def buildClusters(data: RDD[Vector], prevClu: scala.collection.Map[(Int, BVector[Double]), RDD[BVector[Double]]]): Unit = {
+  def buildClusters(data: RDD[Vector], prevClusters: scala.collection.Map[Int, (Vector, RDD[Vector])]): scala.collection.Map[Vector, Iterable[Vector]] = {
 
     println("------------------- Build clusters -------------------- ")
     // get rid of ID
-    val prevClusters = prevClu.groupBy( {case((index, vect), r) => (vect, r)})
+    //val prevClusters = prevClu.groupBy( {case((index, vect), r) => ((vect), r)})
     println("size prev custers = " + prevClusters.size)
     prevClusters.foreach(println)
-    /*val nextClusters = data.map({ vect =>
-      val byDistanceToPoint = new Ordering[BVector[Double]] {
+    prevClusters.keys.foreach(println)
+    val nextClusters = data.map({ vect =>
+      val byDistanceToPoint = new Ordering[Vector] {
         //override def compare(v1: Vector, v2: Vector) = distanceTo(v1, vect) compareTo distanceTo(v2, vect)
-        def compare(v1: BVector[Double], v2: BVector[Double]) = sqrt((v1.toArray zip v2.toArray).map { case (x,y) => pow(x - y, 2) }.sum).toInt
+        @transient def compare(v1: Vector, v2: Vector) = v1.distanceTo(vect) compareTo v2.distanceTo(vect)
       }
-      (vect, prevClusters.keys min byDistanceToPoint)
-    }).groupBy({ case (centroid, _) => centroid })
-*/
-      /*.groupBy({ case (_, centroid) => centroid }).map({ case (centroid, pointsToCentroids) =>
-      val points = pointsToCentroids.map({ case (point, _) => point })
-      (centroid, points)
-    })*/
+      (vect, prevClusters.map({ case (_,(centroid, _)) => centroid }) min byDistanceToPoint)
+    }).groupBy({ case (centroid, _) => centroid }).map({ case (centroid, pointsToCentroids) =>
+      val vects = pointsToCentroids.map({ case (vect, _) => vect })
+      (centroid, vects)
+    })
 
     //println("new clusters = " + nextClusters.count())
+    nextClusters.foreach(println)
+    println("---------- end clustering ------ ")
 
-    //nextClusters.foreach(println)
-      /*
-
-
-      (vect, prevClusters.keys min byDistanceToPoint)
-    }).groupBy({ case (_, centroid) => centroid })
-      .map({ case (centroid, pointsToCentroids) =>
-        val points = pointsToCentroids.map({ case (point, _) => point })
-        (centroid, points)
-      })
-
-    prevClusters*/
-    /*
-
+/*
     if (prevClusters != nextClusters) {
       val nextClustersWithBetterCentroids = nextClusters.map({
         case (centroid, members) =>
@@ -188,9 +219,10 @@ class KMeansClustering (
       })
 
       buildClusters(data, nextClustersWithBetterCentroids)
-    } else {
-      prevClusters
-    }*/
+    } else {*/
+      //prevClusters
+    nextClusters.collectAsMap()
+   // }
   }
 
 }
