@@ -21,13 +21,6 @@ import breeze.linalg.{DenseMatrix => BMatrix}
 
 object Tensor
 {
-  var sc: SparkContext = null
-
-  def setSparkContext( inSC: SparkContext  ): Unit =
-  {
-    sc = inSC
-  }
-
   //-----------------------------------------------------------------------------------------------------------------
   // Class to store tensor information
   //-----------------------------------------------------------------------------------------------------------------
@@ -126,35 +119,20 @@ object Tensor
     val tensorDims = blockRanks.length
 
     // Set Hadoop configuration
-    val hadoopJobConf = new JobConf( sc.hadoopConfiguration )
-    //    hadoopJobConf.set("mapred.max.split.size", rddPartitionSize)
-    //hadoopJobConf.set("mapred.min.split.size", rddPartitionSize)
-    val blockPath = inPath
-    FileInputFormat.setInputPaths( hadoopJobConf, blockPath )
+    val hadoopJobConf = new JobConf( MySpark.sc.hadoopConfiguration )
+
     val recordSize = ( blockRanks.product * 8 ) + ( tensorDims * 4 )
-    println("record size = " + recordSize)
+
+    hadoopJobConf.set("mapred.min.split.size", recordSize.toString)
+    FileInputFormat.setInputPaths( hadoopJobConf, inPath)
     MyFixedLengthInputFormat.setRecordLength( hadoopJobConf, recordSize )
 
     // Read tensor block data from HDFS and convert to tuple2( blockSubIndex, DenseVector ) format
-    val bytesRdd = sc.hadoopRDD( hadoopJobConf, classOf[MyFixedLengthInputFormat], classOf[LongWritable],
+    val bytesRdd = MySpark.sc.hadoopRDD( hadoopJobConf, classOf[MyFixedLengthInputFormat], classOf[LongWritable],
       classOf[BytesWritable] )
-    //println("count = " + sc.textFile(blockPath).count())
-    //val testrdd = sc.textFile(blockPath).flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_+_)
-    //println("count = " + testrdd.count())
-
-    //val bytesRdd: RDD[String] = sc.textFile(blockPath)
-    //bytesRdd.collect().foreach(println)
 
     val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Tuple( bytes.getBytes, tensorDims ) }
-    //blockRDD.foreach(println)
 
-    //blockRDD.map(s => s._2).map(_.toDenseVector).foreach(println)
-    //blockRDD.map(s => s._2).map(x => x + 2.0).foreach(println)
-    /*val countres = blockRDD.map(s => s._2).flatMap{
-      case x if x != 0 => Some(x)
-    }.count()
-    println("countres = " + countres)*/
-   // println("count = " + blockRDD.map(s => s._2).map(_.toDenseVector).count())
     blockRDD
 
   }
@@ -435,30 +413,20 @@ object Tensor
     val byteBuffer = ByteBuffer.wrap( bytesArray )
 
     // Get block subindex
-    //*val blockSubIndex = new Array[Int]( tensorDims )
     val blockSubIndex = new CM.ArraySeq[Int]( tensorDims )
     for( i <- 0 until tensorDims )
       blockSubIndex(i) = byteBuffer.getInt()
 
-    //println("size of block sub index = " + blockSubIndex.size)
-
-    //println("size of byte buffer = " + byteBuffer.asDoubleBuffer().remaining())
     // Get tensor block content
     val doubleBuffer = byteBuffer.asDoubleBuffer()
     val vectorSize = doubleBuffer.remaining()
-    //println("vector size = " + vectorSize)
     val doubleArray = new Array[Double]( vectorSize )
-    for( i <- 0 until vectorSize){
+    for( i <- 0 until vectorSize)
       doubleArray(i) = doubleBuffer.get()
-      //println("element " + i + " = " + doubleArray(i))
-    }
 
     // Create a dense matrix and size is vectorSize*1
-    //*val outVector = new DenseVector( doubleArray )
     val outMatrix = new DMatrix( vectorSize, 1, doubleArray )
 
-
-    //*( blockSubIndex.toList, outMatrix )
     ( blockSubIndex, outMatrix )
   }
 
@@ -560,28 +528,26 @@ object Tensor
     val tensorDims = tensorRank.length
     var unfoldTensor: RDD[Vector[Double]] = null
     val unfoldRank = new Array[Int](tensorRank.length - 2)
-    val tmpValues: Array[Double] = new Array[Double](tensorRank(0) * tensorRank(1))
+    var tmpValues: Array[Double] = new Array[Double](tensorRank(0) * tensorRank(1))
 
     // number of matrices is the product of ranks except the first 2
     for(i <- 2 until tensorRank.length){
       unfoldRank(i - 2) = tensorRank(i)
     }
+    var tmp = 0
 
     var unfoldMatrices: Array[BMatrix[Double]] = new Array[BMatrix[Double]](unfoldRank.product)
 
     for(k <- 0 to unfoldRank.product - 1; j <- 0 to (tensorRank(0) * tensorRank(1)) - 1){
       // create series of 2D Matrices
-      tmpValues(0) = linearTensor.apply(j, 0)
-      //tmpValues(z) = linearTensor(k)
-      //println("i = " + 6620 + "   " + linearSub(6620, tensorRank) + " " + linearTensor.apply(6620, 0))
-      //println(tensorRank(0) * tensorRank(1) + " and " + tmpValues.length)
+      tmp = j + k * (tensorRank(0) * tensorRank(1))
+      tmpValues(j) = linearTensor.apply(tmp, 0)
       if(j == (tensorRank(0) * tensorRank(1)) - 1) {
         unfoldMatrices(k) = new BMatrix(tensorRank(0), tensorRank(1), tmpValues)
         //var listMatrices = MySpark.sc.parallelize(Seq(unfoldMatrix))
       }
 
     }
-
     MySpark.sc.parallelize(unfoldMatrices)
   }
 

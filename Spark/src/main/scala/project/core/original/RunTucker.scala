@@ -22,27 +22,18 @@ object MySpark{
 
   val sc = new SparkContext( conf )
   TensorTucker.setSparkContext( sc )
-  Tensor.setSparkContext( sc )
+  //Tensor.setSparkContext( sc )
 
 
   val Spark = SparkSession
     .builder()
     .appName("CTA Algorithm")
     .getOrCreate()
-
-
-  import Spark.implicits._
 }
 object RunTucker extends App{
 
-
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
-
-
-
-
-
 
     // Default variable
     var tensorPath = "data/donkey_spark/"
@@ -53,9 +44,7 @@ object RunTucker extends App{
     var epsilon = 5e-5
     var reconstFlag = 0
     var reconstPath =  ""
-    var rddPartitionSize = ""
-
-
+    var rddPartitionSize = "1"
 
     // Read input argument
     for( argCount <- 0 until args.length by 2 )
@@ -89,57 +78,33 @@ object RunTucker extends App{
     //saveTmpBlock()
     // Read tensor header
     //val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
-    val tensorInfo = Tensor.readTensorHeader("data/ConvertedData/header/part-00000" )
+
+    val tensorInfo = Tensor.readTensorHeader(tensorPath + "header/part-00000" )
+    println(" (1) Read Tensor header : OK")
+
     // Read tensor block and transform into RDD
-    println("------------- OK 1 --------------------------------")
+    val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank, rddPartitionSize)
+    println(" (2) Read Tensor block : OK")
 
-
-    //val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank , rddPartitionSize)
-    //val tensorRDD = Tensor.readTensorBlock( "data/donkey_spark_test/block/part-00000", tensorInfo.blockRank, rddPartitionSize)
-    val tensorRDD = Tensor.readTensorBlock( "data/ConvertedData/block/part-00011", tensorInfo.blockRank, rddPartitionSize)
-
-  tensorRDD.persist( MEMORY_AND_DISK )
-    println("------------- OK 2 --------------------------------")
-
-    println(" ======= BEGIN CLUSTERING ========")
-
-    println(" ==== what are the IDS in ArraySeq[Int]")
-    //tensorRDD.map(s => s._1).foreach(println)
+    tensorRDD.persist( MEMORY_AND_DISK )
 
     var tensorMat = tensorRDD.map(s => s._2).take(1)
-    //tensorMat.foreach(println)
 
-    //val fulltensor = tensor2Vects(matrixToRDD(tensorMat(0)), tensorInfo.tensorRank)
-/*
-  println("initial count " + tensorMat(0).numRows)
-    var tens = localTensorUnfold( tensorMat(0), 0, tensorInfo.blockRank )
-  println("final count  " + tens.size)
-*/
-  // get all 2D Matrices
-  val RDDMatrix = blockTensorAsMatrices( tensorMat(0), tensorInfo.blockRank )
+    // get all 2D Matrices
+    val RDDMatrix = blockTensorAsMatrices( tensorMat(0), tensorInfo.blockRank )
+    println(" (3) Format data into matrices : OK")
 
-  println("OK")
-  // Tranform matrices into RDD[Vector]
-  val RDDVectors = blockTensorAsVectors(RDDMatrix)
+    // Tranform matrices into RDD[Vector]
+    val RDDVectors = blockTensorAsVectors(RDDMatrix)
+    println(" (4) Format data into vectors : OK")
 
-  println("size array of rdd vectors = " + RDDVectors.count())
 
-  println("------------------------------- CLUSTERING ------------------------ ")
-  val test = new KMeansClustering(3, 5, tensorInfo.tensorDims)
-  test.train(RDDVectors)
+    println("------------------------------- CLUSTERING ------------------------ ")
+    val test = new KMeansClustering(3, 5, tensorInfo.tensorDims)
+    test.train(RDDVectors)
 
-    // Create vectors in one block
-    // we know that each block i of size 71*71*31*31
-    //var newmatvect = tensorMat(0).toArray
-    //matrixToRDD(tensorMat(0))
-    //newmatvect.foreach(println)
+    println(" (X) Clustering : OK")
 
-    // a real 2D DenseMatrix
-    //val newmat = new DMatrix(tensorInfo.blockRank(1), tensorInfo.blockRank(0), newmatvect.take(tensorInfo.blockRank(0) * tensorInfo.blockRank(1)))
-    //println(newmat)
-
-    // convert it to an RDD Vector
-    //val finalvects = matrixToRDD(newmat)
 
     // convert linear to 4D coor
    //println(linear2Sub(180, tensorInfo.tensorRank))

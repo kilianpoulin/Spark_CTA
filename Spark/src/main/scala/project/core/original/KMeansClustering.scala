@@ -44,12 +44,15 @@ class KMeansClustering (
   }
 
   def run(data: RDD[Vector]){
-
+    println("to array")
+    data.filter({ case x => x.toArray.sum > 0.0}).foreach(println)
+    println("top")
     // Step 1 : create k clusters with random values as centroidsdata)
     val clusters = buildClusters(data, createRandomCentroids(data))
 
     println("------------------------- Clustering result ----------------------")
-    clusters.map({ case(centroid, members) => members.size}).foreach(println)
+    clusters.filter({case(x, _) => x.toArray.sum > 0}).foreach(println)
+   // clusters.map({ case(centroid, members) => members.size}).foreach(println)
    /*clusters.foreach({
       case (centroid, members) =>
         members.foreach({ member => println(s"Centroid: $centroid Member: $members") })
@@ -64,10 +67,15 @@ class KMeansClustering (
   def createRandomCentroids(data: RDD[Vector]): scala.collection.Map[Int, (Vector, RDD[Vector])] = {
     val randomIndices = collection.mutable.HashSet[Int]()
     val random = new Random()
+    var tmp = 0
     while (randomIndices.size < k) {
       // choosing on of the vectors in the dataset to become one cluster centroid
       // so we will choose k vectors in the dataset
-      randomIndices += random.nextInt(data.count().toInt)
+      // we only choose vectors not equal to zero vector
+      tmp = random.nextInt(data.count().toInt)
+      //println("sum = " + data.take(tmp)(0).toArray.sum)
+      if(data.take(tmp)(0).toArray.sum != 0)
+        randomIndices += random.nextInt(data.count().toInt)
     }
 
     val vect = Vector()
