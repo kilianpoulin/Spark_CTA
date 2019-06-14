@@ -114,7 +114,7 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Read tensor block
   //-----------------------------------------------------------------------------------------------------------------
-  def readTensorBlock ( inPath: String, blockRanks: Array[Int] , rddPartitionSize: String): RDD[ (CM.ArraySeq[Int], DMatrix) ] =
+  def readTensorBlock ( inPath: String, blockRanks: Array[Int]): RDD[ (CM.ArraySeq[Int], DMatrix) ] =
   {
     val tensorDims = blockRanks.length
 
@@ -124,6 +124,7 @@ object Tensor
     val recordSize = ( blockRanks.product * 8 ) + ( tensorDims * 4 )
 
     hadoopJobConf.set("mapred.min.split.size", recordSize.toString)
+
     FileInputFormat.setInputPaths( hadoopJobConf, inPath)
     MyFixedLengthInputFormat.setRecordLength( hadoopJobConf, recordSize )
 

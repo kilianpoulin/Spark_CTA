@@ -44,7 +44,6 @@ object RunTucker extends App{
     var epsilon = 5e-5
     var reconstFlag = 0
     var reconstPath =  ""
-    var rddPartitionSize = "1"
 
     // Read input argument
     for( argCount <- 0 until args.length by 2 )
@@ -67,10 +66,29 @@ object RunTucker extends App{
           reconstFlag = args( argCount + 1 ).toInt
         case "--ReconstPath" =>
           reconstPath = args( argCount + 1 )
-        case "--RDDPartitionSize"=>
-          rddPartitionSize = args(argCount + 1)
       }
     }
+
+  //******************************************************************************************************************
+  // Section to do data pre-processing
+  //******************************************************************************************************************
+
+  val tensorInfo = Tensor.readTensorHeader(tensorPath + "header/part-00000" )
+  println(" (1) Read Tensor header : OK")
+
+  // Read tensor block and transform into RDD
+  val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank)
+  println(" (2) Read Tensor block : OK")
+
+  // Unfold tensor along the Dimension 1
+  val dataMatrix = localTensorUnfold( tensorRDD.map(s => s._2).take(1)(0), 1,  tensorInfo.blockRank)
+  println(" (3) Tensor unfolded along Dimension 1 : OK")
+
+  tensorRDD.persist( MEMORY_AND_DISK )
+
+  // Creating clusters
+  val kmeans = new KMeansClustering(3, 5, tensorInfo.tensorDims)
+  kmeans.train(, dataMatrix)
 
     //******************************************************************************************************************
     // Section to do tensor Tucker approximation
@@ -79,16 +97,11 @@ object RunTucker extends App{
     // Read tensor header
     //val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
 
-    val tensorInfo = Tensor.readTensorHeader(tensorPath + "header/part-00000" )
-    println(" (1) Read Tensor header : OK")
 
-    // Read tensor block and transform into RDD
-    val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank, rddPartitionSize)
-    println(" (2) Read Tensor block : OK")
 
-    tensorRDD.persist( MEMORY_AND_DISK )
 
-    var tensorMat = tensorRDD.map(s => s._2).take(1)
+  /** Too costly
+
 
     // get all 2D Matrices
     val RDDMatrix = blockTensorAsMatrices( tensorMat(0), tensorInfo.blockRank )
@@ -105,7 +118,7 @@ object RunTucker extends App{
 
     println(" (X) Clustering : OK")
 
-
+*/
     // convert linear to 4D coor
    //println(linear2Sub(180, tensorInfo.tensorRank))
 

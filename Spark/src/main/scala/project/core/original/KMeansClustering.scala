@@ -9,12 +9,16 @@ import org.apache.spark.rdd.RDD
 import scala.math.Ordering
 import scala.annotation.tailrec
 import scala.util.Random
-import org.apache.spark.mllib.linalg.Vector
+import scala.{Vector => Vect}
+import breeze.linalg.{DenseMatrix, Vector}
+
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 class KMeansClustering (
                          private var k: Int,
                          private var maxIterations: Int,
                          private var tensorDim: Int) extends Serializable {
-
+/*
   //
   // Creating implicit class to add function distanceTo to Vector
   //
@@ -22,14 +26,14 @@ class KMeansClustering (
     @transient val distanceTo = (v2: Vector) =>  sqrt((v1.toArray zip v2.toArray).map { case (x,y) => pow(x - y, 2) }.sum)
   }
 
-  @transient implicit def distancecalc(@transient v: Vector): VData = VData(v)
 
+  @transient implicit def distancecalc(@transient v: Vector): VData = VData(v)
+*/
   def train(
-             data: RDD[Vector]
+             data: DenseMatrix[Double]
            ) = {
       run(data)
   }
-
   /**
   * Set the number of clusters to create (k).
     *
@@ -43,15 +47,17 @@ class KMeansClustering (
     this
   }
 
-  def run(data: RDD[Vector]){
-    println("to array")
-    data.filter({ case x => x.toArray.sum > 0.0}).foreach(println)
-    println("top")
+  def run(data: DenseMatrix[Double]){
+    //data.filter({ case x => x.toArray.sum > 0.0}).foreach(println)
+
     // Step 1 : create k clusters with random values as centroidsdata)
-    val clusters = buildClusters(data, createRandomCentroids(data))
+    val clustersTmp = createRandomCentroids(data)
+    clustersTmp.foreach(println)
+    //clustersTmp.foreach(println)
+    //val clusters = buildClusters(data, createRandomCentroids(data))
 
     println("------------------------- Clustering result ----------------------")
-    clusters.filter({case(x, _) => x.toArray.sum > 0}).foreach(println)
+    //clusters.filter({case(x, _) => x.toArray.sum > 0}).foreach(println)
    // clusters.map({ case(centroid, members) => members.size}).foreach(println)
    /*clusters.foreach({
       case (centroid, members) =>
@@ -63,23 +69,37 @@ class KMeansClustering (
 
   }
 
+  def getMatVect(data: DenseMatrix[Double], row: Int): Vect[Double] ={
+    var tmpArray = new Array[Double](data.cols)
+    for(i <- 0 until data.cols){
+      tmpArray(i) = data.apply(row, i)
+    }
+    tmpArray.toVector
+  }
+
   // should return scala.collection.Map[Vector, RDD[Vector]]
-  def createRandomCentroids(data: RDD[Vector]): scala.collection.Map[Int, (Vector, RDD[Vector])] = {
-    val randomIndices = collection.mutable.HashSet[Int]()
+  // Array[Array[Vector]]
+  def createRandomCentroids(data: DenseMatrix[Double]) = {
+
+    val randomIndices = ListBuffer[Int]()
     val random = new Random()
     var tmp = 0
     while (randomIndices.size < k) {
       // choosing on of the vectors in the dataset to become one cluster centroid
       // so we will choose k vectors in the dataset
       // we only choose vectors not equal to zero vector
-      tmp = random.nextInt(data.count().toInt)
+      tmp = random.nextInt(data.rows.toInt)
       //println("sum = " + data.take(tmp)(0).toArray.sum)
-      if(data.take(tmp)(0).toArray.sum != 0)
-        randomIndices += random.nextInt(data.count().toInt)
+      if(getMatVect(data, tmp).toArray.sum != 0)
+        randomIndices += tmp
     }
 
-    val vect = Vector()
-    val tmpRDD: RDD[Vector] = MySpark.sc.parallelize(vect)
+    var partCluster = MySpark.sc.parallelize(Seq(Seq(mutable.ArraySeq[Int](k - 1, 0), getMatVect(data, randomIndices(0))), Seq(mutable.ArraySeq[Int](k, 0), getMatVect(data, randomIndices(1)))))
+
+    //var clusters = new Array[Array[Vect[Double]]](this.k)(data.cols)
+
+    val clusters = partCluster
+    /*
 
     val myvect = data.zipWithIndex.filter({case (_, index) => randomIndices.contains(index.toInt)}).map({ case (vect, _) => (vect, tmpRDD)}).map(s => s._1).take(1)
 
@@ -90,11 +110,11 @@ class KMeansClustering (
       .zipWithIndex
       .filter({ case (_, index) => randomIndices.contains(index.toInt) })
       .map({ case (centroid, index) => (index.toInt, (centroid, tmpRDD)) }).collectAsMap()
-
-    myclusters
+*/
+    clusters
   }
 
-
+/*
   // returns Map[Vector, RDD[Vector]]
   //@tailrec
   def buildClusters(data: RDD[Vector], prevClusters: scala.collection.Map[Int, (Vector, RDD[Vector])]): scala.collection.Map[Vector, Iterable[Vector]] = {
@@ -128,5 +148,5 @@ class KMeansClustering (
     nextClusters.collectAsMap()
    // }
   }
-
+*/
 }
