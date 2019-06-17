@@ -73,22 +73,18 @@ object RunTucker extends App{
   // Section to do data pre-processing
   //******************************************************************************************************************
 
-  val tensorInfo = Tensor.readTensorHeader(tensorPath + "header/part-00000" )
+  val tensorInfo = Tensor.readTensorHeader(tensorPath)
   println(" (1) Read Tensor header : OK")
 
   // Read tensor block and transform into RDD
-  val tensorRDD = Tensor.readTensorBlock( tensorPath + "block/part-00000", tensorInfo.blockRank)
+  val tensorRDD = Tensor.readTensorBlock( tensorPath, tensorInfo.blockRank)
   println(" (2) Read Tensor block : OK")
-
-  // Unfold tensor along the Dimension 1
-  val dataMatrix = localTensorUnfold( tensorRDD.map(s => s._2).take(1)(0), 1,  tensorInfo.blockRank)
-  println(" (3) Tensor unfolded along Dimension 1 : OK")
 
   tensorRDD.persist( MEMORY_AND_DISK )
 
   // Creating clusters
   val kmeans = new KMeansClustering(3, 5, tensorInfo.tensorDims)
-  kmeans.train(, dataMatrix)
+  kmeans.train(tensorRDD)
 
     //******************************************************************************************************************
     // Section to do tensor Tucker approximation

@@ -8,9 +8,14 @@ import org.apache.spark.rdd.RDD
 
 import scala.math.Ordering
 import scala.annotation.tailrec
+import scala.collection.{mutable => CM}
+import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}
+
 import scala.util.Random
 import scala.{Vector => Vect}
 import breeze.linalg.{DenseMatrix, Vector}
+import project.core.original.RunTucker.{tensorInfo, tensorRDD}
+import project.core.original.Tensor.{MyPartitioner, localTensorUnfoldBlock}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -30,7 +35,7 @@ class KMeansClustering (
   @transient implicit def distancecalc(@transient v: Vector): VData = VData(v)
 */
   def train(
-             data: DenseMatrix[Double]
+             data: RDD[ (CM.ArraySeq[Int], DMatrix) ]
            ) = {
       run(data)
   }
@@ -47,16 +52,38 @@ class KMeansClustering (
     this
   }
 
-  def run(data: DenseMatrix[Double]){
-    //data.filter({ case x => x.toArray.sum > 0.0}).foreach(println)
+  def run(data: RDD[ (CM.ArraySeq[Int], DMatrix) ]){
 
-    // Step 1 : create k clusters with random values as centroidsdata)
-    val clustersTmp = createRandomCentroids(data)
-    clustersTmp.foreach(println)
+    // Step 1 : Unfold each block and make one partition for one block
+    val newdata = data.map{ case(ids, mat) =>
+      (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
+    }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
+
+    println(" (3) Tensor unfolded along Dimension 1 : OK")
+    //newdata.foreach(println)
+
+    // Step 2 : create k clusters with random values as centroids data)
+    var clustersTmp = createRandomCentroids(ids(0), mat(0))
+
+    /*
+    for(i <- 1 until data.count().toInt){
+      // Unfold tensor along the Dimension 1
+      mat = null
+      ids = null
+      mat = data.map(s => s._2).take(i)
+      ids = data.map(s => s._1).take(i)
+      //println(i + " " + ids(0) + "number = " + mat(0).numRows)
+      //data.take(i).map(s => s._1).foreach(println)
+      dataMatrix = null
+      dataMatrix = localTensorUnfoldBlock( mat(0), ids(0), 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank)
+      println(" (3) Tensor unfolded along Dimension 1 : OK")
+      //var clustersTmp = createRandomCentroids(ids(0), mat(0))
+    }*/
+    //clustersTmp.foreach(println)
     //clustersTmp.foreach(println)
     //val clusters = buildClusters(data, createRandomCentroids(data))
 
-    println("------------------------- Clustering result ----------------------")
+   // println("------------------------- Clustering result ----------------------")
     //clusters.filter({case(x, _) => x.toArray.sum > 0}).foreach(println)
    // clusters.map({ case(centroid, members) => members.size}).foreach(println)
    /*clusters.foreach({
@@ -69,9 +96,9 @@ class KMeansClustering (
 
   }
 
-  def getMatVect(data: DenseMatrix[Double], row: Int): Vect[Double] ={
-    var tmpArray = new Array[Double](data.cols)
-    for(i <- 0 until data.cols){
+  def getMatVect(data: DMatrix, row: Int): Vect[Double] ={
+    var tmpArray = new Array[Double](data.numCols)
+    for(i <- 0 until data.numCols){
       tmpArray(i) = data.apply(row, i)
     }
     tmpArray.toVector
@@ -79,7 +106,7 @@ class KMeansClustering (
 
   // should return scala.collection.Map[Vector, RDD[Vector]]
   // Array[Array[Vector]]
-  def createRandomCentroids(data: DenseMatrix[Double]) = {
+  def createRandomCentroids(ids: CM.ArraySeq[Int], data: DMatrix) = {
 
     val randomIndices = ListBuffer[Int]()
     val random = new Random()
@@ -88,7 +115,7 @@ class KMeansClustering (
       // choosing on of the vectors in the dataset to become one cluster centroid
       // so we will choose k vectors in the dataset
       // we only choose vectors not equal to zero vector
-      tmp = random.nextInt(data.rows.toInt)
+      tmp = random.nextInt(data.numRows.toInt)
       //println("sum = " + data.take(tmp)(0).toArray.sum)
       if(getMatVect(data, tmp).toArray.sum != 0)
         randomIndices += tmp

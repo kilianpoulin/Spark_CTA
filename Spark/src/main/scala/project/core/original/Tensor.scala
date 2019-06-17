@@ -74,7 +74,7 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   def readTensorHeader ( inPath: String ): TensorInfo =
   {
-    val headerPath = inPath
+    val headerPath = inPath + "header/"
     val argArray = MySpark.sc.textFile( headerPath ).collect()
     var tensorDims: Int = 0
 
@@ -125,7 +125,8 @@ object Tensor
 
     hadoopJobConf.set("mapred.min.split.size", recordSize.toString)
 
-    FileInputFormat.setInputPaths( hadoopJobConf, inPath)
+    val blockPath = inPath + "block/"
+    FileInputFormat.setInputPaths( hadoopJobConf, blockPath)
     MyFixedLengthInputFormat.setRecordLength( hadoopJobConf, recordSize )
 
     // Read tensor block data from HDFS and convert to tuple2( blockSubIndex, DenseVector ) format
@@ -473,9 +474,90 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Perform local tensor unfold
   //-----------------------------------------------------------------------------------------------------------------
+  def localTensorUnfoldBlock( tensorMatrixTmp: DMatrix, ids: CM.ArraySeq[Int], unfoldDim: Int, blockRank: Array[Int], blockNum: Array[Int], tensorRank: Array[Int] )
+  : DenseMatrix[Double] =
+  {
+    //println("new")
+    //tensorRank.foreach(println)
+    var modifiedRank: Int = 0
+    val tensorDims = blockRank.length
+    var unfoldMatrix: DenseMatrix[Double] = null
+    val unfoldRank = new Array[Int](2)
+    val tensorMatrix = new DenseMatrix[Double](tensorMatrixTmp.numRows, tensorMatrixTmp.numCols, tensorMatrixTmp.values)
+    if( unfoldDim == 0 )                   // For first dimension
+    {
+      unfoldRank(0) = blockRank(0)
+      unfoldRank(1) = 1
+      for( i <- 1 until tensorDims)
+      {
+        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+        else
+          modifiedRank = blockRank(i)
+
+        unfoldRank(1) = unfoldRank(1) * modifiedRank
+      }
+
+      if(ids(0) == (blockNum(0) - 1) && blockRank(0) % tensorRank(0) != 0)
+        unfoldRank(0) = tensorRank(0) - (blockRank(0) * (blockNum(0) - 1))
+      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false )
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) )
+    }
+    else if( unfoldDim == tensorDims - 1 ) // For last dimension
+    {
+      println("last")
+      unfoldRank(0) = blockRank(0)
+      unfoldRank(1) = blockRank(unfoldDim)
+      for( i <- 1 to tensorDims - 2 )
+      {
+        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+        else
+          modifiedRank = blockRank(i)
+        unfoldRank(0) = unfoldRank(0) * modifiedRank
+      }
+      if(ids(0) == (blockNum(tensorDims - 1 ) - 1) && blockRank(tensorDims - 1 ) % tensorRank(tensorDims - 1 ) != 0)
+        unfoldRank(1) = tensorRank(tensorDims - 1 ) - (blockRank(tensorDims - 1 ) * (blockNum(tensorDims - 1 ) - 1))
+      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
+
+    }
+    else                                   // For others dimension
+    {
+      println("others")
+      unfoldRank(0) = blockRank(0)
+      unfoldRank(1) = 1
+      for( i <- 1 until tensorDims )
+      {
+        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+        else
+          modifiedRank = blockRank(i)
+
+        if( i < unfoldDim )
+          unfoldRank(0) = unfoldRank(0) * modifiedRank
+        else
+          unfoldRank(1) = unfoldRank(1) * modifiedRank
+      }
+      val temp = blockRank.product / blockRank(unfoldDim)
+      println("---------- temp = " + temp)
+      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+      //*                           .reshape( tensorRank(unfoldDim), temp, false )
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
+        .reshape( blockRank(unfoldDim), temp, false )
+    }
+
+    unfoldMatrix
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Perform local tensor unfold
+  //-----------------------------------------------------------------------------------------------------------------
   def localTensorUnfold( tensorMatrixTmp: DMatrix, unfoldDim: Int, tensorRank: Array[Int] )
   : DenseMatrix[Double] =
   {
+    //println("new")
+    //tensorRank.foreach(println)
     val tensorDims = tensorRank.length
     var unfoldMatrix: DenseMatrix[Double] = null
     val unfoldRank = new Array[Int](2)
@@ -515,6 +597,10 @@ object Tensor
           unfoldRank(1) = unfoldRank(1) * tensorRank(i)
       }
       val temp = tensorRank.product / tensorRank(unfoldDim)
+
+      // if last block, the number of rows will be different
+      println("unfold rank 0 = " + unfoldRank(0))
+      println("unfold rank 1 = " + unfoldRank(1))
 
       //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
       //*                           .reshape( tensorRank(unfoldDim), temp, false )
