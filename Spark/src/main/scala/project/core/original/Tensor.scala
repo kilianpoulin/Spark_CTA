@@ -18,7 +18,9 @@ import scala.collection.{mutable => CM}
 import javacode._
 import org.apache.spark.mllib.linalg.{Vectors, DenseMatrix => DMatrix, Vector => MVector}
 import breeze.linalg.{DenseMatrix => BMatrix}
+import scala.collection.immutable.{ Vector => IVector}
 
+import scala.{Vector => Vect}
 object Tensor
 {
   //-----------------------------------------------------------------------------------------------------------------
@@ -475,15 +477,15 @@ object Tensor
   // Perform local tensor unfold
   //-----------------------------------------------------------------------------------------------------------------
   def localTensorUnfoldBlock( tensorMatrixTmp: DMatrix, ids: CM.ArraySeq[Int], unfoldDim: Int, blockRank: Array[Int], blockNum: Array[Int], tensorRank: Array[Int] )
-  : DenseMatrix[Double] =
+  : BMatrix[Double] =
   {
     //println("new")
     //tensorRank.foreach(println)
     var modifiedRank: Int = 0
     val tensorDims = blockRank.length
-    var unfoldMatrix: DenseMatrix[Double] = null
+    var unfoldMatrix: BMatrix[Double] = null
     val unfoldRank = new Array[Int](2)
-    val tensorMatrix = new DenseMatrix[Double](tensorMatrixTmp.numRows, tensorMatrixTmp.numCols, tensorMatrixTmp.values)
+    val tensorMatrix = new BMatrix[Double](tensorMatrixTmp.numRows, tensorMatrixTmp.numCols, tensorMatrixTmp.values)
     if( unfoldDim == 0 )                   // For first dimension
     {
       unfoldRank(0) = blockRank(0)
@@ -610,7 +612,7 @@ object Tensor
 
     unfoldMatrix
   }
-
+/*
   def blockTensorAsMatrices(linearTensor: DMatrix, tensorRank: Array[Int]): RDD[DenseMatrix[Double]] ={
     val tensorDims = tensorRank.length
     var unfoldTensor: RDD[Vector[Double]] = null
@@ -636,29 +638,25 @@ object Tensor
 
     }
     MySpark.sc.parallelize(unfoldMatrices)
+  }*/
+
+  def blockTensorAsVectors(densemat: BMatrix[Double]): RDD[Vect[Double]] ={
+   // val tmpRdd: RDD[Vect[Double]] = new RDD[Vect[Double]]
+
+    val tmpRdd = matrixToRDD(densemat)
+
+    //val fullRdd: RDD[Vect[Double]] = concatRDDs(tmpRdd, 0)
+    //fullRdd
+    tmpRdd
   }
-
-  def blockTensorAsVectors(tensorMatrices: RDD[BMatrix[Double]]): RDD[MVector] ={
-    val tmpRdd: Array[RDD[MVector]] = new Array[RDD[MVector]](tensorMatrices.count().toInt)
-
-
-    for(k <- 1 to tensorMatrices.count.toInt){
-      val densemat = tensorMatrices.take(k)
-      //val mat: B = new DenseMatrix(densemat(0).rows, densemat(0).cols, densemat(0).values)
-      //densemat(0).rows, densemat(0).cols, densemat(0).values)
-      tmpRdd(k - 1) = matrixToRDD(densemat(0))
-    }
-    val fullRdd: RDD[MVector] = concatRDDs(tmpRdd, 0)
-    fullRdd
-  }
-
-  def concatRDDs(r: Array[RDD[MVector]], index: Int): RDD[MVector] = {
+/*
+  def concatRDDs(r: Array[RDD[Vect[Double]]], index: Int): RDD[Vect[Double]] = {
     if(index == r.length - 1)
       r(index)
     else
       r(index) ++ concatRDDs(r, index + 1)
   }
-
+*/
   //-----------------------------------------------------------------------------------------------------------------
   // Perform local tensor unfold
   //-----------------------------------------------------------------------------------------------------------------
@@ -1058,10 +1056,11 @@ object Tensor
     covMatrix
   }
 
-  def matrixToRDD(m: BMatrix[Double]): RDD[MVector] = {
+  def matrixToRDD(m: BMatrix[Double]): RDD[Vect[Double]] = {
     val columns = m.toArray.grouped(m.rows)
     val rows = columns.toSeq.transpose
-    val vectors = rows.map(row => Vectors.dense(row.toArray))
+
+    val vectors = rows.map(row => row.toArray.toVector)
     MySpark.sc.parallelize(vectors)
   }
 
