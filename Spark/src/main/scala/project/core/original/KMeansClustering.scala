@@ -2,6 +2,7 @@ package project.core.original
 
 import java.io.File
 import java.lang.Math.{pow, sqrt}
+import java.util
 
 import org.apache.spark.ml.clustering.KMeansModel
 import org.apache.spark.rdd.RDD
@@ -60,20 +61,44 @@ class KMeansClustering (
   def run(data: RDD[ (CM.ArraySeq[Int], DMatrix) ]){
 
     // Step 1 : Unfold each block and make one partition for one block
-    val newdata = data.map{ case(ids, mat) =>
-      (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
-    }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
+      val newdata = data.map{ case(ids, mat) =>
+        (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
+      }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
 
-    println(" (3) Tensor unfolded along Dimension 1 : OK")
-    //newdata.foreach(println)
+      println(" (3) Tensor unfolded along Dimension 1 : OK")
+      //newdata.foreach(println)
 
     // Step 2 : create k clusters with random values as centroids data)
-    var centroids = newdata.map{ case(ids, mat) => (ids, createRandomCentroids(mat))}
-    //clusters.foreach{ case(x, s) => s.foreach(println)}
-    println(" (4) " + k + " splitted clusters successfully initialized : OK")
+      var centroids = newdata.map{ case(ids, mat) => (ids, createRandomCentroids(mat))}
+      //clusters.foreach{ case(x, s) => s.foreach(println)}
+      println(" (4) " + k + " splitted clusters successfully initialized : OK")
 
-    // Step 3 : build clusters
-    var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => ((ids, centroids), buildClusters(ids, centroids, values))}
+
+    // Step 3 : calculate distance between partial vectors and each partial centroid vector
+      var distances = centroids.join(newdata).map { case (ids, (centroids, values)) => (ids, getPartialDistances(ids, centroids, Tensor.blockTensorAsVectors(values))) }
+      println(" (5) calculating distances between partial vectors and each partial centroid vector : OK")
+      // display list of distances
+      //distances.map{ case(id, values) => values }.flatMap(v => v).map{ case(vector, distances) => distances}.flatMap(a => a).collect().foreach(println)
+
+
+
+    // Step 4 : build clusters by adding partial distances and selecting the shortest one
+      // adding partial distances
+      //distances.map{case(ids, _) => ids}.map{case(id) => (id, (id(0), id(2), id(3)))}.groupBy(_._2).foreach(println)
+      //var vectIds = distances.map{case(ids, _) => ids}.map{case(id) => (id, (id(0), id(2), id(3)))}.groupBy(_._2).map{case (i, iter) => iter.map(_._1)}
+
+    // do it manually with a var ?
+      var vectIds = distances.map({ x => getVectorIds(x._1) }).collect()
+
+    // or do it directy on distances RDD
+    var fullVectors = distances.map{ x => (getVectorIds(x._1), x._2) }.groupBy(_._1)
+    println("fullVectors = " + fullVectors.count() + " distances = " + distances.count())
+
+
+
+    /*
+    //var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => ((ids, centroids), buildClusters(ids, centroids, values))}
+    var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => (ids, buildClusters(ids, centroids, values))}
     println("cluster count = " + clusters.count())
 
     /* test centroids
@@ -81,9 +106,12 @@ class KMeansClustering (
     println(test(0)(0))
     */
    // var test = clusters.take(8).map{ case((id, centroid), values) => values}.collect
-   var test = clusters.map{ case((id, centroid), values) => values}
-    test.collect.foreach(arr => println(arr))
+
+   var test = clusters.map{ case(id, values) => values}
+    //test.toLocalIterator.foreach(arr => println(arr))
+    test.collect().toList.foreach(println)
     println(" (5) " + k + " clusters built with partial vectors : OK")
+    */
    // var clusters = centroids.map{ case()
     /*
     for(i <- 1 until data.count().toInt){
@@ -114,6 +142,16 @@ class KMeansClustering (
     // Step 2 : Calculate partial distances
     //CalcPartialDist(data)
 
+  }
+
+  def getVectorIds(ids: CM.ArraySeq[Int]): List[CM.ArraySeq[Int]] ={
+    var listIds = new Array[CM.ArraySeq[Int]](tensorInfo.blockNum(1))
+    for(i <- 0 until tensorInfo.blockNum(1)){
+      listIds(i) = ids.clone()
+      listIds(i)(1) = i
+    }
+
+    listIds.toList
   }
 
   def getMatVect(data: BMatrix[Double], row: Int): Vect[Double] ={
@@ -167,6 +205,16 @@ class KMeansClustering (
       .filter({ case (_, index) => randomIndices.contains(index.toInt) })
       .map({ case (centroid, index) => (index.toInt, (centroid, tmpRDD)) }).collectAsMap()
 */
+  }
+
+  def calcDistances(centroids: Array[Vect[Double]], vector: Vect[Double]): Array[Double] ={
+    centroids.map{ case(c) => vector.distanceTo(c)}
+  }
+
+  def getPartialDistances(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data:Array[Vect[Double]]) = {
+    data.map{
+      case(vect) => (vect, calcDistances(centroids, vect))
+    }
   }
 
   def buildClusters(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data: BMatrix[Double]) = {

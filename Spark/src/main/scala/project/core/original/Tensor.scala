@@ -639,7 +639,7 @@ object Tensor
     }
     MySpark.sc.parallelize(unfoldMatrices)
   }*/
-
+/*
   def blockTensorAsVectors(densemat: BMatrix[Double]): RDD[Vect[Double]] ={
    // val tmpRdd: RDD[Vect[Double]] = new RDD[Vect[Double]]
 
@@ -648,7 +648,14 @@ object Tensor
     //val fullRdd: RDD[Vect[Double]] = concatRDDs(tmpRdd, 0)
     //fullRdd
     tmpRdd
-  }
+  }*/
+def blockTensorAsVectors(m: BMatrix[Double]): Array[Vect[Double]] ={
+  val columns = m.toArray.grouped(m.rows)
+  val rows = columns.toSeq.transpose
+
+  val vectors = rows.map(row => row.toArray.toVector)
+  vectors.toArray
+}
 /*
   def concatRDDs(r: Array[RDD[Vect[Double]]], index: Int): RDD[Vect[Double]] = {
     if(index == r.length - 1)
@@ -1056,12 +1063,12 @@ object Tensor
     covMatrix
   }
 
-  def matrixToRDD(m: BMatrix[Double]): RDD[Vect[Double]] = {
+  def matrixToRDD(m: BMatrix[Double]): Array[Vect[Double]]  = {
     val columns = m.toArray.grouped(m.rows)
     val rows = columns.toSeq.transpose
 
     val vectors = rows.map(row => row.toArray.toVector)
-    MySpark.sc.parallelize(vectors)
+    vectors.toArray
   }
 
   /*def TestmatrixToRDD(m: DMatrix, columns: Int, rows: Int): RDD[MVector] = {
