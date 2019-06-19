@@ -81,20 +81,19 @@ class KMeansClustering (
       //distances.map{ case(id, values) => values }.flatMap(v => v).map{ case(vector, distances) => distances}.flatMap(a => a).collect().foreach(println)
 
 
-
     // Step 4 : build clusters by adding partial distances and selecting the shortest one
       // adding partial distances
-      //distances.map{case(ids, _) => ids}.map{case(id) => (id, (id(0), id(2), id(3)))}.groupBy(_._2).foreach(println)
-      //var vectIds = distances.map{case(ids, _) => ids}.map{case(id) => (id, (id(0), id(2), id(3)))}.groupBy(_._2).map{case (i, iter) => iter.map(_._1)}
+    // below is the valid code
+      //var fullVectors = distances.map{ x => (getVectorIds(x._1), x._2) }.groupByKey()
+      //fullVectors.foreach(println)
+      //println("fullVectors = " + fullVectors.count() + " distances = " + distances.count())
+      var test = distances.map{ x => (getVectorIds(x._1), x._2) }.groupByKey().map{case (i, iter) => (i, iter.toList)}
+        // on ne peut pas savoir combien il y a de blocks
+    // .map{ case(i, iter) => (i, iter(0).toList, iter(1).toList)}
 
-    // do it manually with a var ?
-      var vectIds = distances.map({ x => getVectorIds(x._1) }).collect()
+      //test.map{ case(i, iter) => (i, combinePartialVectors(iter))}.foreach(println)
 
-    // or do it directy on distances RDD
-    var fullVectors = distances.map{ x => (getVectorIds(x._1), x._2) }.groupBy(_._1)
-    println("fullVectors = " + fullVectors.count() + " distances = " + distances.count())
-
-
+    test.map{ case(i, iter) => combinePartialVectors(iter).size}.foreach(println)
 
     /*
     //var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => ((ids, centroids), buildClusters(ids, centroids, values))}
@@ -142,6 +141,17 @@ class KMeansClustering (
     // Step 2 : Calculate partial distances
     //CalcPartialDist(data)
 
+  }
+
+  def getTupleList(list: List[(List[Double], Int)])={
+    var newlist = list
+    newlist.toArray.map{ case(l, id) => list.filter{ case(l1, id1) => id1 == id}.map(_._1)}.distinct.map{ case(x) => x.transpose.map(_.sum)}.flatMap(x => x).toList
+  }
+
+  def combinePartialVectors(list: List[Array[(Vect[Double], Array[Double])]]) ={
+    list.toArray.map{ case(x) => x.map{ case (y, z) => z.toList}.zipWithIndex.toList}.toList.flatMap(s => s).groupBy(e => e._2).map(_._2).map{ case(x) => getTupleList(x)}
+      //map{case(a) => a.toArray.map(_._1).flatten}.transpose.map(_.sum)
+    //.map(_._1)
   }
 
   def getVectorIds(ids: CM.ArraySeq[Int]): List[CM.ArraySeq[Int]] ={

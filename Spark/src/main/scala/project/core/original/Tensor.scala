@@ -650,9 +650,8 @@ object Tensor
     tmpRdd
   }*/
 def blockTensorAsVectors(m: BMatrix[Double]): Array[Vect[Double]] ={
-  val columns = m.toArray.grouped(m.rows)
+  val columns = m.toArray.grouped(m.cols)
   val rows = columns.toSeq.transpose
-
   val vectors = rows.map(row => row.toArray.toVector)
   vectors.toArray
 }
