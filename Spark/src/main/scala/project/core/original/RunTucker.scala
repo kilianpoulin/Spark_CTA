@@ -3,17 +3,11 @@ package project.core.original
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.storage.StorageLevel._
 import org.apache.spark.{SparkConf, SparkContext}
-import Tensor._
-import org.apache.spark.rdd._
-import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
-import org.apache.spark.mllib.linalg.{Vectors, DenseMatrix => DMatrix, Vector => MVector}
 import org.apache.spark.sql.SparkSession
-import project.core.original.KMeansClustering
 
-/**
-  * Created by root on 2016/2/1.
-  */
-
+/**.
+  * Creating MySpark object to set only one SparkContext
+  * */
 object MySpark{
 
   // Set Spark context
@@ -74,17 +68,24 @@ object RunTucker extends App{
   //******************************************************************************************************************
 
   val tensorInfo = Tensor.readTensorHeader(tensorPath)
-  println(" (1) Read Tensor header : OK")
+  println(" (1) [OK] Read Tensor header ")
 
   // Read tensor block and transform into RDD
   val tensorRDD = Tensor.readTensorBlock( tensorPath, tensorInfo.blockRank)
-  println(" (2) Read Tensor block : OK")
+  println(" (2) [OK] Read Tensor block ")
 
   tensorRDD.persist( MEMORY_AND_DISK )
 
-  // Creating clusters
+  //******************************************************************************************************************
+  // Section to perform K-Means
+  //******************************************************************************************************************
+
   val kmeans = new KMeansClustering(3, 5, tensorInfo.tensorDims)
   kmeans.train(tensorRDD)
+
+
+
+
 
     //******************************************************************************************************************
     // Section to do tensor Tucker approximation

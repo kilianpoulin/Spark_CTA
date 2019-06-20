@@ -1,34 +1,29 @@
 package project.core.original
 
-import java.io.File
 import java.lang.Math.{pow, sqrt}
-import java.util
 
-import org.apache.spark.ml.clustering.KMeansModel
 import org.apache.spark.rdd.RDD
 
 import scala.math.Ordering
-import scala.annotation.tailrec
 import scala.collection.{mutable => CM}
 import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}
 
 import scala.util.Random
 import scala.{Vector => Vect}
-import breeze.linalg.{DenseMatrix, Vector}
 import project.core.original.RunTucker.{tensorInfo, tensorRDD}
 import project.core.original.Tensor.{MyPartitioner, localTensorUnfoldBlock}
 import breeze.linalg.{DenseMatrix => BMatrix}
 
-import scala.collection.mutable
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.{ListBuffer}
 class KMeansClustering (
                          private var k: Int,
                          private var maxIterations: Int,
                          private var tensorDim: Int) extends Serializable {
 
-  //
-  // Creating implicit class to add function distanceTo to Vector
-  //
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Implicit class to add function distanceTo to Vector class
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   @transient case class VData(@transient v1: Vect[Double]) extends Serializable {
     @transient val distanceTo = (v2: Vect[Double]) => {
       val s: Array[Double] = v1.toArray
@@ -37,19 +32,18 @@ class KMeansClustering (
     }
   }
 
-
   @transient implicit def distancecalc(@transient v: Vect[Double]): VData = VData(v)
+
 
   def train(
              data: RDD[ (CM.ArraySeq[Int], DMatrix) ]
            ) = {
       run(data)
   }
+
   /**
   * Set the number of clusters to create (k).
     *
-  * @note It is possible for fewer than k clusters to
-  * be returned, for example, if there are fewer than k distinct points to cluster. Default: 2.
   */
   def setK(k: Int): this.type = {
     require(k > 0,
@@ -58,112 +52,44 @@ class KMeansClustering (
     this
   }
 
-  def run(data: RDD[ (CM.ArraySeq[Int], DMatrix) ]){
-
-    // Step 1 : Unfold each block and make one partition for one block
-      val newdata = data.map{ case(ids, mat) =>
-        (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
-      }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
-
-      println(" (3) Tensor unfolded along Dimension 1 : OK")
-      //newdata.foreach(println)
-
-    // Step 2 : create k clusters with random values as centroids data)
-      var centroids = newdata.map{ case(ids, mat) => (ids, createRandomCentroids(mat))}
-      //clusters.foreach{ case(x, s) => s.foreach(println)}
-      println(" (4) " + k + " splitted clusters successfully initialized : OK")
-
-
-    // Step 3 : calculate distance between partial vectors and each partial centroid vector
-      var distances = centroids.join(newdata).map { case (ids, (centroids, values)) => (ids, getPartialDistances(ids, centroids, Tensor.blockTensorAsVectors(values))) }
-      println(" (5) calculating distances between partial vectors and each partial centroid vector : OK")
-      // display list of distances
-      //distances.map{ case(id, values) => values }.flatMap(v => v).map{ case(vector, distances) => distances}.flatMap(a => a).collect().foreach(println)
-
-
-    // Step 4 : build clusters by adding partial distances and selecting the shortest one
-      // adding partial distances
-    // below is the valid code
-      //var fullVectors = distances.map{ x => (getVectorIds(x._1), x._2) }.groupByKey()
-      //fullVectors.foreach(println)
-      //println("fullVectors = " + fullVectors.count() + " distances = " + distances.count())
-      var test = distances.map{ x => (getVectorIds(x._1), x._2) }.groupByKey().map{case (i, iter) => (i, iter.toList)}
-        // on ne peut pas savoir combien il y a de blocks
-    // .map{ case(i, iter) => (i, iter(0).toList, iter(1).toList)}
-
-      //test.map{ case(i, iter) => (i, combinePartialVectors(iter))}.foreach(println)
-
-    test.map{ case(i, iter) => combinePartialVectors(iter).size}.foreach(println)
-
-    /*
-    //var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => ((ids, centroids), buildClusters(ids, centroids, values))}
-    var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => (ids, buildClusters(ids, centroids, values))}
-    println("cluster count = " + clusters.count())
-
-    /* test centroids
-    var test = clusters.take(8).map{ case((id, centroid), values) => centroid}
-    println(test(0)(0))
-    */
-   // var test = clusters.take(8).map{ case((id, centroid), values) => values}.collect
-
-   var test = clusters.map{ case(id, values) => values}
-    //test.toLocalIterator.foreach(arr => println(arr))
-    test.collect().toList.foreach(println)
-    println(" (5) " + k + " clusters built with partial vectors : OK")
-    */
-   // var clusters = centroids.map{ case()
-    /*
-    for(i <- 1 until data.count().toInt){
-      // Unfold tensor along the Dimension 1
-      mat = null
-      ids = null
-      mat = data.map(s => s._2).take(i)
-      ids = data.map(s => s._1).take(i)
-      //println(i + " " + ids(0) + "number = " + mat(0).numRows)
-      //data.take(i).map(s => s._1).foreach(println)
-      dataMatrix = null
-      dataMatrix = localTensorUnfoldBlock( mat(0), ids(0), 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank)
-      println(" (3) Tensor unfolded along Dimension 1 : OK")
-      //var clustersTmp = createRandomCentroids(ids(0), mat(0))
-    }*/
-    //clustersTmp.foreach(println)
-    //clustersTmp.foreach(println)
-    //val clusters = buildClusters(data, createRandomCentroids(data))
-
-   // println("------------------------- Clustering result ----------------------")
-    //clusters.filter({case(x, _) => x.toArray.sum > 0}).foreach(println)
-   // clusters.map({ case(centroid, members) => members.size}).foreach(println)
-   /*clusters.foreach({
-      case (centroid, members) =>
-        members.foreach({ member => println(s"Centroid: $centroid Member: $members") })
-    })*/
-
-    // Step 2 : Calculate partial distances
-    //CalcPartialDist(data)
-
-  }
-
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Main function for K-Means
+    * Contains all steps
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   def getTupleList(list: List[(List[Double], Int)])={
     var newlist = list
     newlist.toArray.map{ case(l, id) => list.filter{ case(l1, id1) => id1 == id}.map(_._1)}.distinct.map{ case(x) => x.transpose.map(_.sum)}.flatMap(x => x).toList
   }
 
-  def combinePartialVectors(list: List[Array[(Vect[Double], Array[Double])]]) ={
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Combines and addition partial distances to get the distance to each centroid for a full vector
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
+  def combinePartialDistances(list: List[Array[(Vect[Double], Array[Double])]]) ={
     list.toArray.map{ case(x) => x.map{ case (y, z) => z.toList}.zipWithIndex.toList}.toList.flatMap(s => s).groupBy(e => e._2).map(_._2).map{ case(x) => getTupleList(x)}
       //map{case(a) => a.toArray.map(_._1).flatten}.transpose.map(_.sum)
     //.map(_._1)
   }
 
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Vectors are cut into partial vectors, each in different blocks
+    * This function finds all blocks by their ID, that contain a partial vector of a vector.
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   def getVectorIds(ids: CM.ArraySeq[Int]): List[CM.ArraySeq[Int]] ={
     var listIds = new Array[CM.ArraySeq[Int]](tensorInfo.blockNum(1))
     for(i <- 0 until tensorInfo.blockNum(1)){
       listIds(i) = ids.clone()
       listIds(i)(1) = i
     }
-
     listIds.toList
   }
 
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Returns a vector in a matrix, based on its row number
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   def getMatVect(data: BMatrix[Double], row: Int): Vect[Double] ={
     var tmpArray = new Array[Double](data.cols)
     for(i <- 0 until data.cols){
@@ -172,11 +98,13 @@ class KMeansClustering (
     tmpArray.toVector
   }
 
-  // should return scala.collection.Map[Vector, RDD[Vector]]
-  // Array[Array[Vector]]
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Initializes partial centroids for each cluster
+    * Each partial centroid is in fact a randomly chosen vector in the corresponding block
+    * nbIt is the number of iterations we want to do in order to try to find a vector that different from the vector 0
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   def createRandomCentroids(data: BMatrix[Double]) = {
-
-
     val randomIndices = ListBuffer[Int]()
     val random = new Random()
     var tmp = 0
@@ -193,49 +121,99 @@ class KMeansClustering (
       } else {
         nbIt += 1
       }
-
     }
 
     var centroids: Array[Vect[Double]] = new Array[Vect[Double]](randomIndices.size)
     for(i <- 0 until randomIndices.size)
       centroids(i) = getMatVect(data, randomIndices(i))
 
-    //var clusters = new Array[Array[Vect[Double]]](this.k)(data.cols)
-
     centroids
-    /*
-
-    val myvect = data.zipWithIndex.filter({case (_, index) => randomIndices.contains(index.toInt)}).map({ case (vect, _) => (vect, tmpRDD)}).map(s => s._1).take(1)
-
-    // now we find these vectors in the dataset using their ID, previously randomly selected
-    // we add another element to these vectors : which will be the vector of the cluster
-    // thus, each cluster is an RDD / map containing a pair (Vector : centroid, Vector: cluster values)
-    val myclusters = data
-      .zipWithIndex
-      .filter({ case (_, index) => randomIndices.contains(index.toInt) })
-      .map({ case (centroid, index) => (index.toInt, (centroid, tmpRDD)) }).collectAsMap()
-*/
   }
 
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Returns the distance from one vector to each centroid vector
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   def calcDistances(centroids: Array[Vect[Double]], vector: Vect[Double]): Array[Double] ={
     centroids.map{ case(c) => vector.distanceTo(c)}
   }
 
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Returns a tuple containing a vector and all the distances from this vector to each centroid vector
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
   def getPartialDistances(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data:Array[Vect[Double]]) = {
     data.map{
       case(vect) => (vect, calcDistances(centroids, vect))
     }
   }
 
-  def buildClusters(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data: BMatrix[Double]) = {
+
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Main function for K-Means
+    * Contains all steps
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
+  def run(data: RDD[ (CM.ArraySeq[Int], DMatrix) ]){
+
+    // Step 1 : Unfold each block and make one partition for one block
+    val newdata = data.map{ case(ids, mat) =>
+      (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
+    }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
+
+    println(" (3) [OK] Tensor unfolded along Dimension 1 ")
+
+    // Step 2 : create k clusters with random values as centroids data)
+    var centroids = newdata.map{ case(ids, mat) => (ids, createRandomCentroids(mat))}
+
+    println(" (4) [OK] " + k + " splitted clusters successfully initialized ")
+
+
+    // Step 3 : calculate distance between partial vectors and each partial centroid vector
+    var distances = centroids.join(newdata).map { case (ids, (centroids, values)) => (ids, getPartialDistances(ids, centroids, Tensor.blockTensorAsVectors(values))) }
+    println(" (5) [OK] calculating distances between partial vectors and each partial centroid vector ")
+    // display list of distances
+    //distances.map{ case(id, values) => values }.flatMap(v => v).map{ case(vector, distances) => distances}.flatMap(a => a).collect().foreach(println)
+
+
+    // Step 4 : Addition partial distances
+    // adding partial distances
+    var tmpDistances = distances.map{ x => (getVectorIds(x._1), x._2) }.groupByKey().map{case (i, iter) => (i, iter.toList)}
+    var fullDistances = tmpDistances.map{ case(i, iter) => (i, combinePartialDistances(iter))}
+
+    //test.map{ case(i, iter) => combinePartialVectors(iter).size}.foreach(println)
+    println(" (6) [OK] Addition partial distances for each full vector ")
+
+    /* IN PROGRESS
+    // Step 5 : Build clusters based on the shortest distance of the full vector
+      // we need to break the ids of fullDistances
+      var tmpfullDistances = fullDistances.map{case(x) => (x._1, x._2)}.flatMap{ case(a,b) => a.map(y => (y, b))}
+      //println("test = " + test.size)
+      var tmpclusters = centroids.join(tmpfullDistances).join(distances.map{ case(ids, x) => (ids, x.map{ case(centroids, vectors) => (centroids, vectors)})}).collect
+        var clusters = tmpclusters
+        .map{ case(ids, o) => (ids, buildClusters(ids, o._1._1, o._2.map{ case(c, d) => c},  o._1._2))}
+    // centroids, vectors, distances
+      //var clusters = centroids.join(newdata).map{ case(ids, (centroids, values)) => (ids, buildClusters(ids, centroids, values))}
+
+      println(" (7) [OK] Building clusters ")
+      */
+
+  }
+
+  /** -----------------------------------------------------------------------------------------------------------------
+    * Dispatches partial vectors into each partial cluster
+    * -----------------------------------------------------------------------------------------------------------------
+    * */
+  /*
+  def buildClusters(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data: Array[Vect[Double]], distances: Iterable[List[Double]]) = {
     println(ids)
     //val data = newel.filter{ case(id, _) => id == ids}.map{ case(id, mat) => mat}.take(1)
 
-    var newdata = Tensor.blockTensorAsVectors(data)
+    //var newdata = Tensor.blockTensorAsVectors(data)
     //println("count data = " + newdata.count())
-    newdata.map({ vect =>
-      val byDistanceToCentroid = new Ordering[Vect[Double]] {
-        def compare(v1: Vect[Double], v2: Vect[Double]) = v1.distanceTo(vect) compareTo v2.distanceTo(vect)
+    data.map({ vect =>
+      val byDistanceToCentroid = new Ordering[Double] {
+        def compare(v1: Double, v2: Double) = v1 compareTo v2
       }
       (vect, centroids.map({ case(centroid) => centroid }) min byDistanceToCentroid)
     })
@@ -279,4 +257,5 @@ class KMeansClustering (
    // }
   }
 */
+* */
 }
