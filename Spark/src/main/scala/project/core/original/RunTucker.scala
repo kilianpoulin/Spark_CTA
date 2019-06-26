@@ -34,6 +34,7 @@ object RunTucker extends App {
   var approxPath = ""
   var deCompSeq = Array(0, 0, 0)
   var coreRank = Array(0, 0, 0)
+  var unfoldDim = 0
   var maxIter: Int = 20
   var epsilon = 5e-5
   var reconstFlag = 0
@@ -50,6 +51,8 @@ object RunTucker extends App {
         deCompSeq = args(argCount + 1).split(",").map(_.toInt)
       case "--CoreRank" =>
         coreRank = args(argCount + 1).split(",").map(_.toInt)
+      case "--UnfoldDim" =>
+        unfoldDim = args(argCount + 1).toInt
       case "--MaxIter" =>
         maxIter = args(argCount + 1).toInt
       case "--Epsilon" =>
@@ -72,10 +75,11 @@ object RunTucker extends App {
   val tensorRDD = Tensor.readTensorBlock(tensorPath, tensorInfo.blockRank)
   println(" (2) [OK] Read Tensor block ")
 
-  val dmat = tensorRDD.map { case (x, y) => y }.take(1)
-  // test algorithm to unfold one tensor
- Tensor.localTensorUnfoldOriginal(tensorRDD, 0, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
-  //println(res)
+  // Unfold the tensor -- pre-process before applying K-Means
+  val tensorBlocks = Tensor.TensorUnfoldBlocks(tensorRDD, unfoldDim, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
+  println(" (3) [OK] Block-wise tensor unfolded along dimension " + unfoldDim)
+
+  // Performing K-means algorithm
 
   //println("mt cols = " + res.cols + " mt rows = " + res.rows)
   tensorRDD.persist(MEMORY_AND_DISK)
