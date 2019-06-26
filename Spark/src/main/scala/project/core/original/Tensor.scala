@@ -18,8 +18,8 @@ import scala.collection.{mutable => CM}
 import javacode._
 import org.apache.spark.mllib.linalg.{Vectors, DenseMatrix => DMatrix, Vector => MVector}
 import breeze.linalg.{DenseMatrix => BMatrix}
-import scala.collection.immutable.{ Vector => IVector}
-
+import breeze.numerics._
+import scala.collection.immutable.{Vector => IVector}
 import scala.{Vector => Vect}
 object Tensor
 {
@@ -479,8 +479,12 @@ object Tensor
   def localTensorUnfoldBlock( tensorMatrixTmp: DMatrix, ids: CM.ArraySeq[Int], unfoldDim: Int, blockRank: Array[Int], blockNum: Array[Int], tensorRank: Array[Int] )
   : BMatrix[Double] =
   {
-    //println("new")
-    //tensorRank.foreach(println)
+    /*for(l <- 0 until tensorMatrixTmp.numRows){
+     if(tensorMatrixTmp.apply(l, 0) == 0.283203125){
+       println(" l = " + l)
+     }
+
+    }*/
     var modifiedRank: Int = 0
     val tensorDims = blockRank.length
     var unfoldMatrix: BMatrix[Double] = null
@@ -502,15 +506,15 @@ object Tensor
 
       if(ids(0) == (blockNum(0) - 1) && blockRank(0) % tensorRank(0) != 0)
         unfoldRank(0) = tensorRank(0) - (blockRank(0) * (blockNum(0) - 1))
-      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false )
+
       unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) )
     }
     else if( unfoldDim == tensorDims - 1 ) // For last dimension
     {
-      println("last")
-      unfoldRank(0) = blockRank(0)
+      println("ids : " + ids.toList + " " + tensorMatrixTmp.numRows)
+      unfoldRank(0) = 1
       unfoldRank(1) = blockRank(unfoldDim)
-      for( i <- 1 to tensorDims - 2 )
+      for( i <- 0 to tensorDims - 2 )
       {
         if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
           modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
@@ -518,99 +522,175 @@ object Tensor
           modifiedRank = blockRank(i)
         unfoldRank(0) = unfoldRank(0) * modifiedRank
       }
-      if(ids(0) == (blockNum(tensorDims - 1 ) - 1) && blockRank(tensorDims - 1 ) % tensorRank(tensorDims - 1 ) != 0)
+      if(ids(unfoldDim) == (blockNum(tensorDims - 1 ) - 1) && blockRank(tensorDims - 1 ) % tensorRank(tensorDims - 1 ) != 0)
         unfoldRank(1) = tensorRank(tensorDims - 1 ) - (blockRank(tensorDims - 1 ) * (blockNum(tensorDims - 1 ) - 1))
-      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
-      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
 
+
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+      /*for(w <- 0 until unfoldMatrix.rows)
+        //println("(0, 34999)" + unfoldMatrix.apply(w,34999))
+     for(w <- 0 until unfoldMatrix.rows){
+        for(v <- 0 until unfoldMatrix.cols){
+          //0.042442321777344
+          if(unfoldMatrix.apply(w, v) == 0.283203125){
+            println(ids)
+            println("(" + w + "," + v + ") = " + unfoldMatrix.apply(w, v))
+          }
+        }
+      }
+
+      println("test")*/
     }
-    else                                   // For others dimension
+    else                                   // For other dimensions
     {
-      println("others")
-      unfoldRank(0) = blockRank(0)
+      println("ids : " + ids.toList + " " + tensorMatrixTmp.numRows)
+      unfoldRank(0) = 1
       unfoldRank(1) = 1
-      for( i <- 1 until tensorDims )
+      for( i <- 0 until tensorDims )
       {
-        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
-          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
-        else
-          modifiedRank = blockRank(i)
+          if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+            modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+          else
+            modifiedRank = blockRank(i)
 
-        if( i < unfoldDim )
+        if(i < unfoldDim)
           unfoldRank(0) = unfoldRank(0) * modifiedRank
         else
           unfoldRank(1) = unfoldRank(1) * modifiedRank
+
       }
       val temp = blockRank.product / blockRank(unfoldDim)
-      println("---------- temp = " + temp)
-      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
-      //*                           .reshape( tensorRank(unfoldDim), temp, false )
-      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
-        .reshape( blockRank(unfoldDim), temp, false )
+
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+        .reshape(blockRank(unfoldDim), temp, false)
     }
 
     unfoldMatrix
   }
 
+  def permute[T](i: Int, list: List[T]): List[T] = i match {
+    case i if i > 0 => list match {
+      case head :: xs => permute(i-1, xs ::: List(head))
+      case Nil => permute(i-1, Nil)
+    }
+    case i if i < 0 => list.reverse match {
+      case head :: xs => permute(i + 1, head :: xs.reverse)
+      case Nil => permute(i+1, Nil)
+    }
+    case _ => list
+  }
+
+  def roundUp(d: Double) = math.ceil(d).toInt
+
+  def defineSubIndex(IndexArray: Array[CM.ArraySeq[Int]], blockNum: Array[Int], unfoldDim: Int): Array[CM.ArraySeq[Int]] ={
+    val nbDims = blockNum.length
+    blockNum(unfoldDim) = 1
+    val nbIds = blockNum.product
+
+    var sortCol = unfoldDim
+    var arr = IndexArray
+    for(i <- 0 until nbDims){
+      sortCol = (sortCol + 1) % 4
+     /* if(sortCol < 0)
+        sortCol = nbDims + sortCol*/
+      arr = arr.map{ case(x) => x}.sortBy(x => (x(sortCol)))
+    }
+
+    arr
+  }
+
   //-----------------------------------------------------------------------------------------------------------------
   // Perform local tensor unfold
   //-----------------------------------------------------------------------------------------------------------------
-  def localTensorUnfold( tensorMatrixTmp: DMatrix, unfoldDim: Int, tensorRank: Array[Int] )
-  : DenseMatrix[Double] =
+  def localTensorUnfoldOriginal( tensorRDD: RDD[(CM.ArraySeq[Int], DMatrix)], unfoldDim: Int, tensorRank: Array[Int], blockRank: Array[Int], blockNumTmp: Array[Int])
+  //: DenseMatrix[Double] =
+  =
   {
-    //println("new")
-    //tensorRank.foreach(println)
     val tensorDims = tensorRank.length
-    var unfoldMatrix: DenseMatrix[Double] = null
-    val unfoldRank = new Array[Int](2)
-    val tensorMatrix = new DenseMatrix[Double](tensorMatrixTmp.numRows, tensorMatrixTmp.numCols, tensorMatrixTmp.values)
-    if( unfoldDim == 0 )                   // For first dimension
-    {
-      unfoldRank(0) = tensorRank(0)
-      unfoldRank(1) = tensorRank(1)
-      for( i <- 2 until tensorDims )
-      {
-        unfoldRank(1) = unfoldRank(1) * tensorRank(i)
+    val unfoldRank: Array[Int] = Array(tensorRank(unfoldDim), tensorRank.product / tensorRank(unfoldDim))
+    val unfoldBlockRank: Array[Int] = Array(blockRank(unfoldDim), blockRank.product / blockRank(unfoldDim))
+
+    val unfoldSeq: Array[Int] = unfoldRank.zip(unfoldBlockRank).map{ case(x, y) => roundUp(x.toDouble / y.toDouble)}
+
+    val totalNumBlocks = blockNumTmp.product / blockNumTmp(unfoldDim)
+
+    //tensorRDD.map{ case(x, y) => (x(0), (x(1), x(2), x(3)))}.sortBy(_._1, true).map{ case(b, c) => (b, c._1, c._2, c._3)}.foreach(println)
+    //tensorRDD.sortBy{ case(x) => x._1(unfoldDim)}.foreach(println)
+    //tensorRDD.map{ case(x, y) => (x(0), (x(1), x(2), x(3)))}.sortBy(_._1, true).foreach(println)
+    //tensorRDD.map{ case(x, y) => (x(0), (x(1), x(2), x(3)))}.groupBy(_._1).mapValues{_.map{ case(_, c) => c}}.map{ case(x, c) => c.map{z => (x, z._1, z._2, z._3)}}.flatMap(x => x).foreach(println)
+      //map{ case(x, y) => x -> y.map{ case(_, (c)) => c}}.foreach(println)
+
+    var subIndex = defineSubIndex(tensorRDD.map{ case(x, y) => x}.collect(), blockNumTmp.clone(), unfoldDim)
+    // permuting block numbers depending on unfolding dimension
+    val blockNum = permute(unfoldDim, blockNumTmp.toList).toArray
+
+    var newBlocks: Array[(CM.ArraySeq[Int], BMatrix[Double])] = new Array[(CM.ArraySeq[Int], BMatrix[Double])](unfoldSeq.product + unfoldSeq(0))
+
+    for( i <- 0 until unfoldSeq(0)){
+      // Valid size of the block
+      var validSize = min(unfoldRank(1), unfoldBlockRank(1))
+      var unfoldSize = 0
+      var blockIndexCol = 1
+      //println("valid size = " + validSize)
+      // initialize tensor
+      var unfoldBlock: BMatrix[Double] = null
+
+      for( j <- 0 until totalNumBlocks){
+        var block = tensorRDD.filter{ case (x, y) => x == subIndex(j + (i * totalNumBlocks))}.map{ case(x, y) => localTensorUnfoldBlock(y, x, unfoldDim, blockRank, blockNumTmp, tensorRank)}.take(1)
+        // get the size of the block
+        var blockSize = block(0).cols
+
+        unfoldSize += blockSize
+
+
+          //println(subIndex(j + (i * totalNumBlocks)) + " => block size = " + block(0).rows + " * " + blockSize)
+
+        if(unfoldSize >= validSize){
+          unfoldSize -= validSize
+          var catSize = blockSize - unfoldSize
+          // reshape matrix into cat size -- concatenate with previous data
+          if(unfoldBlock == null)
+              unfoldBlock = block(0)(::, 0 to (catSize - 1))
+          else
+            unfoldBlock = BMatrix.horzcat(unfoldBlock, block(0)(::, 0 to (catSize - 1)))
+
+          // Generation of new block is complete
+          // Save the new block
+          // HDFS
+          newBlocks(i * unfoldSeq(1) + blockIndexCol) = (CM.ArraySeq[Int](i, blockIndexCol), unfoldBlock)
+
+          // Update block index and size
+          validSize = min(unfoldRank(1) - blockIndexCol * unfoldBlockRank(1), unfoldBlockRank(1))
+          blockIndexCol += 1
+
+          // Update the unfolded tensor (data left)
+          unfoldBlock = block(0)(::, catSize to -1)
+
+        } else {
+          if(unfoldBlock == null)
+            unfoldBlock = block(0)
+          else {
+
+            unfoldBlock = BMatrix.horzcat(unfoldBlock, block(0))
+          }
+        }
+
       }
-      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false )
-      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) )
-    }
-    else if( unfoldDim == tensorDims - 1 ) // For last dimension
-    {
-      unfoldRank(0) = tensorRank(0)
-      unfoldRank(1) = tensorRank(unfoldDim)
-      for( i <- 1 to tensorDims - 2 )
-      {
-        unfoldRank(0) = unfoldRank(0) * tensorRank(i)
-      }
-      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
-      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
-
-    }
-    else                                   // For others dimension
-    {
-      unfoldRank(0) = tensorRank(0)
-      unfoldRank(1) = 1
-      for( i <- 1 until tensorDims )
-      {
-        if( i < unfoldDim )
-          unfoldRank(0) = unfoldRank(0) * tensorRank(i)
-        else
-          unfoldRank(1) = unfoldRank(1) * tensorRank(i)
-      }
-      val temp = tensorRank.product / tensorRank(unfoldDim)
-
-      // if last block, the number of rows will be different
-      println("unfold rank 0 = " + unfoldRank(0))
-      println("unfold rank 1 = " + unfoldRank(1))
-
-      //*unfoldMatrix = tensorVector.asDenseMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
-      //*                           .reshape( tensorRank(unfoldDim), temp, false )
-      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) ).t
-        .reshape( tensorRank(unfoldDim), temp, false )
     }
 
-    unfoldMatrix
+    println("unfoldRank")
+    println(unfoldRank.toList)
+
+    println("unfoldBlockRank")
+    println(unfoldBlockRank.toList)
+
+    println("unfoldSeq")
+    println(unfoldSeq.toList)
+
+    println("total of output blocks : " + totalNumBlocks)
+
+    println("permuted block num")
+    println(blockNum.toList)
   }
 /*
   def blockTensorAsMatrices(linearTensor: DMatrix, tensorRank: Array[Int]): RDD[DenseMatrix[Double]] ={

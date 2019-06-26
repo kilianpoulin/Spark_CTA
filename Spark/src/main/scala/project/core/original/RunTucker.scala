@@ -24,44 +24,42 @@ object MySpark{
     .appName("CTA Algorithm")
     .getOrCreate()
 }
-object RunTucker extends App{
+object RunTucker extends App {
 
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
 
-    // Default variable
-    var tensorPath = "data/donkey_spark/"
-    var approxPath = ""
-    var deCompSeq = Array( 0, 0, 0 )
-    var coreRank = Array( 0, 0, 0 )
-    var maxIter: Int = 20
-    var epsilon = 5e-5
-    var reconstFlag = 0
-    var reconstPath =  ""
+  // Default variable
+  var tensorPath = "data/donkey_spark/"
+  var approxPath = ""
+  var deCompSeq = Array(0, 0, 0)
+  var coreRank = Array(0, 0, 0)
+  var maxIter: Int = 20
+  var epsilon = 5e-5
+  var reconstFlag = 0
+  var reconstPath = ""
 
-    // Read input argument
-    for( argCount <- 0 until args.length by 2 )
-    {
-      args( argCount ) match
-      {
-        case "--TensorPath"  =>
-          tensorPath = args( argCount + 1 )
-        case "--ApproxPath" =>
-          approxPath = args( argCount + 1 )
-        case "--DeCompSeq" =>
-          deCompSeq = args( argCount + 1 ).split(",").map(_.toInt)
-        case "--CoreRank" =>
-          coreRank = args( argCount + 1 ).split(",").map(_.toInt)
-        case "--MaxIter" =>
-          maxIter = args( argCount + 1 ).toInt
-        case "--Epsilon" =>
-          epsilon = args( argCount + 1 ).toDouble
-        case "--DoReconst" =>
-          reconstFlag = args( argCount + 1 ).toInt
-        case "--ReconstPath" =>
-          reconstPath = args( argCount + 1 )
-      }
+  // Read input argument
+  for (argCount <- 0 until args.length by 2) {
+    args(argCount) match {
+      case "--TensorPath" =>
+        tensorPath = args(argCount + 1)
+      case "--ApproxPath" =>
+        approxPath = args(argCount + 1)
+      case "--DeCompSeq" =>
+        deCompSeq = args(argCount + 1).split(",").map(_.toInt)
+      case "--CoreRank" =>
+        coreRank = args(argCount + 1).split(",").map(_.toInt)
+      case "--MaxIter" =>
+        maxIter = args(argCount + 1).toInt
+      case "--Epsilon" =>
+        epsilon = args(argCount + 1).toDouble
+      case "--DoReconst" =>
+        reconstFlag = args(argCount + 1).toInt
+      case "--ReconstPath" =>
+        reconstPath = args(argCount + 1)
     }
+  }
 
   //******************************************************************************************************************
   // Section to do data pre-processing
@@ -71,19 +69,26 @@ object RunTucker extends App{
   println(" (1) [OK] Read Tensor header ")
 
   // Read tensor block and transform into RDD
-  val tensorRDD = Tensor.readTensorBlock( tensorPath, tensorInfo.blockRank)
+  val tensorRDD = Tensor.readTensorBlock(tensorPath, tensorInfo.blockRank)
   println(" (2) [OK] Read Tensor block ")
 
-  tensorRDD.persist( MEMORY_AND_DISK )
+  val dmat = tensorRDD.map { case (x, y) => y }.take(1)
+  // test algorithm to unfold one tensor
+ Tensor.localTensorUnfoldOriginal(tensorRDD, 0, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
+  //println(res)
+
+  //println("mt cols = " + res.cols + " mt rows = " + res.rows)
+  tensorRDD.persist(MEMORY_AND_DISK)
+}
 
   //******************************************************************************************************************
   // Section to perform K-Means
   //******************************************************************************************************************
-
+/*
   val kmeans = new KMeansClustering(3, 5, tensorInfo.tensorDims)
   kmeans.train(tensorRDD)
 
-
+*/
 
 
 
@@ -150,7 +155,7 @@ object RunTucker extends App{
 
     println(" ======= END CLUSTERING ==========")
     */
-}
+
 
     //println(tensorRDD)
     //tensorRDD.foreach(println)
@@ -190,3 +195,4 @@ object RunTucker extends App{
     // Shut down Spark context
     sc.stop
     */
+
