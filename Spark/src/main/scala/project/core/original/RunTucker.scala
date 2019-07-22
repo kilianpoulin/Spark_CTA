@@ -78,22 +78,18 @@ object RunTucker extends App {
   // Unfold the tensor -- pre-process before applying K-Means
   val tensorBlocks = Tensor.TensorUnfoldBlocks(tensorRDD, unfoldDim, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
   println(" (3) [OK] Block-wise tensor unfolded along dimension " + unfoldDim)
-
-  // Performing K-means algorithm
-
-  //println("mt cols = " + res.cols + " mt rows = " + res.rows)
-  tensorRDD.persist(MEMORY_AND_DISK)
-}
+  println(tensorBlocks.toDebugString)
+  println("nb of partitions = " + tensorBlocks.getNumPartitions)
+  tensorBlocks.persist(MEMORY_AND_DISK)
 
   //******************************************************************************************************************
   // Section to perform K-Means
   //******************************************************************************************************************
-/*
+
   val kmeans = new KMeansClustering(3, 5, tensorInfo.tensorDims)
-  kmeans.train(tensorRDD)
+  kmeans.train(tensorBlocks)
 
-*/
-
+}
 
 
     //******************************************************************************************************************

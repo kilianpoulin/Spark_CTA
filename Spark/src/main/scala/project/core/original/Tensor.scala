@@ -661,8 +661,9 @@ object Tensor
 
       }
     }
-
-    MySpark.sc.parallelize(newBlocks).partitionBy(new MyPartitioner(unfoldSeq))
+    MySpark.sc.parallelize(newBlocks)
+      //.partitionBy(new MyPartitioner(unfoldSeq))
+      //.repartition(unfoldSeq.product).reduceByKey( new MyPartitioner( unfoldSeq ), ( a, b ) => a + b )
   }
 /*
   def blockTensorAsMatrices(linearTensor: DMatrix, tensorRank: Array[Int]): RDD[DenseMatrix[Double]] ={

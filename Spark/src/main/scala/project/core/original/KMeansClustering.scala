@@ -36,7 +36,7 @@ class KMeansClustering (
 
 
   def train(
-             data: RDD[ (CM.ArraySeq[Int], DMatrix) ]
+             data: RDD[ (CM.ArraySeq[Int], BMatrix[Double]) ]
            ) = {
       run(data)
   }
@@ -63,7 +63,7 @@ class KMeansClustering (
   }
 
   /** -----------------------------------------------------------------------------------------------------------------
-    * Combines and addition partial distances to get the distance to each centroid for a full vector
+    * Combines and additions partial distances to get the distance to each centroid for a full vector
     * -----------------------------------------------------------------------------------------------------------------
     * */
   def combinePartialDistances(list: List[Array[(Vect[Double], Array[Double])]]) ={
@@ -104,28 +104,40 @@ class KMeansClustering (
     * nbIt is the number of iterations we want to do in order to try to find a vector that different from the vector 0
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def createRandomCentroids(data: BMatrix[Double]) = {
-    val randomIndices = ListBuffer[Int]()
-    val random = new Random()
-    var tmp = 0
-    var nbIt = 0
-    while (randomIndices.size < k) {
-      // choosing one of the vectors in the dataset to become one cluster centroid
-      // so we will choose k vectors in the dataset
-      // we try to only choose vectors not equal to zero vector
-      tmp = random.nextInt(data.rows.toInt)
-      //println("sum = " + data.take(tmp)(0).toArray.sum)
-      if(getMatVect(data, tmp).toArray.sum != 0 || nbIt > 5 ) {
-        randomIndices += tmp
-        nbIt = 0
-      } else {
-        nbIt += 1
-      }
-    }
+  def createRandomCentroids(data: BMatrix[Double], option: String = ""): Array[Vect[Double]] = {
+    var centroids: Array[Vect[Double]] = new Array[Vect[Double]](k)
+   if(option == "default"){
+     val cluster1 = MySpark.sc.textFile("../data/cluster1spark").collect()
+     val cluster2 = MySpark.sc.textFile("../data/cluster2spark").collect()
+     val cluster3 = MySpark.sc.textFile("../data/cluster3spark").collect()
+     centroids(0) = cluster1.map{ case(x) => x.toDouble}.toVector
+     centroids(0).foreach(println)
+     centroids(1) = cluster2.map{ case(x) => x.toDouble}.toVector
+     centroids(2) = cluster3.map{ case(x) => x.toDouble}.toVector
+     //centroids.foreach(println)
+    } else {
 
-    var centroids: Array[Vect[Double]] = new Array[Vect[Double]](randomIndices.size)
-    for(i <- 0 until randomIndices.size)
-      centroids(i) = getMatVect(data, randomIndices(i))
+      val randomIndices = ListBuffer[Int]()
+      val random = new Random()
+      var tmp = 0
+      var nbIt = 0
+      while (randomIndices.size < k) {
+        // choosing one of the vectors in the dataset to become one cluster centroid
+        // so we will choose k vectors in the dataset
+        // we try to only choose vectors not equal to zero vector
+        tmp = random.nextInt(data.rows.toInt)
+        //println("sum = " + data.take(tmp)(0).toArray.sum)
+        if(getMatVect(data, tmp).toArray.sum != 0 || nbIt > 5 ) {
+          randomIndices += tmp
+          nbIt = 0
+        } else {
+          nbIt += 1
+        }
+      }
+
+      for(i <- 0 until randomIndices.size)
+        centroids(i) = getMatVect(data, randomIndices(i))
+    }
 
     centroids
   }
@@ -154,35 +166,31 @@ class KMeansClustering (
     * Contains all steps
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def run(data: RDD[ (CM.ArraySeq[Int], DMatrix) ]){
+  def run(newdata: RDD[ (CM.ArraySeq[Int], BMatrix[Double]) ]){
 
-    // Step 1 : Unfold each block and make one partition for one block
+   /* // Step 1 : Unfold each block and make one partition for one block
     val newdata = data.map{ case(ids, mat) =>
       (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
     }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
 
-    println(" (3) [OK] Tensor unfolded along Dimension 1 ")
+    println(" (3) [OK] Tensor unfolded along Dimension 1 ")*/
 
+    var data = newdata.reduceByKey( new MyPartitioner( Array(2,7) ), ( a, b ) => a + b )
     // Step 2 : create k clusters with random values as centroids data)
-    var centroids = newdata.map{ case(ids, mat) => (ids, createRandomCentroids(mat))}
-
+    println(data.toDebugString)
+    //data.foreach(println)
+    var centroids = data.map{ case(ids, mat) => (ids, createRandomCentroids(mat, "default"))}
+    println(centroids.toDebugString)
     println(" (4) [OK] " + k + " splitted clusters successfully initialized ")
 
 
-    // Step 3 : calculate distance between partial vectors and each partial centroid vector
-    var distances = centroids.join(newdata).map { case (ids, (centroids, values)) => (ids, getPartialDistances(ids, centroids, Tensor.blockTensorAsVectors(values))) }
-    println(" (5) [OK] calculating distances between partial vectors and each partial centroid vector ")
-    // display list of distances
-    //distances.map{ case(id, values) => values }.flatMap(v => v).map{ case(vector, distances) => distances}.flatMap(a => a).collect().foreach(println)
+    var distances = centroids.join(data).map { case (ids, (centroids, values)) => (ids, getPartialDistances(ids, centroids, Tensor.blockTensorAsVectors(values))) }
 
-
-    // Step 4 : Addition partial distances
-    // adding partial distances
     var tmpDistances = distances.map{ x => (getVectorIds(x._1), x._2) }.groupByKey().map{case (i, iter) => (i, iter.toList)}
     var fullDistances = tmpDistances.map{ case(i, iter) => (i, combinePartialDistances(iter))}
-
+    //var tmp = fullDistances.collect()
     //test.map{ case(i, iter) => combinePartialVectors(iter).size}.foreach(println)
-    println(" (6) [OK] Addition partial distances for each full vector ")
+    println(" (6) [OK] Add distances for each full vector ")
 
     /* IN PROGRESS
     // Step 5 : Build clusters based on the shortest distance of the full vector

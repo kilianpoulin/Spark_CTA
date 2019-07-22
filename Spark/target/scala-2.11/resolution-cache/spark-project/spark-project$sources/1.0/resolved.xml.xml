@@ -4,7 +4,7 @@
 		module="spark-project$sources"
 		revision="1.0"
 		status="integration"
-		publication="20190613071201"
+		publication="20190722031829"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
