@@ -27,12 +27,14 @@ class KMeansClustering (
     * */
   @transient case class VData(@transient v1: Vect[Double]) extends Serializable {
     @transient val distanceTo = (v2: Vect[Double]) => {
+
       val s: Array[Double] = v1.toArray
       //val s = Array.fill(34116)(0.0)
       val t: Array[Double] = v2.toArray
       var tmp = (s zip t).map{ case (x,y) => x - y }
       var res = tmp.map{ case(x) => pow(x, 2)}
       var resum = res.sum
+s
       //var resroot = sqrt(resum)
 
       //var resfull = sqrt((s zip t).map{ case (x,y) => pow(x - y, 2) }.sum)
@@ -181,8 +183,13 @@ class KMeansClustering (
     * Returns the distance from one vector to each centroid vector
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def calcDistances(centroids: Array[Vect[Double]], vector: Vect[Double]): Array[Double] ={
-    centroids.map{ case(c) => vector.distanceTo(c)}
+  def calcDistances(ids: CM.ArraySeq[Int], centroids: Array[Array[Vect[Double]]], vector: Vect[Double]): Array[Double] ={
+    if(ids == CM.ArraySeq[Int](0,1)){
+      for(i <- 0 until 10)
+        println(vector.apply(i))
+    }
+    println("\n\n")
+    centroids.map{ case(c) => vector.distanceTo(c((ids(1))))}
   }
   def calcDistances2(centroids: Vect[Double], vector: Vect[Double]): Double ={
     vector.distanceTo(centroids)
@@ -192,9 +199,9 @@ class KMeansClustering (
     * Returns a tuple containing a vector and all the distances from this vector to each centroid vector
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def getPartialDistances(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data:Array[Vect[Double]]) = {
+  def getPartialDistances(ids: CM.ArraySeq[Int], centroids: Array[Array[Vect[Double]]], data:Array[Vect[Double]]) = {
     data.map{
-      case(vect) => calcDistances(centroids, vect)
+      case(vect) => calcDistances(ids, centroids, vect)
     }
   }
 
@@ -202,6 +209,9 @@ class KMeansClustering (
     calcDistances2(centroids, data(0))
   }
 
+  def combineDists(x: Array[Array[Double]]): Unit ={
+    x.map{ case(i) => i}
+  }
 
   /** -----------------------------------------------------------------------------------------------------------------
     * Main function for K-Means
@@ -234,7 +244,7 @@ centroids.foreach(println)
     println("count = " + count1)*/
     //var centroids = centRDD.map{ case(cent) => cent.map{ case(x) => x.split(",")}.flatMap(x => x).map{ case(y) => y.toDouble}.toList.grouped(9800).map{case (z) => z.toVector}.toArray}.collect()
     var centroids = centRDD.map{ case(cent) => cent.map{ case(x) => x.split(",")}.flatMap(x => x).map{ case(y) => y.toDouble}.toList.grouped(34116).map{case (z) => z.toVector}.toArray}.collect()
-
+    centroids = centroids.flatMap(x => x).grouped(2).toArray
     //centroids.take(1).map{case (x) => x.toList}.toList.foreach(println)
 
   //  var centdata = data.map{ case(ids, map) => ids}.foreach(println)
@@ -287,8 +297,27 @@ centroids.foreach(println)
       (CM.ArraySeq[Int](1,1), block22)))
 
     println("end test")
-    var test3 = fulldata.map{ case(ids, values) => (ids, getPartialDistances(ids, centroids.flatMap{case (x) => x}, Tensor.blockTensorAsVectors(values)))}.collect()
-    var distances = test3.map{ case(ids, dist) => dist.toList}
+    var test3 = fulldata.map{ case(ids, values) => (ids, getPartialDistances(ids, centroids, Tensor.blockTensorAsVectors(values)))}.collect()
+    var distances2x2 = test3.map{ case(ids, dist) => dist.toList}
+    //var distances2x1 = test3.map{ case(ids, values) => (ids(0), values)}.groupBy{ case(id, values) => id}.map{ x => x._2}.flatMap{ x => x}
+    var distances2x1 = test3.groupBy{ case(ids, values) => ids(0)}.map{ x => x._2.map(y => y._2)}.toArray
+
+    var dim11 = distances2x1(0)(0)
+    var dim12 = distances2x1(0)(1)
+    var dim21 = distances2x1(1)(0)
+    var dim22 = distances2x1(1)(1)
+
+    // dim
+    //  centroids
+    //    full vector distance to centroid (0 => to cluster1 ; 1 => to cluster 2; 2 => to cluster 3
+    var dim1 = dim11.zip(dim12) map (_.zipped map (_ + _))
+    var dim2 = dim21.zip(dim22) map (_.zipped map (_ + _))
+    //map (_.sum)
+      //dim11.map{_ zip dim12}
+      //.map(_.map{case(a,b) => })
+
+
+      //.groupBy{ case(id, value) => id}
     println("done")
     //test3.take(1).foreach(println)
     return
