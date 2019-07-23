@@ -319,35 +319,44 @@ centroids.foreach(println)
     var clusters = c.map{ case(x) => x.indexOf(x.min)}
 
     // update cluster centers
-    for(i <- 0 until k - 1){
+    for(i <- 0 until k){
       //get id of vector member
       var members = clusters.zipWithIndex.filter{ case(x, y) => x == i}.map{ case(x,y) => y}
-      var membersv2 = members.filter{ x => x > 50}.map{ x => x%50}
+      var membersv2 = members.filter{ x => x > 49}.map{ x => x%50}
 
+      // get vectors with the corresponding member ids  (transform matrix into vector) for each part (x 34116 and x 34115)
       var tmpvectorsdim1 = fulldata.filter{ case(ids, values) => ids == CM.ArraySeq[Int](0,0) || ids == CM.ArraySeq[Int](0,1)}
           .map{ case(ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex}.map{ case(x) => x.filter{case(a,b) => members.contains(b)}}.collect()
 
       var tmpvectorsdim2 = fulldata.filter{ case(ids, values) => ids == CM.ArraySeq[Int](1,0) || ids == CM.ArraySeq[Int](1,1)}
         .map{ case(ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex}.map{ case(x) => x.filter{case(a,b) => membersv2.contains(b)}}.collect()
 
+      // concatenate parts
       var newarr = tmpvectorsdim1.map{ x => x.map{case(a,b) => a}} ++ tmpvectorsdim2.map{ x => x.map{case(a,b) => a}}
       var vectdim1 = newarr(0) ++ newarr(2)
       var vectdim2 = newarr(1) ++ newarr(3)
-      // sum of multiple vectors
-      //left
-      /*for(s <- 0 until 18)
-        println(newarr(0).apply(s).apply(18030))*/
-      for(s <- 0 until 26)
-        println(vectdim1.apply(s).apply(18030))
-      //var e = vectdim1(0).toArray
-      //var s = centroids(0).apply(0).toArray
-     // var d = (e zip s).map{ case(x, y) => x - y}
 
+
+      for( s <- 0 until 7) {
+        var testvect = vectdim1.apply(s)
+        var testvect1 = testvect.apply(23497)
+        println(testvect1)
+      }
+      var testvect2 = vectdim2.apply(0).apply(23497)
+
+      // sum of multiple vectors
+
+     // left
       var b = vectdim1.toVector.map{ case (x) => x.toVector}.transpose.map(_.sum / members.size)
       //right
       var c = vectdim2.toVector.map{ case (x) => x.toVector}.transpose.map(_.sum / members.size)
 
+
+
       centroids(i) = Array(b, c)
+
+      var testdata1 = centroids(i).apply(0).apply(28900)
+      var testdata2 = centroids(i).apply(1).apply(28900)
       println("do")
     }
 
