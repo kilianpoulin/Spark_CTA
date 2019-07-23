@@ -12,8 +12,9 @@ import scala.util.Random
 import scala.{Vector => Vect}
 import project.core.v2.RunTucker.{tensorInfo, tensorRDD}
 import project.core.v2.Tensor.{MyPartitioner, localTensorUnfoldBlock}
-import breeze.linalg.{sum, DenseMatrix => BMatrix}
+import breeze.linalg.{DenseVector, sum, DenseMatrix => BMatrix}
 import org.apache.spark.storage.StorageLevel.{DISK_ONLY, MEMORY_AND_DISK, MEMORY_ONLY}
+import spire.std.array
 
 import scala.collection.mutable.ListBuffer
 class KMeansClustering (
@@ -184,11 +185,6 @@ s
     * -----------------------------------------------------------------------------------------------------------------
     * */
   def calcDistances(ids: CM.ArraySeq[Int], centroids: Array[Array[Vect[Double]]], vector: Vect[Double]): Array[Double] ={
-    if(ids == CM.ArraySeq[Int](0,1)){
-      for(i <- 0 until 10)
-        println(vector.apply(i))
-    }
-    println("\n\n")
     centroids.map{ case(c) => vector.distanceTo(c((ids(1))))}
   }
   def calcDistances2(centroids: Vect[Double], vector: Vect[Double]): Double ={
@@ -302,19 +298,58 @@ centroids.foreach(println)
     //var distances2x1 = test3.map{ case(ids, values) => (ids(0), values)}.groupBy{ case(id, values) => id}.map{ x => x._2}.flatMap{ x => x}
     var distances2x1 = test3.groupBy{ case(ids, values) => ids(0)}.map{ x => x._2.map(y => y._2)}.toArray
 
+
+
     var dim11 = distances2x1(0)(0)
     var dim12 = distances2x1(0)(1)
     var dim21 = distances2x1(1)(0)
     var dim22 = distances2x1(1)(1)
-
     // dim
     //  centroids
     //    full vector distance to centroid (0 => to cluster1 ; 1 => to cluster 2; 2 => to cluster 3
-    var dim1 = dim11.zip(dim12) map (_.zipped map (_ + _))
-    var dim2 = dim21.zip(dim22) map (_.zipped map (_ + _))
+    var dim1 = dim21.zip(dim22) map (_.zipped map (_ + _))
+    var dim2 = dim11.zip(dim12) map (_.zipped map (_ + _))
+
+
     //map (_.sum)
       //dim11.map{_ zip dim12}
       //.map(_.map{case(a,b) => })
+    var c = dim1 ++ dim2
+    // get cluster membership
+    var clusters = c.map{ case(x) => x.indexOf(x.min)}
+
+    // update cluster centers
+    for(i <- 0 until k - 1){
+      //get id of vector member
+      var members = clusters.zipWithIndex.filter{ case(x, y) => x == i}.map{ case(x,y) => y}
+      var membersv2 = members.filter{ x => x > 50}.map{ x => x%50}
+
+      var tmpvectorsdim1 = fulldata.filter{ case(ids, values) => ids == CM.ArraySeq[Int](0,0) || ids == CM.ArraySeq[Int](0,1)}
+          .map{ case(ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex}.map{ case(x) => x.filter{case(a,b) => members.contains(b)}}.collect()
+
+      var tmpvectorsdim2 = fulldata.filter{ case(ids, values) => ids == CM.ArraySeq[Int](1,0) || ids == CM.ArraySeq[Int](1,1)}
+        .map{ case(ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex}.map{ case(x) => x.filter{case(a,b) => membersv2.contains(b)}}.collect()
+
+      var newarr = tmpvectorsdim1.map{ x => x.map{case(a,b) => a}} ++ tmpvectorsdim2.map{ x => x.map{case(a,b) => a}}
+      var vectdim1 = newarr(0) ++ newarr(2)
+      var vectdim2 = newarr(1) ++ newarr(3)
+      // sum of multiple vectors
+      //left
+      /*for(s <- 0 until 18)
+        println(newarr(0).apply(s).apply(18030))*/
+      for(s <- 0 until 26)
+        println(vectdim1.apply(s).apply(18030))
+      //var e = vectdim1(0).toArray
+      //var s = centroids(0).apply(0).toArray
+     // var d = (e zip s).map{ case(x, y) => x - y}
+
+      var b = vectdim1.toVector.map{ case (x) => x.toVector}.transpose.map(_.sum / members.size)
+      //right
+      var c = vectdim2.toVector.map{ case (x) => x.toVector}.transpose.map(_.sum / members.size)
+
+      centroids(i) = Array(b, c)
+      println("do")
+    }
 
 
       //.groupBy{ case(id, value) => id}
