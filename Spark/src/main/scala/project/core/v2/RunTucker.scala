@@ -81,15 +81,11 @@ object RunTucker extends App {
   println(" (2) [OK] Read Tensor block ")
 
   val dmat = tensorRDD.map { case (x, y) => y }.take(1)
-  // test algorithm to unfold one tensor
-  //var unfoldTensor = Tensor.localTensorUnfoldOriginal(tensorRDD, 0, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
-  //println(res)
 
   // Unfold the tensor -- pre-process before applying K-Means
   val tensorBlocks = Tensor.TensorUnfoldBlocks2(tensorRDD, unfoldDim, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
   println(" (3) [OK] Block-wise tensor unfolded along dimension " + unfoldDim)
 
-  //println("mt cols = " + res.cols + " mt rows = " + res.rows)
   tensorRDD.unpersist()
   tensorBlocks.persist(MEMORY_AND_DISK)
 
@@ -98,11 +94,10 @@ object RunTucker extends App {
 // Section to perform K-Means
 //******************************************************************************************************************
 
-  val kmeans = new KMeansClustering(3, 5, centroidsInit, centroidsPath, tensorInfo.tensorDims)
+  val kmeans = new KMeansClustering(3, 5, centroidsInit, centroidsPath, maxIter, tensorInfo.tensorDims)
   kmeans.train(tensorBlocks)
 
 }
-
 
 
 //******************************************************************************************************************
@@ -113,67 +108,6 @@ object RunTucker extends App {
 //val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
 
 
-
-
-/** Too costly
-
-
-    // get all 2D Matrices
-    val RDDMatrix = blockTensorAsMatrices( tensorMat(0), tensorInfo.blockRank )
-    println(" (3) Format data into matrices : OK")
-
-    // Tranform matrices into RDD[Vector]
-    val RDDVectors = blockTensorAsVectors(RDDMatrix)
-    println(" (4) Format data into vectors : OK")
-
-
-    println("------------------------------- CLUSTERING ------------------------ ")
-    val test = new KMeansClustering(3, 5, tensorInfo.tensorDims)
-    test.train(RDDVectors)
-
-    println(" (X) Clustering : OK")
-
-  */
-// convert linear to 4D coor
-//println(linear2Sub(180, tensorInfo.tensorRank))
-
-//val test = new KMeansClustering(sc, 3, 5, tensorInfo.tensorDims)
-//test.train(finalvects)
-
-/*finalvects.foreach(println)
-
-println(" ======= printing clusters centers ======= ")
-var clusters = KMeans.train(finalvects, 2, 10)
-clusters.clusterCenters.foreach(println)*/
-
-//var parsedData = tensorRDD.map(s => s._2) // get an RDD of DenseMatrices
-//parsedData.collect().foreach(println)
-
-
-// convert RDD to Dataframe
-//val mydmat = DMatrix(parsedData.collect())
-//val mydmat = parsedData.map(x => DMatrix(x))
-
-/*
-  val mydmat: DMatrix = parsedData.first()
-  //println(mydmat)
-  var vectData = matrixToRDD(mydmat)
-  //vectData.collect().foreach(println)
-  println("printing data")
-  //vectData.foreach(println)
-
-  println(" ======= printing clusters centers ======= ")
-  var clusters = KMeans.train(vectData, 5, 10)
-  clusters.clusterCenters.foreach(println)
-
-  println(" ======= END CLUSTERING ==========")
-  */
-
-
-//println(tensorRDD)
-//tensorRDD.foreach(println)
-//println("number rows = " + tensorRDD.count())
-//return
 
 // Run tensor Tucker approximation
 /*
