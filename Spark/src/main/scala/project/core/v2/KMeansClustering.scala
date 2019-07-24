@@ -20,6 +20,8 @@ import scala.collection.mutable.ListBuffer
 class KMeansClustering (
                          private var k: Int,
                          private var maxIterations: Int,
+                         private var centroidsInit: String,
+                         private var centroidsPath: String,
                          private var tensorDim: Int) extends Serializable {
 
   /** -----------------------------------------------------------------------------------------------------------------
@@ -184,8 +186,9 @@ s
     * Returns the distance from one vector to each centroid vector
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def calcDistances(ids: CM.ArraySeq[Int], centroids: Array[Array[Vect[Double]]], vector: Vect[Double]): Array[Double] ={
-    centroids.map{ case(c) => vector.distanceTo(c((ids(1))))}
+  def calcDistances(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], vector: Vect[Double]): Array[Double] ={
+    //centroids.map{ case(c) => vector.distanceTo(c((ids(1))))}
+    centroids.map{ case(c) => vector.distanceTo(c)}
   }
   def calcDistances2(centroids: Vect[Double], vector: Vect[Double]): Double ={
     vector.distanceTo(centroids)
@@ -195,7 +198,7 @@ s
     * Returns a tuple containing a vector and all the distances from this vector to each centroid vector
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def getPartialDistances(ids: CM.ArraySeq[Int], centroids: Array[Array[Vect[Double]]], data:Array[Vect[Double]]) = {
+  def getPartialDistances(ids: CM.ArraySeq[Int], centroids: Array[Vect[Double]], data:Array[Vect[Double]]) = {
     data.map{
       case(vect) => calcDistances(ids, centroids, vect)
     }
@@ -209,6 +212,24 @@ s
     x.map{ case(i) => i}
   }
 
+  def createCentroidsFromSample(path: String, blockValueSize: Int) ={
+    var cent1 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster1full").collect()
+    var cent2 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster2full").collect()
+    var cent3 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster3full").collect()
+    var centRDD = MySpark.sc.parallelize(Array(cent1, cent2, cent3))
+    //var blockNum = blockIds.map{ case(x) => x(1)}.max + 1
+
+    // Creating blocks of same size as unfolded tensor
+    var centroids = centRDD.map{ case(cent) => cent.map{ case(x) => x.split(",")}.flatMap(x => x).map{ case(y) => y.toDouble}.toList.grouped(blockValueSize).map{case (z) => z.toVector}.toArray}.collect()
+    // Grouping each centroid into 2 dimensions just like unfolded tensor
+    //centroids = centroids.flatMap(x => x).grouped(blockNum).toArray
+    centroids
+  }
+
+  def getFullDistances(array: Array[Array[Array[Double]]]): Array[Array[Double]] ={
+    array.map{ case(x) => x.transpose}.map{ case(x) => x.map{ y => y.sum}}
+  }
+
   /** -----------------------------------------------------------------------------------------------------------------
     * Main function for K-Means
     * Contains all steps
@@ -216,31 +237,69 @@ s
     * */
   def run(data: RDD[ (CM.ArraySeq[Int], BMatrix[Double]) ]){
 
-    // Step 1 : Unfold each block and make one partition for one block
-    /*val newdata = data.map{ case(ids, mat) =>
-      (ids, localTensorUnfoldBlock( mat, ids, 0,  tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.tensorRank))
-    }.reduceByKey( new MyPartitioner( tensorInfo.blockNum ), ( a, b ) => a + b )
-*/
     var newdata = data
-    println(" (3) [OK] Tensor unfolded along Dimension 1 ")
+    var centroids: Array[Array[Vect[Double]]] = null
 
-    // Step 2 : create k clusters with random values as centroids data)
+    // Step 1 : create k clusters with random or default values as centroids data)
+    centroidsInit match{
+      case "sample" =>
+        var blockValueSize = data.filter{ case(x, y) => x == CM.ArraySeq[Int](0,0)}.map{ case(x,y) => y.cols}.collect()
+        //var blockIds = data.map{ case(ids, values) => ids(1)}.collect()
+        centroids = createCentroidsFromSample(centroidsPath, blockValueSize(0))
 
+      /*case "random" =>
+        centroids = data.map{ case(ids, mat) => (ids, createRandomCentroids(mat, "default"))}.collect()*/
+    }
+    println(" (4) [OK] " + k + " block cluster centroids successfully initialized ")
+
+    // Step 2 : Calculate partial distances between block vectors and block centroids
+    var partdist = data.map{ case(ids, values) => (ids, getPartialDistances(ids, centroids.map{ case(x) => x.zipWithIndex.filter{ case(cvalues, cids) => cids == ids(1)}.map{ case(cvalues, cids) => cvalues}}.flatMap{ x => x}, Tensor.blockTensorAsVectors(values)))}.collect()
+
+    println(" (5) [OK] Calculating partial distances between block vectors and block centroid vectors ")
+
+    // Step 3 : Add partial distances and get full vector distances
+    var distances2x1 = partdist.groupBy{ case(ids, values) => ids(0)}.map{ x => x._2.map(y => y._2)}.toArray
+    var fulldist = distances2x1.map{ x => getFullDistances(x.transpose)}
+
+    println(" (6) [OK] Calculating full distances between tensor vectors and centroids ")
+
+    // Step 4 : Distributing cluster IDs to tensor vectors based on shortest distance to centroids
+    var clusters = fulldist.reverse.flatMap{x => x}.map{ case(x) => x.indexOf(x.min)}
+    println(" (7) [OK] Tensor vectors distributed to closest cluster ")
+
+    // Step 5 : Updating cluster centroids
+    for(i <- 0 until k){
+      var members = clusters.zipWithIndex.filter{ case(x, y) => x == i}.map{ case(x,y) => y}
+      var membersv2 = members.filter{ x => x > tensorInfo.blockRank(0) - 1}.map{ x => x % tensorInfo.blockRank(0)}
+
+      // get vectors with the corresponding member ids  (transform matrix into vector) for each part (x 34116 and x 34115)
+      var tmpvectorsdim1 = data.filter{ case(ids, values) => ids(0) == 0}
+        .map{ case(ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex}.map{ case(x) => x.filter{case(a,b) => members.contains(b)}.map{ case(a,b) => a}}.collect()
+
+      var tmpvectorsdim2 = data.filter{ case(ids, values) => ids(0) == 1}
+        .map{ case(ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex}.map{ case(x) => x.filter{case(a,b) => membersv2.contains(b)}.map{ case(a,b) => a}}.collect()
+
+      var fullvectorsdim = (tmpvectorsdim1 zip tmpvectorsdim2).map{ case(x) => x._1 ++ x._2}
+
+      // Sum each point and divide the result by the number of cluster members => Means
+      var bc = fullvectorsdim.toVector.map{ case (x) => x.toVector.transpose.map(_.sum / members.size)}
+      centroids(i) = bc.toArray
+      println("rank")
+    }
+
+    println("stop")
     /*val cluster1 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster1spark")
     cluster1.foreach(println)*/
-   /* var centroids = newdata.map{ case(ids, mat) => (ids, createRandomCentroids(mat, "default"))}
+   /*
 centroids.foreach(println)
     println(" (4) [OK] " + k + " splitted clusters successfully initialized ")
 */
-    var cent1 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster1full").collect()
-    var cent2 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster2full").collect()
-    var cent3 = MySpark.sc.textFile("../Spark/data/clustertmp/cluster3full").collect()
-    var centRDD = MySpark.sc.parallelize(Array(cent1, cent2, cent3))
+
+
     /*var count1 = centroids.map{ case(x) => x.split(",")}.flatMap(x => x).count()
     println("count = " + count1)*/
     //var centroids = centRDD.map{ case(cent) => cent.map{ case(x) => x.split(",")}.flatMap(x => x).map{ case(y) => y.toDouble}.toList.grouped(9800).map{case (z) => z.toVector}.toArray}.collect()
-    var centroids = centRDD.map{ case(cent) => cent.map{ case(x) => x.split(",")}.flatMap(x => x).map{ case(y) => y.toDouble}.toList.grouped(34116).map{case (z) => z.toVector}.toArray}.collect()
-    centroids = centroids.flatMap(x => x).grouped(2).toArray
+
     //centroids.take(1).map{case (x) => x.toList}.toList.foreach(println)
 
   //  var centdata = data.map{ case(ids, map) => ids}.foreach(println)
@@ -254,7 +313,7 @@ centroids.foreach(println)
     test.take(5).foreach(println)
     test.take(7).foreach(println)*/
     println("success")
-
+/*
     //newdata = newdata.filter{ case(ids, mat) => ids == CM.ArraySeq[Int](0,0)}
     // only 4
     var mat00 = newdata.filter{ case(ids, mat) => ids == CM.ArraySeq[Int](0,0)}.map{ case(ids, mat) => mat}.collect()
@@ -310,10 +369,6 @@ centroids.foreach(println)
     var dim1 = dim21.zip(dim22) map (_.zipped map (_ + _))
     var dim2 = dim11.zip(dim12) map (_.zipped map (_ + _))
 
-
-    //map (_.sum)
-      //dim11.map{_ zip dim12}
-      //.map(_.map{case(a,b) => })
     var c = dim1 ++ dim2
     // get cluster membership
     var clusters = c.map{ case(x) => x.indexOf(x.min)}
@@ -358,7 +413,7 @@ centroids.foreach(println)
       var testdata1 = centroids(i).apply(0).apply(28900)
       var testdata2 = centroids(i).apply(1).apply(28900)
       println("do")
-    }
+    }*/
 
 
       //.groupBy{ case(id, value) => id}

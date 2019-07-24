@@ -40,6 +40,8 @@ object RunTucker extends App {
   var epsilon = 5e-5
   var reconstFlag = 0
   var reconstPath = ""
+  var centroidsInit = "random"
+  var centroidsPath = ""
 
   // Read input argument
   for (argCount <- 0 until args.length by 2) {
@@ -60,6 +62,10 @@ object RunTucker extends App {
         reconstFlag = args(argCount + 1).toInt
       case "--ReconstPath" =>
         reconstPath = args(argCount + 1)
+      case "--CentroidsInit" =>
+        centroidsInit = args(argCount + 1)
+      case "--CentroidsPath" =>
+        centroidsPath = args(argCount + 1)
     }
   }
 
@@ -92,7 +98,7 @@ object RunTucker extends App {
 // Section to perform K-Means
 //******************************************************************************************************************
 
-  val kmeans = new KMeansClustering(3, 5, tensorInfo.tensorDims)
+  val kmeans = new KMeansClustering(3, 5, centroidsInit, centroidsPath, tensorInfo.tensorDims)
   kmeans.train(tensorBlocks)
 
 }
