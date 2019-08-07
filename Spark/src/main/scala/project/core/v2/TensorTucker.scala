@@ -172,15 +172,29 @@ object TensorTucker
           var newIndex2 = (0 to decompBlk - 1 by 1).filter{ x => indexCell(deCompDim).contains(x) == false}
 
           // building a new matrice by deleting row with the IDs found above in this tensor block
-          var newmat = reshapedblock.delete(newIndex2.toSeq, Axis._0)
+          //var newmat = reshapedblock.delete(newIndex2.toSeq, Axis._0)
+          // instead of deleting them, we replace them by 0 vectors
+          val zerolist: Array[Double] = Array.fill(currBlockIndices.product)(0.0)
+          val zerovect = DenseVector[Double](zerolist)
+          for(g <- 0 to newIndex2.length - 1) {
+            reshapedblock(newIndex2(g), ::) := zerovect.t
+          }
+          var newmat = reshapedblock
 
-          println("(" + (i - 1) + ", " + u + ")")
+
+          // reshape the matrix into only one row
+          var lastmat = newmat.reshape(1, newmat.rows * newmat.cols)
+          /*println("(" + (i - 1) + ", " + u + ")")
           println("outsubindex = " + outSubIndex.toList)
-          println("subindex = " + subIndex.toList)
-          // saving this matrix in the corresponding block cluster
-          newclusters(i - 1)(u) = (subIndex.clone(), newmat)
+          println("subindex = " + subIndex.toList)*/
 
-    println("----------------")
+          // TMP - modify tensorInfo
+          //tensorInfo.tensorRank(deCompDim) = outRank(deCompDim)
+
+          // saving this matrix in the corresponding block cluster
+          newclusters(i - 1)(u) = (subIndex.clone(), lastmat)
+
+    //println("----------------")
   }
 
 }

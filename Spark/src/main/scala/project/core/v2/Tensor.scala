@@ -324,7 +324,6 @@ object Tensor
     //*    tensorInfo.blockRank, tensorInfo.blockNum, tensorInfo.blockFinal ) }
     //*  .reduceByKey( new MyPartitioner( outTensorInfo.blockNum ), ( a, b ) => a + b )
 
-
     val prodRDD = tensorRDD.flatMap{ case( blockSubIndex, denseMatrix ) =>
       localMMMany( blockSubIndex, denseMatrix, prodDim, bcMatrix, tensorInfo.blockRank,
         tensorInfo.blockNum, tensorInfo.blockFinal ) }

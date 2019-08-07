@@ -124,8 +124,13 @@ object RunTucker extends App {
   var clusteredRDDmat = clusteredRDD.map{ x => (x.size, x(0).length, x.map{ y => y.toArray})}.collect()
   var clusteredRDDmat2 = clusteredRDDmat.map{ x => new DenseMatrix(x._2, x._1, x._3.reduce((a,b) => a ++ b))}.map{ x => (CM.ArraySeq[Int](0,0), x.t)}
   var finalClusters = TensorTucker.transformClusters(tensorRDD, MySpark.sc.parallelize(clusteredRDDmat2.map{ case(x, y) => y}), clusterMembers, tensorInfo, coreRank, cluNum, 0)
-  finalClusters.take(3).map{ x => x.map{ y => List(y._1.toList, y._2.rows * y._2.cols)}.toList}.foreach(println)
-  val(coreTensors, coreInfo, basisMatrices, iterRecord) = TensorTucker.deComp2 (MySpark.sc.parallelize(clusteredRDDmat2.toSeq), tensorInfo, deCompSeq, coreRank, maxIter, epsilon )
+  //finalClusters.take(3).map{ x => x.map{ y => breeze.linalg.sum(y._2).toDouble}.toList}.foreach(println)
+  var test = finalClusters.zipWithIndex.filter{ case(x ,y) => y == 2}.map{ case(x,y) => x}.collect()
+  val test2 = MySpark.sc.parallelize(test(0))
+  println("")
+  val(coreTensors, coreInfo, basisMatrices, iterRecord) = TensorTucker.deComp2 (test2, tensorInfo, deCompSeq, coreRank, maxIter, epsilon )
+  //val(coreTensors, coreInfo, basisMatrices, iterRecord) = TensorTucker.deComp2 (MySpark.sc.parallelize(clusteredRDDmat2.toSeq), tensorInfo, deCompSeq, coreRank, maxIter, epsilon )
+  //
   println("CTA done")
 }
 
