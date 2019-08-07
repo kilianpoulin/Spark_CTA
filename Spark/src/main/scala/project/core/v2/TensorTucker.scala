@@ -8,8 +8,9 @@ import breeze.numerics.abs
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
+import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}
 
-import scala.collection.{mutable => CM}
+import scala.collection.{ mutable => CM}
 import scala.util.control.Breaks
 
 object TensorTucker
@@ -22,135 +23,476 @@ object TensorTucker
     //    Tensor.setSparkContext( sc )
   }
 
-  def deComp ( tensorRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], tensorInfo: Tensor.TensorInfo,
-               deCompSeq: Array[Int], coreRank: Array[Int], maxIter: Int, epsilon: Double )
-  : ( RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], Tensor.TensorInfo, Array[ Broadcast[DenseMatrix[Double]] ], Int )
-  =
-  {
-    // Create random basis matrices and broadcast them
-    val deCompDims = deCompSeq.length
-    val bcBasisMatrixArray = new Array[ Broadcast[DenseMatrix[Double]] ]( tensorInfo.tensorDims )
-    for ( i <- 0 until deCompDims )
-    {
-      //*bcBasisMatrixArray(i) = sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank(i) ) )
-      bcBasisMatrixArray( deCompSeq(i) ) =
-        sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank( deCompSeq(i) ) ) )
-    }
+  implicit def bool2int(b:Boolean) = if (b) 1 else 0
 
-    // Set variable to record final result
-    var iterRecord = 0
-    var finalRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] = null
-    var finalInfo: Tensor.TensorInfo = null
+  def h(index:Int, blkrank:Int, tensrank:Int, num:Int) = if (index == num) (tensrank - blkrank) % blkrank else blkrank
 
-    // Main iteration to compute tensor decomposition
-    val loop = new Breaks
-    loop.breakable
-    {
-      for( iter <- 1 to maxIter )
-      {
-        var convergeFlag = true
+  def transformClusters (tensorRDD: RDD[(CM.ArraySeq[Int], DMatrix)], clusterRDD: RDD[DenseMatrix[Double]], clusterMembers: Array[Int], tensorInfo: Tensor.TensorInfo, coreRank: Array[Int], cluNum: Int, deCompDim: Int): RDD[Array[(CM.ArraySeq[Int], DenseMatrix[Double])]] ={
+    var outBlockMod = tensorInfo.tensorRank.map { _ + 1 }.zipWithIndex.map{ case(x ,nb) => x % tensorInfo.blockRank(nb)}.map{ _ - 1}
+    var outRank = tensorInfo.tensorRank.clone()
+    var outBlockNum = tensorInfo.blockNum.clone()
+    var rankCell: Array[Array[Int]] = Array.ofDim(tensorInfo.tensorRank.length, tensorInfo.tensorRank.length)
+    var rankNum: Int = 0
+    var eleNum: Int = 0
 
-        // For every decompose dimensions to compute basis matrix
-        //*for( dimCount <- 0 to deCompDims - 1 )
-        for( dimCount <- deCompSeq )
-        {
-          // Set variable
-          val prodsSeq = new Array[Int]( deCompDims - 1 )
+    var eleCell: Array[List[List[Int]]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var validCell: Array[Array[Array[Array[Boolean]]]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var outValidCell: Array[Array[Array[Boolean]]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var blockCell: Array[Array[Int]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var subIndex: CM.ArraySeq[Int] = new CM.ArraySeq[Int](tensorInfo.tensorRank.length)
+    var blkRank: Array[Int] = Array.ofDim(tensorInfo.tensorRank.length)
+    var validEleCell: Array[Array[Array[Boolean]]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var outBlockCell: Array[Array[Int]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var outSubIndex: CM.ArraySeq[Int] = new CM.ArraySeq[Int](tensorInfo.tensorRank.length)
+    var outIndexCell: Array[Array[Int]] = Array.ofDim(tensorInfo.tensorRank.length)
+    var indexCell: Array[Array[Int]] = Array.ofDim(tensorInfo.tensorRank.length)
 
-          var cumIndex = 0
-          for( i <- 0 until deCompDims )
-          {
-            if( deCompSeq( i ) != dimCount )
-            {
-              prodsSeq( cumIndex ) = deCompSeq( i )
-              //*prodsRank( cumIndex ) = coreRank( i )
-              //*prodsBasis( cumIndex ) = bcBasisMatrixArray( i )
-              cumIndex = cumIndex + 1
-            }
+    var newclusters: Array[Array[(CM.ArraySeq[Int], DenseMatrix[Double])]] = Array.ofDim(cluNum, tensorRDD.count().toInt)
+
+
+
+    var clusterIDs = clusterMembers.zipWithIndex.groupBy(_._1).mapValues(_.map(_._2)).map{ x => x._2}.toArray
+
+    /**
+      * Each cluster, starting from the last
+      * outRank => cluster rank => number of rows in the cluster
+      * eleCell => IDs of vectors for each dimension, based on the result of the KMeans clustering / block-wise version
+      *
+      */
+    for(i <- cluNum to 1 by -1) {
+      // rank of the cluster (number of rows)
+      outRank(deCompDim) = clusterRDD.take(i).apply(i - 1).rows
+
+      // for each block of each dimension -- initialize vector IDs
+      for(d <- 0 to (tensorInfo.tensorDims - 1)){
+        var rangevals = (0 to (outRank(d) - 1) by tensorInfo.blockRank(d)).toArray ++ Array(outRank(d))
+        rangevals = rangevals.filter{ x => x != 0}
+        var lists: Array[List[Int]] = Array.ofDim(rangevals.length)
+        var count = 0
+        for(rangeval <- rangevals){
+          lists(count) = ((1 + count * tensorInfo.blockRank(d)) to rangeval).toList
+          //lists(count) = ((1 + count * tensorInfo.blockRank(d)) to ((rangeval + count) % (tensorInfo.blockRank(d) + 1))).toList
+          count = count + 1
+        }
+        eleCell(d) = lists.toList
+      }
+
+      // on peut remplir les valeurs de la dimension decomposee avec KMeans et pour le cluster etudie
+      eleCell(deCompDim) = List(clusterIDs.toArray.take(1).flatMap{x => x}.map{ x => x + 1}.toList)
+
+
+      // For each dimension
+      for(d <- 0 to (tensorInfo.tensorDims - 1)){
+        /*outBlockMod(d) = ((outRank(d) - 1) % tensorInfo.blockRank(d)) + 1
+        outBlockNum( d ) = (outRank( d ) - outBlockMod( d )) / tensorInfo.blockRank( d ) + 1*/
+        // get the minimum rank of each block (starts by, then rank of 1 block, etc..)
+        rankCell(d) = (0 to (tensorInfo.tensorRank(d) - 1) by tensorInfo.blockRank(d)).toArray ++ Array(tensorInfo.tensorRank(d))
+
+        rankNum = rankCell(d).length - 1
+        eleNum = eleCell(d).length
+        validCell(d) = Array.ofDim(rankNum)
+        outValidCell(d) = Array.ofDim(eleNum, rankNum)
+
+        for(r <- 0 to rankNum - 1){
+          validCell(d)(r) = new Array(eleNum)
+          for(e <- 0 to eleNum - 1){
+            // if the vector ID is greater than the minimum rank and lower than the maximum rank (min rank of next block)
+            // then the vector #x = true => vector id is in this block
+            // otherwise => false
+            validCell(d)(r)(e) = eleCell(d)(e).map{ x => ((x > rankCell(d)(r)) && x <= rankCell(d)(r + 1))}.toArray
+
+            // if there are some vector IDs true (meaning they will be added to this cluster)
+            // => then outvalidcell = true
+            outValidCell(d)(e)(r) = validCell(d)(r)(e).contains(true)
           }
-
-          // Mode-N products
-          val( prodsRDD, prodsInfo ) = Tensor.modeNProducts( tensorRDD, tensorInfo, prodsSeq, bcBasisMatrixArray )
-
-          // Extract basis
-          val basisMatrix = Tensor.extractBasis( prodsRDD, prodsInfo, dimCount, coreRank( dimCount ) )
-
-          // Check converge or not
-          val preBasisMatrix = bcBasisMatrixArray( dimCount ).value
-          convergeFlag = convergeFlag && checkBasisMatrixConverge( preBasisMatrix, basisMatrix, epsilon )
-
-          // Broadcast new basis matrix
-          bcBasisMatrixArray( dimCount ).destroy()
-          bcBasisMatrixArray( dimCount ) = sc.broadcast( basisMatrix )
-
-          //
-          /*
-          if( convergeFlag == true )
-          {
-            finalRDD = prodsRDD
-            finalInfo = prodsInfo
-          }
-          */
-          finalRDD = prodsRDD
-          finalInfo = prodsInfo
         }
 
-        // If converge, break main iteration
-        if( convergeFlag == true )
-        {
-          iterRecord = iter
-          loop.break
+        blockCell(d) = outValidCell(d).map{ e => e.zipWithIndex.filter{ case(r, id) => r == true}.map{ case(r, id) => id}}.flatMap( x => x).toArray
+
+      }
+
+      blockCell = blockCell.zipWithIndex.map{ case(values, id) => values.map{ x => List.fill(id + 1)(x).toArray}.flatMap{ z => z}}
+        .map{ case(e) => List.fill(tensorRDD.count().toInt / e.length)(e).toArray.flatMap{ r => r}}
+
+
+      /**
+        * ***************************************** END OF INITIALIZATION ************************************
+        * EACH BLOCK
+        */
+
+
+      // read each block
+      for(u <- 0 to blockCell(0).length - 1){
+        // for each dimension
+        for(d <- 0 to (tensorInfo.tensorDims - 1)){
+          subIndex(d) = blockCell(d)(u)
+          blkRank(d) = rankCell(d)(subIndex(d))
+
+          // extract flags of valid elements in current block for current dimension
+          validEleCell(d) = validCell(d)(subIndex(d))
+
+          // Obtain valid output block indices for current dimension
+          outBlockCell(d) = outValidCell(d).map{ x => x(subIndex(d))}.zipWithIndex.filter{ case(value, id) => value == true}.map{ case(value, id) => id}
+
         }
-        else
-          finalRDD.unpersist( false )
-      }
-    }
+        // get initial tensor block
+        var tensortest = tensorRDD.collect()
+        var block = tensorRDD.filter{ case (id, value) => id == subIndex}.collect()
+        var blockID = subIndex
 
-    // Post processing
-    val ( coreRDD, coreInfo ) = Tensor.modeNProduct( finalRDD, finalInfo, deCompSeq.last,
-      bcBasisMatrixArray( deCompSeq.last ) )
+        // Obtain valid elements from each sub-block of the output tensor
+        for(o <- 0 to outBlockCell(0).length - 1){
+          for(d <- 0 to tensorInfo.tensorDims - 1){
+            // Extract sub-indices of current output block for current dimension
+            outSubIndex(d) = outBlockCell(d)(o)
 
-    ( coreRDD, coreInfo, bcBasisMatrixArray, iterRecord )
+            // Obtain the indices of the specified elements in current input and output blocks for current dimension
+            outIndexCell(d) = validEleCell(d)(outSubIndex(d)).map{ x => x:Int}
+            indexCell(d) = (eleCell(d)(outSubIndex(d)).toArray zip outIndexCell(d)).filter{ case(value, flag) => flag == 1}.map{ case(value, flag) => (value - 1 - blkRank(d))}
+            println("")
+          }
+
+          // converting the tensor block matrix to a breeze densematrix
+          var mat = block.map{ case(x,y) => y}
+          var bmatblock: DenseMatrix[Double] = new DenseMatrix(mat(0).numRows, mat(0).numCols, mat(0).toArray)
+
+          // looking for the rank of the current tensor block
+          var currBlockIndices = subIndex.map{ x => x + 1}.zipWithIndex
+              .map{ case(value, id) => h(value, tensorInfo.blockRank(id), tensorInfo.tensorRank(id), tensorInfo.blockNum(id))}
+
+          //saving the decomposition dimension block rank
+          var decompBlk = currBlockIndices(deCompDim)
+          // removing the rank the decomposition dimension
+          currBlockIndices = currBlockIndices.zipWithIndex.filter{ case(x, y) => y != deCompDim}.map{ case(x,y) => x}
+
+          // reshaping the tensor block matrix to get as many rows as the block rank of the decomposition dimension
+          var reshapedblock = bmatblock.reshape(decompBlk, currBlockIndices.product)
+
+          // row data IDs that will not be used in this cluster
+          var newIndex2 = (0 to decompBlk - 1 by 1).filter{ x => indexCell(deCompDim).contains(x) == false}
+
+          // building a new matrice by deleting row with the IDs found above in this tensor block
+          var newmat = reshapedblock.delete(newIndex2.toSeq, Axis._0)
+
+          println("(" + (i - 1) + ", " + u + ")")
+          println("outsubindex = " + outSubIndex.toList)
+          println("subindex = " + subIndex.toList)
+          // saving this matrix in the corresponding block cluster
+          newclusters(i - 1)(u) = (subIndex.clone(), newmat)
+
+    println("----------------")
   }
 
-  //-----------------------------------------------------------------------------------------------------------------
-  // Reconst
-  //-----------------------------------------------------------------------------------------------------------------
-  def reConst ( coreRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], coreInfo: Tensor.TensorInfo,
-                reContSeq: Array[Int], bcBasisMatrixArray: Array[ Broadcast[DenseMatrix[Double]] ] )
-  : ( RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], Tensor.TensorInfo ) =
-  {
-    val tensorDims = coreInfo.tensorDims
-    val bcBasisMatrixTransArray = new Array[ Broadcast[DenseMatrix[Double]] ]( tensorDims )
-    for ( i <- 0 to tensorDims - 1 )
-    {
-      if( bcBasisMatrixArray(i) != null )
-      {
-        val tempMatrix = bcBasisMatrixArray( i ).value.t
-        bcBasisMatrixTransArray( i ) = sc.broadcast( tempMatrix )
-      }
-    }
+}
+println("")
+}
 
-    val( reconstRDD, reconstInfo ) = Tensor.modeNProducts( coreRDD, coreInfo, reContSeq, bcBasisMatrixTransArray )
-    val temp = reconstRDD.count()
+MySpark.sc.parallelize(newclusters)
+}
 
-    ( reconstRDD, reconstInfo )
-  }
+def deComp2 ( tensorRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], tensorInfo: Tensor.TensorInfo,
+      deCompSeq: Array[Int], coreRank: Array[Int], maxIter: Int, epsilon: Double )
+: ( RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], Tensor.TensorInfo, Array[ Broadcast[DenseMatrix[Double]] ], Int )
+=
+{
+// Create random basis matrices and broadcast them
+val deCompDims = deCompSeq.length
+val bcBasisMatrixArray = new Array[ Broadcast[DenseMatrix[Double]] ]( tensorInfo.tensorDims )
+for ( i <- 0 until deCompDims )
+{
+//*bcBasisMatrixArray(i) = sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank(i) ) )
+bcBasisMatrixArray( deCompSeq(i) ) =
+sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank( deCompSeq(i) ) ) )
+}
 
-  //-----------------------------------------------------------------------------------------------------------------
-  // Check previous basis matrix and current basis matrix is converge or not
-  //-----------------------------------------------------------------------------------------------------------------
-  def checkBasisMatrixConverge( matrixA: DenseMatrix[Double], matrixB: DenseMatrix[Double], threshold: Double )
-  : Boolean =
-  {
-    // Set variable
-    val columnS = matrixA.cols
-    val onesVector = DenseVector.ones[Double]( columnS )
-    val thresholdVector = DenseVector.fill( columnS ){ threshold }
+// Set variable to record final result
+var iterRecord = 0
+var finalRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] = null
+var finalInfo: Tensor.TensorInfo = null
 
-    // Compute
-    //val flag = abs( onesVector - abs( sum( matrixA :* matrixB, Axis._0 ).toDenseVector ) ) :< thresholdVector
-    //flag.forall( _ == true )
-    true
-  }
+// Main iteration to compute tensor decomposition
+val loop = new Breaks
+loop.breakable
+{
+for( iter <- 1 to maxIter )
+{
+var convergeFlag = true
+
+// For every decompose dimensions to compute basis matrix
+//*for( dimCount <- 0 to deCompDims - 1 )
+for( dimCount <- deCompSeq )
+{
+ // Set variable
+ val prodsSeq = new Array[Int]( deCompDims - 1 )
+
+ var cumIndex = 0
+ for( i <- 0 until deCompDims )
+ {
+   if( deCompSeq( i ) != dimCount )
+   {
+     prodsSeq( cumIndex ) = deCompSeq( i )
+     //*prodsRank( cumIndex ) = coreRank( i )
+     //*prodsBasis( cumIndex ) = bcBasisMatrixArray( i )
+     cumIndex = cumIndex + 1
+   }
+ }
+ // Mode-N products
+ val( prodsRDD, prodsInfo ) = Tensor.modeNProducts( tensorRDD, tensorInfo, prodsSeq, bcBasisMatrixArray )
+ // Extract basis
+ val basisMatrix = Tensor.extractBasis( prodsRDD, prodsInfo, dimCount, coreRank( dimCount ) )
+
+ // Check converge or not
+ val preBasisMatrix = bcBasisMatrixArray( dimCount ).value
+ convergeFlag = convergeFlag && checkBasisMatrixConverge( preBasisMatrix, basisMatrix, epsilon )
+
+ // Broadcast new basis matrix
+ bcBasisMatrixArray( dimCount ).destroy()
+ bcBasisMatrixArray( dimCount ) = sc.broadcast( basisMatrix )
+
+ //
+ /*
+ if( convergeFlag == true )
+ {
+   finalRDD = prodsRDD
+   finalInfo = prodsInfo
+ }
+ */
+ finalRDD = prodsRDD
+ finalInfo = prodsInfo
+}
+
+// If converge, break main iteration
+if( convergeFlag == true )
+{
+ iterRecord = iter
+ loop.break
+}
+else
+ finalRDD.unpersist( false )
+}
+}
+
+// Post processing
+val ( coreRDD, coreInfo ) = Tensor.modeNProduct( finalRDD, finalInfo, deCompSeq.last,
+bcBasisMatrixArray( deCompSeq.last ) )
+
+( coreRDD, coreInfo, bcBasisMatrixArray, iterRecord )
+}
+
+def deComp ( tensorRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], tensorInfo: Tensor.TensorInfo,
+      deCompSeq: Array[Int], coreRank: Array[Int], maxIter: Int, epsilon: Double )
+: ( RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], Tensor.TensorInfo, Array[ Broadcast[DenseMatrix[Double]] ], Int )
+=
+{
+// Create random basis matrices and broadcast them
+val deCompDims = deCompSeq.length
+val bcBasisMatrixArray = new Array[ Broadcast[DenseMatrix[Double]] ]( tensorInfo.tensorDims )
+for ( i <- 0 until deCompDims )
+{
+//*bcBasisMatrixArray(i) = sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank(i) ) )
+bcBasisMatrixArray( deCompSeq(i) ) =
+sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank( deCompSeq(i) ) ) )
+}
+
+// Set variable to record final result
+var iterRecord = 0
+var finalRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] = null
+var finalInfo: Tensor.TensorInfo = null
+
+// Main iteration to compute tensor decomposition
+val loop = new Breaks
+loop.breakable
+{
+for( iter <- 1 to maxIter )
+{
+var convergeFlag = true
+
+// For every decompose dimensions to compute basis matrix
+//*for( dimCount <- 0 to deCompDims - 1 )
+for( dimCount <- deCompSeq )
+{
+ // Set variable
+ val prodsSeq = new Array[Int]( deCompDims - 1 )
+
+ var cumIndex = 0
+ for( i <- 0 until deCompDims )
+ {
+   if( deCompSeq( i ) != dimCount )
+   {
+     prodsSeq( cumIndex ) = deCompSeq( i )
+     //*prodsRank( cumIndex ) = coreRank( i )
+     //*prodsBasis( cumIndex ) = bcBasisMatrixArray( i )
+     cumIndex = cumIndex + 1
+   }
+ }
+
+ // Mode-N products
+ val( prodsRDD, prodsInfo ) = Tensor.modeNProducts( tensorRDD, tensorInfo, prodsSeq, bcBasisMatrixArray )
+
+ // Extract basis
+ val basisMatrix = Tensor.extractBasis( prodsRDD, prodsInfo, dimCount, coreRank( dimCount ) )
+
+ // Check converge or not
+ val preBasisMatrix = bcBasisMatrixArray( dimCount ).value
+ convergeFlag = convergeFlag && checkBasisMatrixConverge( preBasisMatrix, basisMatrix, epsilon )
+
+ // Broadcast new basis matrix
+ bcBasisMatrixArray( dimCount ).destroy()
+ bcBasisMatrixArray( dimCount ) = sc.broadcast( basisMatrix )
+
+ //
+ /*
+ if( convergeFlag == true )
+ {
+   finalRDD = prodsRDD
+   finalInfo = prodsInfo
+ }
+ */
+ finalRDD = prodsRDD
+ finalInfo = prodsInfo
+}
+
+// If converge, break main iteration
+if( convergeFlag == true )
+{
+ iterRecord = iter
+ loop.break
+}
+else
+ finalRDD.unpersist( false )
+}
+}
+
+// Post processing
+val ( coreRDD, coreInfo ) = Tensor.modeNProduct( finalRDD, finalInfo, deCompSeq.last,
+bcBasisMatrixArray( deCompSeq.last ) )
+
+( coreRDD, coreInfo, bcBasisMatrixArray, iterRecord )
+}
+/*
+def deComp ( tensorRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], tensorInfo: Tensor.TensorInfo,
+      deCompSeq: Array[Int], coreRank: Array[Int], maxIter: Int, epsilon: Double )
+: ( RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], Tensor.TensorInfo, Array[ Broadcast[DenseMatrix[Double]] ], Int )
+=
+{
+// Create random basis matrices and broadcast them
+val deCompDims = deCompSeq.length
+val bcBasisMatrixArray = new Array[ Broadcast[DenseMatrix[Double]] ]( tensorInfo.tensorDims )
+for ( i <- 0 until deCompDims )
+{
+//bcBasisMatrixArray(i) = sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank(i) ) )
+bcBasisMatrixArray( deCompSeq(i) ) =
+sc.broadcast( DenseMatrix.rand( tensorInfo.tensorRank( deCompSeq(i) ), coreRank( deCompSeq(i) ) ) )
+}
+
+// Set variable to record final result
+var iterRecord = 0
+var finalRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ] = null
+var finalInfo: Tensor.TensorInfo = null
+
+// Main iteration to compute tensor decomposition
+val loop = new Breaks
+loop.breakable
+{
+for( iter <- 1 to maxIter )
+{
+var convergeFlag = true
+
+// For every decompose dimensions to compute basis matrix
+//for( dimCount <- 0 to deCompDims - 1 )
+for( dimCount <- deCompSeq )
+{
+ // Set variable
+ val prodsSeq = new Array[Int]( deCompDims - 1 )
+
+ var cumIndex = 0
+ for( i <- 0 until deCompDims )
+ {
+   if( deCompSeq( i ) != dimCount )
+   {
+     prodsSeq( cumIndex ) = deCompSeq( i )
+     //prodsRank( cumIndex ) = coreRank( i )
+     //prodsBasis( cumIndex ) = bcBasisMatrixArray( i )
+     cumIndex = cumIndex + 1
+   }
+ }
+
+ // Mode-N products
+ val( prodsRDD, prodsInfo ) = Tensor.modeNProducts( tensorRDD, tensorInfo, prodsSeq, bcBasisMatrixArray )
+
+ // Extract basis
+ val basisMatrix = Tensor.extractBasis( prodsRDD, prodsInfo, dimCount, coreRank( dimCount ) )
+
+ // Check converge or not
+ val preBasisMatrix = bcBasisMatrixArray( dimCount ).value
+ convergeFlag = convergeFlag && checkBasisMatrixConverge( preBasisMatrix, basisMatrix, epsilon )
+
+ // Broadcast new basis matrix
+ bcBasisMatrixArray( dimCount ).destroy()
+ bcBasisMatrixArray( dimCount ) = sc.broadcast( basisMatrix )
+
+ finalRDD = prodsRDD
+ finalInfo = prodsInfo
+}
+
+// If converge, break main iteration
+if( convergeFlag == true )
+{
+ iterRecord = iter
+ loop.break
+}
+else
+ finalRDD.unpersist( false )
+}
+}
+
+// Post processing
+val ( coreRDD, coreInfo ) = Tensor.modeNProduct( finalRDD, finalInfo, deCompSeq.last,
+bcBasisMatrixArray( deCompSeq.last ) )
+
+( coreRDD, coreInfo, bcBasisMatrixArray, iterRecord )
+}
+*/
+
+
+//-----------------------------------------------------------------------------------------------------------------
+// Reconst
+//-----------------------------------------------------------------------------------------------------------------
+def reConst ( coreRDD: RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], coreInfo: Tensor.TensorInfo,
+       reContSeq: Array[Int], bcBasisMatrixArray: Array[ Broadcast[DenseMatrix[Double]] ] )
+: ( RDD[ (CM.ArraySeq[Int], DenseMatrix[Double]) ], Tensor.TensorInfo ) =
+{
+val tensorDims = coreInfo.tensorDims
+val bcBasisMatrixTransArray = new Array[ Broadcast[DenseMatrix[Double]] ]( tensorDims )
+for ( i <- 0 to tensorDims - 1 )
+{
+if( bcBasisMatrixArray(i) != null )
+{
+val tempMatrix = bcBasisMatrixArray( i ).value.t
+bcBasisMatrixTransArray( i ) = sc.broadcast( tempMatrix )
+}
+}
+
+val( reconstRDD, reconstInfo ) = Tensor.modeNProducts( coreRDD, coreInfo, reContSeq, bcBasisMatrixTransArray )
+val temp = reconstRDD.count()
+
+( reconstRDD, reconstInfo )
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+// Check previous basis matrix and current basis matrix is converge or not
+//-----------------------------------------------------------------------------------------------------------------
+def checkBasisMatrixConverge( matrixA: DenseMatrix[Double], matrixB: DenseMatrix[Double], threshold: Double )
+: Boolean =
+{
+// Set variable
+val columnS = matrixA.cols
+val onesVector = DenseVector.ones[Double]( columnS )
+val thresholdVector = DenseVector.fill( columnS ){ threshold }
+
+// Compute
+//val flag = abs( onesVector - abs( sum( matrixA :* matrixB, Axis._0 ).toDenseVector ) ) :< thresholdVector
+//flag.forall( _ == true )
+true
+}
 }

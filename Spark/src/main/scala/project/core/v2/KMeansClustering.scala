@@ -14,7 +14,6 @@ import project.core.v2.RunTucker.{tensorInfo, tensorRDD}
 import breeze.linalg.{DenseVector, sum, DenseMatrix => BMatrix}
 class KMeansClustering (
                          private var k: Int,
-                         private var maxIterations: Int,
                          private var centroidsInit: String,
                          private var centroidsPath: String,
                          private var maxIter: Int,
@@ -46,7 +45,7 @@ class KMeansClustering (
 
   def train(
              data: RDD[ (CM.ArraySeq[Int], BMatrix[Double]) ]
-           ) = {
+           ): (RDD[Array[DenseVector[Double]]], Array[Int]) = {
     run(data)
   }
 
@@ -205,8 +204,9 @@ class KMeansClustering (
     * Contains all steps
     * -----------------------------------------------------------------------------------------------------------------
     * */
-  def run(data: RDD[ (CM.ArraySeq[Int], BMatrix[Double]) ]) {
+  def run(data: RDD[ (CM.ArraySeq[Int], BMatrix[Double]) ]): (RDD[Array[DenseVector[Double]]], Array[Int]) ={
 
+    var allmembers = Array.fill(tensorInfo.tensorRank(0))(0)
 
     // Step 1 : create k clusters with random or default values as centroids data)
     var centroids: Array[Array[Vect[Double]]] = createRandomCentroids(data, centroidsInit)
@@ -239,6 +239,8 @@ class KMeansClustering (
         var members = clusters.zipWithIndex.filter { case (x, y) => x == i }.map { case (x, y) => y }
         var membersv2 = members.filter { x => x > tensorInfo.blockRank(0) - 1 }.map { x => x % tensorInfo.blockRank(0) }
 
+        members.map{ x => allmembers(x) = i}
+
         // get vectors with the corresponding member ids  (transform matrix into vector) for each part (x 34116 and x 34115)
         var tmpvectorsdim1 = data.filter { case (ids, values) => ids(0) == 0 }
           .map { case (ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex }.map { case (x) => x.filter { case (a, b) => members.contains(b) }.map { case (a, b) => a } }.collect()
@@ -251,12 +253,23 @@ class KMeansClustering (
         // Sum each point and divide the result by the number of cluster members => Means
         var bc = fullvectorsdim.toVector.map { case (x) => x.toVector.transpose.map(_.sum / members.size) }
         centroids(i) = bc.toArray
-        println(" (8." + (i + 1) + ") [OK] Cluster centroid #" + k + " updated successfully")
+        println(" (8) " + (i + 1) + "/" + k + ".. Cluster centroid #" + (i + 1) + " updated successfully")
       }
 
-      println(" (8+) All cluster centroids successfully updated")
+      println(" (8) [OK] All cluster centroids successfully updated")
     }
 
-    return
+    val newdata = data.collect()
+
+    // Create RDD containing clustered tensor (combining partial vectors to become full vectors)
+    var clustersdim1 = allmembers.zipWithIndex.filter{ case(nb, index) => index < tensorInfo.blockRank(0)}.map{ case(nb, index) => (nb, newdata.filter{ case(x, y) => x(0) == 0}.map{ case(id, arr) => (arr.t)(::, index)})}
+      .groupBy{ case(x,y) => x}.map{ case (x, y) => y.map{ case(i,j) => j.reduce((a,b) => DenseVector.vertcat(a, b))}}
+
+    var clustersdim2 = allmembers.zipWithIndex.filter{ case(nb, index) => index > tensorInfo.blockRank(0) - 1}.map{ case(nb, index) => (nb, newdata.filter{ case(x, y) => x(0) == 1}.map{ case(id, arr) => (arr.t)(::, index % 50)})}
+      .groupBy{ case(x,y) => x}.map{ case (x, y) => y.map{ case(i,j) => j.reduce((a,b) => DenseVector.vertcat(a, b))}}
+
+    var clusters = (clustersdim1 zip clustersdim2).map{ case(x) => x._1 ++ x._2}
+
+    (MySpark.sc.parallelize(clusters.toSeq), allmembers)
   }
 }

@@ -1,10 +1,17 @@
 package project.core.v2
 
+import java.util
+
+import breeze.linalg.{DenseMatrix, DenseVector}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.storage.StorageLevel._
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SparkSession
 import project.core.original.RunTucker.{tensorInfo, tensorRDD, unfoldDim}
+import org.apache.spark.broadcast.Broadcast
+import org.apache.spark.rdd.RDD
+
+import scala.collection.{mutable => CM}
 import project.core.original.Tensor
 
 /**.
@@ -30,6 +37,7 @@ object RunTucker extends App {
 
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
+  MySpark.sc.setLogLevel("ERROR")
 
   // Default variable
   var tensorPath = "data/donkey_spark/"
@@ -42,6 +50,7 @@ object RunTucker extends App {
   var reconstPath = ""
   var centroidsInit = "random"
   var centroidsPath = ""
+  var cluNum = 1
 
   // Read input argument
   for (argCount <- 0 until args.length by 2) {
@@ -66,6 +75,8 @@ object RunTucker extends App {
         centroidsInit = args(argCount + 1)
       case "--CentroidsPath" =>
         centroidsPath = args(argCount + 1)
+      case "--CluNum" =>
+        cluNum = args(argCount + 1).toInt
     }
   }
 
@@ -94,9 +105,28 @@ object RunTucker extends App {
 // Section to perform K-Means
 //******************************************************************************************************************
 
-  val kmeans = new KMeansClustering(3, 5, centroidsInit, centroidsPath, maxIter, tensorInfo.tensorDims)
-  kmeans.train(tensorBlocks)
+  val kmeans = new KMeansClustering(cluNum, centroidsInit, centroidsPath, maxIter, tensorInfo.tensorDims)
+  val (clusteredRDD, clusterMembers) = kmeans.train(tensorBlocks)
 
+//************************************************** ****************************************************************
+// Section to perform CTA
+//******************************************************************************************************************
+
+  /*var coreTensors: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])] = null
+  var coreInfo: Tensor.TensorInfo = null
+  var basisMatrices: Array[Broadcast[DenseMatrix[Double]]] = null
+  var iterRecord: Int = 0*/
+
+  // convert spark DenseMatrix to breeze DenseMatrix
+  //val BtensorRDD = tensorRDD.map{ case(x, y) => (x, new DenseMatrix[Double](y.numRows, y.numCols, y.values))}
+
+  // convert Densevectors to DenseMatrix
+  var clusteredRDDmat = clusteredRDD.map{ x => (x.size, x(0).length, x.map{ y => y.toArray})}.collect()
+  var clusteredRDDmat2 = clusteredRDDmat.map{ x => new DenseMatrix(x._2, x._1, x._3.reduce((a,b) => a ++ b))}.map{ x => (CM.ArraySeq[Int](0,0), x.t)}
+  var finalClusters = TensorTucker.transformClusters(tensorRDD, MySpark.sc.parallelize(clusteredRDDmat2.map{ case(x, y) => y}), clusterMembers, tensorInfo, coreRank, cluNum, 0)
+  finalClusters.take(3).map{ x => x.map{ y => List(y._1.toList, y._2.rows * y._2.cols)}.toList}.foreach(println)
+  val(coreTensors, coreInfo, basisMatrices, iterRecord) = TensorTucker.deComp2 (MySpark.sc.parallelize(clusteredRDDmat2.toSeq), tensorInfo, deCompSeq, coreRank, maxIter, epsilon )
+  println("CTA done")
 }
 
 

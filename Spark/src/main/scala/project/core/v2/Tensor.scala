@@ -379,6 +379,7 @@ object Tensor
     // Reset key and group
     val tempBlockNum = tensorInfo.blockNum.clone()
     tempBlockNum( extDim ) = 1
+    var all = tensorRDD.map{ case(blockSubIndex, tensorVector) => tensorVector}.collect()
     val groupRDD = tensorRDD.map{ case( blockSubIndex, tensorVector ) =>
       extractBasisResetKey( blockSubIndex, tensorVector, extDim ) }
       .groupByKey( new MyPartitioner( tempBlockNum )  )
@@ -1003,7 +1004,7 @@ object Tensor
       }
     }
     newBlocks = newBlocks.filter{ case(x) => x != null}
-    //newBlocks.map{ case(ids, mat) => ids}.foreach(println)
+   // newBlocks.map{ case(ids, mat) => ids}.foreach(println)
     MySpark.sc.parallelize(newBlocks)
     //.partitionBy(new MyPartitioner(unfoldSeq))
     //.repartition(unfoldSeq.product).reduceByKey( new MyPartitioner( unfoldSeq ), ( a, b ) => a + b )
