@@ -5,6 +5,11 @@ package project.core.v2
   */
 import java.nio._
 
+import java.io.File
+import java.io.PrintWriter
+
+import scala.io.Source
+
 import breeze.linalg._
 import breeze.numerics._
 import org.apache.hadoop.io.{BytesWritable, LongWritable}
@@ -151,7 +156,7 @@ object Tensor
   {
     // Set save path
     //val filePart = inPath.split( "/" )
-    val savePath = inPath + "header"
+    val savePath = inPath + "header/"
 
     //
     val infoArray = new Array[ String ](4)
@@ -159,7 +164,13 @@ object Tensor
     infoArray(1) = "TensorRank" + " " + tensorInfo.tensorRank.mkString(",")
     infoArray(2) = "BlockRank" + " " + tensorInfo.blockRank.mkString(",")
     infoArray(3) = "BlockNumber" + " " + tensorInfo.blockNum.mkString(",")
+/*
+    val writer = new PrintWriter(new File(savePath + "coreTensors-header.txt"))
 
+    writer.write(infoArray.toString)
+    writer.close()
+
+    Source.fromFile(savePath + "coreTensors-header.txt").foreach { x => print(x) }*/
     MySpark.sc.parallelize( infoArray, 1 ).saveAsTextFile( savePath )
   }
 
@@ -357,12 +368,18 @@ object Tensor
     //*new DenseMatrix( covMatrix.rows, extRank, svd.V.toArray )
 
     val eigPair = eigSym( covMatrix )
-    val basisMatrix = DenseMatrix.zeros[Double]( covMatrix.rows, extRank )
-    for( i <- 0 until extRank )
-    {
-      //val temp1 = eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
-      //val temp2 = basisMatrix( ::, i )
-      basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
+    var basisMatrix = DenseMatrix.zeros[Double]( covMatrix.rows, covMatrix.cols )
+    if(covMatrix.rows < extRank){
+      for(i <- 0 until covMatrix.rows){
+        basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
+      }
+      //add missing clumns
+      basisMatrix = DenseMatrix.horzcat(basisMatrix, DenseMatrix.zeros[Double](covMatrix.rows, extRank - covMatrix.cols))
+
+    } else {
+      for (i <- 0 until covMatrix.rows) {
+        basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
+      }
     }
 
     basisMatrix
@@ -547,6 +564,83 @@ object Tensor
     else                                   // For other dimensions
     {
       println("ids : " + ids.toList + " " + tensorMatrixTmp.numRows)
+      unfoldRank(0) = 1
+      unfoldRank(1) = 1
+      for( i <- 0 until tensorDims )
+      {
+        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+        else
+          modifiedRank = blockRank(i)
+
+        if(i < unfoldDim)
+          unfoldRank(0) = unfoldRank(0) * modifiedRank
+        else
+          unfoldRank(1) = unfoldRank(1) * modifiedRank
+
+      }
+      val temp = blockRank.product / blockRank(unfoldDim)
+
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+        .reshape(blockRank(unfoldDim), temp, false)
+    }
+
+    unfoldMatrix
+  }
+
+
+
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Perform local tensor unfold
+  //-----------------------------------------------------------------------------------------------------------------
+  def localTensorUnfoldBlock( tensorMatrix: BMatrix[Double], ids: CM.ArraySeq[Int], unfoldDim: Int, blockRank: Array[Int], blockNum: Array[Int], tensorRank: Array[Int] )
+  : BMatrix[Double] =
+  {
+    var modifiedRank: Int = 0
+    val tensorDims = blockRank.length
+    var unfoldMatrix: BMatrix[Double] = null
+    val unfoldRank = new Array[Int](2)
+    if( unfoldDim == 0 )                   // For first dimension
+    {
+      unfoldRank(0) = blockRank(0)
+      unfoldRank(1) = 1
+      for( i <- 1 until tensorDims)
+      {
+        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+        else
+          modifiedRank = blockRank(i)
+
+        unfoldRank(1) = unfoldRank(1) * modifiedRank
+      }
+
+      if(ids(0) == (blockNum(0) - 1) && blockRank(0) % tensorRank(0) != 0)
+        unfoldRank(0) = tensorRank(0) - (blockRank(0) * (blockNum(0) - 1))
+
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1) )
+    }
+    else if( unfoldDim == tensorDims - 1 ) // For last dimension
+    {
+      println("ids : " + ids.toList + " " + tensorMatrix.rows)
+      unfoldRank(0) = 1
+      unfoldRank(1) = blockRank(unfoldDim)
+      for( i <- 0 to tensorDims - 2 )
+      {
+        if(ids(i) == (blockNum(i) - 1) && blockRank(i) % tensorRank(i) != 0)
+          modifiedRank = tensorRank(i) - (blockRank(i) * (blockNum(i) - 1))
+        else
+          modifiedRank = blockRank(i)
+        unfoldRank(0) = unfoldRank(0) * modifiedRank
+      }
+      if(ids(unfoldDim) == (blockNum(tensorDims - 1 ) - 1) && blockRank(tensorDims - 1 ) % tensorRank(tensorDims - 1 ) != 0)
+        unfoldRank(1) = tensorRank(tensorDims - 1 ) - (blockRank(tensorDims - 1 ) * (blockNum(tensorDims - 1 ) - 1))
+
+
+      unfoldMatrix = tensorMatrix.reshape( unfoldRank(0), unfoldRank(1), false ).t
+    }
+    else                                   // For other dimensions
+    {
       unfoldRank(0) = 1
       unfoldRank(1) = 1
       for( i <- 0 until tensorDims )
