@@ -10,14 +10,15 @@ import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}
 
 import scala.util.Random
 import scala.{Vector => Vect}
-import project.core.v2.RunTucker.{tensorInfo, tensorRDD}
+//import project.core.v2.RunTucker.{tensorInfo, tensorRDD}
 import breeze.linalg.{DenseVector, sum, DenseMatrix => BMatrix}
 class KMeansClustering (
                          private var k: Int,
                          private var centroidsInit: String,
                          private var centroidsPath: String,
                          private var maxIter: Int,
-                         private var tensorDim: Int) extends Serializable {
+                         private var tensorDim: Int,
+                         private var tensorInfo: Tensor.TensorInfo) extends Serializable {
 
   /** -----------------------------------------------------------------------------------------------------------------
     * Implicit class to add function distanceTo to Vector class

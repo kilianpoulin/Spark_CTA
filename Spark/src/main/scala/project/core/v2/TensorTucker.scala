@@ -32,10 +32,45 @@ object TensorTucker {
     // unfolding the block-wise core tensors
     var unfoldedCoreTensor: DenseMatrix[Double] = null
     //var coreT = coreTensors.map{ case(x, y) => Tensor.localTensorUnfoldBlock(y, x, cluDim, coreInfo.blockRank, coreInfo.blockNum, coreInfo.tensorRank)}
-    var coreTmp = Tensor.TensorUnfoldBlocks2( coreTensors.map{ case(x,y) => (x, new (org.apache.spark.mllib.linalg.DenseMatrix)(y.rows, y.cols, y.valuesIterator.toArray))}, cluDim, coreInfo.tensorRank, coreInfo.blockRank, coreInfo.blockNum)
-    var newmat = coreTmp.map{ case(x,y) => y}.reduce((a,b) => DenseMatrix.horzcat(a,b))
-    // get matrix before performing eigenvectors
+    //var blkNum = Array(50,50,20,20) zip (tensorInfo.blockRank)
+    var newCoreInfo = new v2.Tensor.TensorInfo(coreInfo.tensorDims, Array(50,50,20,20), tensorInfo.blockRank, Array(1,1,2,2), Array(50,50,6,6))
 
+    var coreTmp = Tensor.TensorUnfoldBlocks( coreTensors.map{ case(x,y) => (x, new (org.apache.spark.mllib.linalg.DenseMatrix)(y.rows, y.cols, y.valuesIterator.toArray))}, cluDim, newCoreInfo.tensorRank, newCoreInfo.blockRank, newCoreInfo.blockNum).filter{ x => x != null}
+    // assemble
+    var newmat = coreTmp.map{ case(x,y) => y}.reduce{(a,b) => DenseMatrix.horzcat(a,b)}
+    // get matrix before performing eigenvectors
+    // compute the left singular values
+    var mat1 = coreTmp.map{ case(x,y) => y}.reduce((a,b) => a * b.t)
+
+    var mat2 = coreTmp.map{ case(x,y) => y}.reduce((a,b) => b * a.t)
+
+    var finalmat = mat1 + mat2
+
+    //var fullmat = DenseMatrix.zeros[Double](finalmat.rows, newmat.cols)
+
+   /* val svd.SVD(u,s,v) = svd(finalmat)
+    */
+    // eigPair has both eigenvalues and eigenvectors
+    val eigPair = eigSym( finalmat )
+
+    //precomputqtion
+    val matrixA = breeze.numerics.sqrt(eigPair.eigenvalues)
+
+    val matrixB = diag(matrixA)
+
+    // project results on basis matrices
+    val(result, resultInfo) = Tensor.modeNProducts(tensorRDD, tensorInfo, deCompSeq, basisMatrices)
+
+    val unfoldres = Tensor.TensorUnfoldBlocks( result.map{ case(x,y) => (x, new (org.apache.spark.mllib.linalg.DenseMatrix)(y.rows, y.cols, y.valuesIterator.toArray))}, cluDim, newCoreInfo.tensorRank, newCoreInfo.blockRank, newCoreInfo.blockNum).filter{ x => x != null}
+
+
+    // v is left singular vectors
+    // eigenvectors
+   /* val eigPair = eigSym( finalmat )
+    for(i <- 0 until finalmat.rows){
+      fullmat( ::, i ) := eigPair.eigenvectors( ::, newmat.rows - 1 - i )
+    }*/
+    println("")
     // check if subtensor orthogonal
     //var ortho = coreTmp.map{ case(x,y) => y * y.t}
     //var ortho2 = newmat * newmat.t
@@ -43,7 +78,6 @@ object TensorTucker {
     //* newmat
     //var eigTmp = coreTmp.map{ case(x, y) => y * y.t}
     //var eig2 = eigTmp.map{ case(x) => eigSym(Tensor.blockTensorAsVectors(x))}
-    println("")
   }
 
   def deComp2(tensorRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], tensorInfo: Tensor.TensorInfo,
@@ -107,7 +141,6 @@ object TensorTucker {
           finalRDD.unpersist(false)
       }
     }
-
     // Post processing
     val (coreRDD, coreInfo) = Tensor.modeNProduct(finalRDD, finalInfo, deCompSeq.last,
       bcBasisMatrixArray(deCompSeq.last))

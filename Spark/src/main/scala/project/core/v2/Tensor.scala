@@ -4,15 +4,13 @@ package project.core.v2
   * Created by root on 2015/12/21.
   */
 import java.nio._
-
 import java.io.File
 import java.io.PrintWriter
 
 import scala.io.Source
-
 import breeze.linalg._
 import breeze.numerics._
-import org.apache.hadoop.io.{BytesWritable, LongWritable}
+import org.apache.hadoop.io.{BytesWritable, IntWritable, LongWritable}
 import org.apache.hadoop.mapred._
 import org.apache.spark.{Partitioner, SparkContext}
 import org.apache.spark.broadcast.Broadcast
@@ -43,6 +41,17 @@ object Tensor
     val blockNum = inBlockNum
     val blockFinal = inBlockFinal
   }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Class to store basis matrices information
+  //-----------------------------------------------------------------------------------------------------------------
+  class BasisInfo( inNbRows: Array[Int], inNbCols: Array[Int] ) extends Serializable
+  {
+    val nbRows = inNbRows
+    val nbCols = inNbCols
+  }
+
+
 
   //-----------------------------------------------------------------------------------------------------------------
   // My partitioner to make one partition of RDD only have one tensor block
@@ -121,6 +130,61 @@ object Tensor
 
   }
 
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Read basis matrices header
+  //-----------------------------------------------------------------------------------------------------------------
+  def readBasisHeader ( inPath: String, tensorDims: Int): BasisInfo =
+  {
+    val headerPath = inPath + "header/"
+    val argArray = MySpark.sc.textFile( headerPath ).collect()
+    var line = argArray(0).split(" ")
+
+    var nbRows = new Array[Int]( tensorDims )
+    var nbCols = new Array[Int]( tensorDims )
+
+    for( i <- 1 to 3 )
+    {
+      line(0) match
+      {
+        case "NbRows" => nbRows = line(1).split(",").map(_.toInt)
+        case "NbCols" => nbCols = line(1).split(",").map(_.toInt)
+      }
+      line = argArray(i).split(" ")
+    }
+    new BasisInfo( nbRows, nbCols )
+
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Read basis matrices
+  //-----------------------------------------------------------------------------------------------------------------
+  def readBasisMatrices ( inPath: String, blockRanks: Array[Int]): RDD[ (Int, BMatrix[Double]) ] =
+  {
+    val tensorDims = blockRanks.length
+
+    // Set Hadoop configuration
+    val hadoopJobConf = new JobConf( MySpark.sc.hadoopConfiguration )
+
+    val blockRanks2 = Array(71,71, 31,31)
+    val recordSize = ( blockRanks2.product * 8 ) + ( tensorDims * 4 )
+
+    hadoopJobConf.set("mapred.min.split.size", recordSize.toString)
+
+    val blockPath = inPath
+    FileInputFormat.setInputPaths( hadoopJobConf, blockPath)
+    MyFixedLengthInputFormat.setRecordLength( hadoopJobConf, recordSize )
+
+    // Read tensor block data from HDFS and convert to tuple2( blockSubIndex, DenseVector ) format
+    val bytesRdd = MySpark.sc.hadoopRDD( hadoopJobConf, classOf[MyFixedLengthInputFormat], classOf[LongWritable],
+      classOf[BytesWritable] )
+
+    val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Matrix( bytes.getBytes, tensorDims ) }
+
+    blockRDD
+
+  }
+
   //-----------------------------------------------------------------------------------------------------------------
   // Read tensor block
   //-----------------------------------------------------------------------------------------------------------------
@@ -150,6 +214,21 @@ object Tensor
   }
 
   //-----------------------------------------------------------------------------------------------------------------
+  // Save basis matrices header
+  //-----------------------------------------------------------------------------------------------------------------
+  def saveBasisHeader ( inPath: String, basisInfo: BasisInfo ) =
+  {
+    // Set save path
+    val savePath = inPath + "header/"
+
+    //
+    val infoArray = new Array[ String ](4)
+    infoArray(0) = "NbRows" + " " + basisInfo.nbRows.toString
+    infoArray(1) = "NbCols" + " " + basisInfo.nbCols.mkString(",")
+    MySpark.sc.parallelize( infoArray, 1 ).saveAsTextFile( savePath )
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
   // Save tensor header
   //-----------------------------------------------------------------------------------------------------------------
   def saveTensorHeader ( inPath: String, tensorInfo: TensorInfo ) =
@@ -164,13 +243,6 @@ object Tensor
     infoArray(1) = "TensorRank" + " " + tensorInfo.tensorRank.mkString(",")
     infoArray(2) = "BlockRank" + " " + tensorInfo.blockRank.mkString(",")
     infoArray(3) = "BlockNumber" + " " + tensorInfo.blockNum.mkString(",")
-/*
-    val writer = new PrintWriter(new File(savePath + "coreTensors-header.txt"))
-
-    writer.write(infoArray.toString)
-    writer.close()
-
-    Source.fromFile(savePath + "coreTensors-header.txt").foreach { x => print(x) }*/
     MySpark.sc.parallelize( infoArray, 1 ).saveAsTextFile( savePath )
   }
 
@@ -236,7 +308,8 @@ object Tensor
     // Parallelize bytes array and write to HDFS
     //*val saveRDD = MySpark.sc.parallelize( bytesArray )
     val saveRDD = MySpark.sc.parallelize( matrixArray, matrixNum )
-      .map{ case( dim, matrix ) => convertMatrix2Bytes( dim, matrix ) }
+      .map{ case( dim, matrix ) => convertMatrix2Bytes( matrix.rows, matrix ) }
+    //saveRDD.saveAsTextFile(savePath)
     saveRDD.saveAsHadoopFile( savePath, classOf[BytesWritable], classOf[BytesWritable], classOf[BinaryOutputFormat],
       hadoopJobConf, None )
   }
@@ -326,7 +399,7 @@ object Tensor
     val prodBlockFinal = tensorInfo.blockFinal.clone()
     prodBlockFinal( prodDim ) = ( ( prodDimRank - 1 ) % prodDimBlockRank ) + 1
 
-    val outTensorInfo = new TensorInfo( tensorInfo.tensorDims, prodTensorRank, tensorInfo.blockRank, prodBlockNum,
+   val outTensorInfo = new TensorInfo( tensorInfo.tensorDims, prodTensorRank, tensorInfo.blockRank, prodBlockNum,
       prodBlockFinal )
 
     // Call map function-localMatrixMultiplyMany and reduceByKey to finish mode-N product
@@ -368,16 +441,16 @@ object Tensor
     //*new DenseMatrix( covMatrix.rows, extRank, svd.V.toArray )
 
     val eigPair = eigSym( covMatrix )
-    var basisMatrix = DenseMatrix.zeros[Double]( covMatrix.rows, covMatrix.cols )
+    var basisMatrix = DenseMatrix.zeros[Double]( covMatrix.rows, extRank)
     if(covMatrix.rows < extRank){
       for(i <- 0 until covMatrix.rows){
         basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
       }
-      //add missing clumns
-      basisMatrix = DenseMatrix.horzcat(basisMatrix, DenseMatrix.zeros[Double](covMatrix.rows, extRank - covMatrix.cols))
+      //add missing columns
+      //basisMatrix = DenseMatrix.horzcat(basisMatrix, DenseMatrix.zeros[Double](covMatrix.rows, extRank - covMatrix.cols))
 
     } else {
-      for (i <- 0 until covMatrix.rows) {
+      for (i <- 0 until extRank) {
         basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
       }
     }
@@ -427,6 +500,32 @@ object Tensor
 
     ( new BytesWritable( keyBuffer.array() ), new BytesWritable( valueBuffer.array() ) )
   }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Convert bytes array to basisMatrix
+  //-----------------------------------------------------------------------------------------------------------------
+  private def convertBytes2Matrix( bytesArray: Array[Byte], tensorDims: Int )
+  : (Int, BMatrix[Double]) =
+  {
+    val byteBuffer = ByteBuffer.wrap( bytesArray )
+
+    // Get block subindex
+    val dim: Array[Int] = new Array[Int](1)
+    dim(0) = byteBuffer.getInt()
+
+    // Get tensor block content
+    val doubleBuffer = byteBuffer.asDoubleBuffer()
+    val vectorSize = doubleBuffer.remaining()
+    val doubleArray = new Array[Double]( vectorSize )
+    for( i <- 0 until vectorSize - 1)
+      doubleArray(i) = doubleBuffer.get()
+
+    // Create a dense matrix and size is vectorSize*1
+    val outMatrix = new BMatrix( vectorSize - 1, 1, doubleArray )
+
+    (dim(0), outMatrix)
+  }
+
 
   //-----------------------------------------------------------------------------------------------------------------
   // Convert bytes array to tuple2( blockSubIndex, DenseVector )

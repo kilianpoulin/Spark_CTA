@@ -8,41 +8,182 @@
   <component name="ChangeListManager">
     <list default="true" id="ae2fdefd-1c9e-446b-87f0-5c0f22f442f3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00000.crc" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/.part-00000.crc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00001.crc" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/.part-00001.crc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00002.crc" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/.part-00002.crc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00003.crc" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/.part-00003.crc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00004.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00005.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00006.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00007.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00008.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00009.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00010.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00011.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00012.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00013.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00014.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00015.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00016.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/.part-00017.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00000" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/part-00000" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00001" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/part-00001" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00002" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/part-00002" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00003" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/block/part-00003" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00004" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00005" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00006" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00007" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00008" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00009" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00010" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00011" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00012" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00013" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00014" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00015" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00016" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/block/part-00017" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/header/.part-00000.crc" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/header/.part-00000.crc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/coreTensors/header/part-00000" beforeDir="false" afterPath="$PROJECT_DIR$/data/coreTensors/header/part-00000" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$26.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$26.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$27$$anonfun$apply$20.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$27$$anonfun$apply$20.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$27$$anonfun$apply$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$27$$anonfun$apply$21.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$27.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$27.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$28.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$28.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$29$$anonfun$apply$22$$anonfun$apply$23.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$29$$anonfun$apply$22$$anonfun$apply$23.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$29$$anonfun$apply$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$29$$anonfun$apply$22.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$29.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$29.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$30.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$30.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$31$$anonfun$apply$24.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$31$$anonfun$apply$24.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$31$$anonfun$apply$25.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$31$$anonfun$apply$25.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$31.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$31.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$32.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$32.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$33$$anonfun$apply$26$$anonfun$apply$27.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$33$$anonfun$apply$26$$anonfun$apply$27.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$33$$anonfun$apply$26.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$33$$anonfun$apply$26.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$33.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$33.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$34.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$34.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9$$anonfun$apply$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$calcDistances$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$calcDistances$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combineDists$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combineDists$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$1$$anonfun$apply$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$1$$anonfun$apply$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$combinePartialDistances$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getFullDistances$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getFullDistances$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getFullDistances$2$$anonfun$apply$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getFullDistances$2$$anonfun$apply$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getFullDistances$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getFullDistances$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getMatVect$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getMatVect$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getPartialDistances$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getPartialDistances$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$1$$anonfun$apply$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$1$$anonfun$apply$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$1$$anonfun$apply$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$1$$anonfun$apply$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$2$$anonfun$apply$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$2$$anonfun$apply$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getTupleList$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getVectorIds$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$getVectorIds$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$10$$anonfun$apply$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$10$$anonfun$apply$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$10$$anonfun$apply$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$10$$anonfun$apply$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10$$anonfun$apply$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$12$$anonfun$apply$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$12$$anonfun$apply$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$17.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$18.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$19.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$20$$anonfun$apply$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$20$$anonfun$apply$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$20$$anonfun$apply$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$20$$anonfun$apply$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$20.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$20.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$21.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$22.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$23$$anonfun$apply$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$23$$anonfun$apply$17.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$23$$anonfun$apply$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$23$$anonfun$apply$18.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$23.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$23.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$24.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$24.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$25$$anonfun$apply$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$25$$anonfun$apply$19.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$25.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$25.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1$$anonfun$apply$mcVI$sp$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1$$anonfun$apply$mcVI$sp$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$run$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$setK$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$$anonfun$setK$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$$anonfun$5$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$$anonfun$5$$anonfun$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$$anonfun$5$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$$anonfun$5$$anonfun$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$$anonfun$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering$VData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/KMeansClustering.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$1$$anonfun$apply$mcVI$sp$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$3$$anonfun$apply$1.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$4$$anonfun$apply$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$4$$anonfun$apply$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$4$$anonfun$apply$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$5$$anonfun$apply$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$5$$anonfun$apply$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$7.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$$anonfun$9.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/RunTucker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$13.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$14.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$15.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$18.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$18.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$19.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$20.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$20.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$21.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$24.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$24.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$24.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$25.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$25.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$28.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$28.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$28.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$29.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$29.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5$$anonfun$26.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5$$anonfun$26.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5$$anonfun$26.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5$$anonfun$27.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5$$anonfun$27.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1$$anonfun$apply$mcVI$sp$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4$$anonfun$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4$$anonfun$22.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4$$anonfun$22.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4$$anonfun$23.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4$$anonfun$23.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1$$anonfun$apply$mcVI$sp$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$TensorUnfoldBlocks2$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1$$anonfun$apply$mcVI$sp$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1$$anonfun$apply$mcVI$sp$10.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1$$anonfun$apply$mcVI$sp$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1$$anonfun$apply$mcVI$sp$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1$$anonfun$apply$mcVI$sp$10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1$$anonfun$apply$mcVI$sp$9.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$defineSubIndex$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$extractBasis$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$extractBasis$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$extractBasis$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$extractBasis$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$linear2Sub$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$linear2Sub$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$linear2Sub$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$linear2Sub$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$linearSub$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$linearSub$1.class" afterDir="false" />
@@ -51,83 +192,114 @@
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfold$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfold$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfold$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfold$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfold$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfold$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2$$anonfun$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2$$anonfun$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldBlock$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2$$anonfun$16.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2$$anonfun$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2$$anonfun$17.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1$$anonfun$apply$mcVI$sp$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$localTensorUnfoldOriginal$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$modeNProducts2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$modeNProducts2$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$3$$anonfun$apply$mcVI$sp$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$3$$anonfun$apply$mcVI$sp$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$3$$anonfun$apply$mcVI$sp$11.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$computePartialCovMatrix$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$convertBytes2Tuple$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$convertBytes2Tuple$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$convertBytes2Tuple$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$convertBytes2Tuple$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMMMany$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMMMany$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMMMany$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMMMany$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMMMany$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMMMany$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMultiDimMMMany$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMultiDimMMMany$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMultiDimMMMany$2$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMultiDimMMMany$2$$anonfun$apply$mcVI$sp$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMultiDimMMMany$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$project$core$v2$Tensor$$localMultiDimMMMany$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1$$anonfun$apply$mcVI$sp$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$readTensorHeader$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$saveBasisMatrices$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$saveBasisMatrices$1$$anonfun$apply$mcVI$sp$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$saveBasisMatrices$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$$anonfun$saveBasisMatrices$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$MyPartitioner$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$MyPartitioner$$anonfun$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$MyPartitioner$$anonfun$getPartition$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$MyPartitioner$$anonfun$getPartition$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$MyPartitioner.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$MyPartitioner.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$TensorInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor$TensorInfo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/Tensor.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$11$$anonfun$apply$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$12.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$7.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$8.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$9$$anonfun$apply$4.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$9.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp$2$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$mcVI$sp$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp$2$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp$2$$anonfun$apply$mcV$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp$2.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$2$$anonfun$apply$mcVI$sp$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$1$$anonfun$apply$mcVI$sp$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2$$anonfun$apply$mcV$sp$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$deComp2$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$reConst$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$reConst$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$1$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$15.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$18$$anonfun$apply$7$$anonfun$apply$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$18$$anonfun$apply$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$18$$anonfun$apply$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$18.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$19$$anonfun$apply$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$19$$anonfun$apply$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$19.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$16$$anonfun$apply$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$16$$anonfun$apply$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$16.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$17.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7$$anonfun$apply$mcVI$sp$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5$$anonfun$apply$mcVI$sp$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$20.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$20.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$21.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$13.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15$$anonfun$apply$mcVI$sp$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15$$anonfun$apply$mcVI$sp$22.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15$$anonfun$apply$mcVI$sp$23.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15$$anonfun$apply$mcVI$sp$23.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15$$anonfun$apply$mcVI$sp$24.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15$$anonfun$apply$mcVI$sp$24.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$14.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$15.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17$$anonfun$apply$mcVI$sp$25.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17$$anonfun$apply$mcVI$sp$25.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17$$anonfun$apply$mcVI$sp$26.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17$$anonfun$apply$mcVI$sp$26.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17$$anonfun$apply$mcVI$sp$27.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17$$anonfun$apply$mcVI$sp$27.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$17.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$28.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$28.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$29.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$29.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$30.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$30.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$31.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16$$anonfun$apply$mcVI$sp$31.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14$$anonfun$apply$mcVI$sp$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$2$$anonfun$apply$mcVI$sp$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$2$$anonfun$apply$mcVI$sp$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$2$$anonfun$apply$mcVI$sp$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$2$$anonfun$apply$mcVI$sp$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$32.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$32.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$33.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$33.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$20.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$21.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$10$$anonfun$apply$mcVI$sp$22.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$12$$anonfun$apply$mcVI$sp$23.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$12$$anonfun$apply$mcVI$sp$24.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$12$$anonfun$apply$mcVI$sp$25.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$26.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$27.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11$$anonfun$apply$mcVI$sp$28.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9$$anonfun$apply$mcVI$sp$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$18$$anonfun$apply$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$18$$anonfun$apply$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$18$$anonfun$apply$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$18$$anonfun$apply$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$18.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$19.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7$$anonfun$apply$mcVI$sp$8$$anonfun$apply$mcVI$sp$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7$$anonfun$apply$mcVI$sp$8$$anonfun$apply$mcVI$sp$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7$$anonfun$apply$mcVI$sp$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7$$anonfun$apply$mcVI$sp$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6$$anonfun$apply$mcVI$sp$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1$$anonfun$apply$mcVI$sp$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$$anonfun$transformClusters$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/project/core/v2/TensorTucker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-compile.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-optional.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-provided.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-runtime.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-scala-tool.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/spark-project-spark-project$sources-test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/spark-project/spark-project$sources/1.0/resolved.xml.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/project/project/target/" />
@@ -168,8 +340,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="158" column="36" selection-start-line="158" selection-start-column="36" selection-end-line="158" selection-end-column="36" />
+            <state relative-caret-position="42">
+              <caret line="447" column="7" lean-forward="true" selection-start-line="447" selection-start-column="7" selection-end-line="447" selection-end-column="7" />
               <folding>
                 <element signature="e#69#86#0" expanded="true" />
               </folding>
@@ -180,8 +352,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="111" column="9" selection-start-line="111" selection-start-column="9" selection-end-line="111" selection-end-column="9" />
+            <state relative-caret-position="107">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
               <folding>
                 <element signature="e#69#91#0" expanded="true" />
               </folding>
@@ -192,8 +364,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-66">
-              <caret line="243" column="28" selection-start-line="243" selection-start-column="28" selection-end-line="243" selection-end-column="28" />
+            <state relative-caret-position="110">
+              <caret line="146" selection-start-line="146" selection-end-line="146" />
               <folding>
                 <element signature="e#25#58#0" expanded="true" />
               </folding>
@@ -204,8 +376,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="143" column="4" selection-start-line="143" selection-start-column="4" selection-end-line="143" selection-end-column="4" />
+            <state relative-caret-position="158">
+              <caret line="188" column="4" selection-start-line="188" selection-start-column="4" selection-end-line="188" selection-end-column="4" />
               <folding>
                 <element signature="e#25#41#0" expanded="true" />
               </folding>
@@ -227,36 +399,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>/*</find>
-      <find>Blocks2</find>
-      <find>checkBasisMatr</find>
-      <find>Haddoo</find>
-      <find>checkB</find>
+      <find>saveBas</find>
+      <find>bas</find>
+      <find>Broadcas</find>
       <find>readB</find>
-      <find>hadoop</find>
-      <find>println</find>
-      <find>resha</find>
-      <find>blockNum</find>
-      <find>BMatri</find>
-      <find>localTensorUnfold</find>
-      <find>localMM</find>
-      <find>unfold</find>
-      <find>local</find>
-      <find>local</find>
-      <find>fold</find>
-      <find>localtensor</find>
-      <find>TensorUnfolDb</find>
-      <find>TensorUnfoldBlocks2</find>
+      <find>extract</find>
+      <find>readT</find>
+      <find>readBasis</find>
+      <find>extr</find>
+      <find>basis</find>
       <find>eig</find>
-      <find>gener</find>
-      <find>i</find>
-      <find>index</find>
-      <find>transform</find>
-      <find>blkRa</find>
-      <find>pro</find>
-      <find>coreR</find>
-      <find>norm</find>
+      <find>2Tuple</find>
+      <find>readTensorHead</find>
       <find>save</find>
+      <find>readb</find>
+      <find>saveBasisMa</find>
+      <find>saveB</find>
+      <find>savebasism</find>
+      <find>convertMa</find>
+      <find>convertBa</find>
+      <find>read</find>
+      <find>saveBasisMatri</find>
+      <find>convertMatri</find>
+      <find>convertBytes</find>
+      <find>convert</find>
+      <find>convertM</find>
+      <find>convertBytes2M</find>
+      <find>convertBytes2</find>
+      <find>tensorInfo</find>
+      <find>readBasisMat</find>
+      <find>eigS</find>
     </findStrings>
     <replaceStrings>
       <replace>Vector</replace>
@@ -265,9 +437,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.scala" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -320,9 +489,9 @@
         <option value="$PROJECT_DIR$/src/main/scala/project/core/officialApprox/TensorTucker.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/officialApprox/Tensor.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala" />
       </list>
     </option>
   </component>
@@ -346,6 +515,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -395,6 +565,15 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="scala" type="462c0819:PsiDirectoryNode" />
               <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="original" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Spark Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="scala" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
               <item name="v2" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -411,12 +590,11 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1565791885281" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1566208806815" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -535,10 +713,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="V2Test" type="Application" factoryName="Application">
+    <configuration name="V2Test" type="Application" factoryName="Application" singleton="false">
       <option name="MAIN_CLASS_NAME" value="project.core.v2.RunTucker" />
       <module name="Spark Project" />
-      <option name="PROGRAM_PARAMETERS" value="--TensorPath data/ConvertedData/ --CentroidsInit sample --MaxIter 2 --CoreRank 50,50,20,20 --DeCompSeq 0,1,2,3 --CluNum 3" />
+      <option name="PROGRAM_PARAMETERS" value="--TensorPath data/ConvertedData/ --CentroidsInit sample --MaxIter 2 --CoreRank 50,50,20,20 --DeCompSeq 0,1,2,3 --CluNum 3 --CorePath data/coreTensors/ --BasisPath data/basisMatrices/ --ClustersPath data/clusters/" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -652,8 +830,8 @@
     <frame x="67" y="25" width="1613" height="920" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46848738" visible="true" weight="0.14103383" />
-      <window_info id="Structure" order="1" sideWeight="0.5315126" side_tool="true" visible="true" weight="0.14103383" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4642857" weight="0.1448628" />
+      <window_info id="Structure" order="1" sideWeight="0.53571427" side_tool="true" weight="0.1448628" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -662,9 +840,9 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32996207" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4975097" weight="0.3767383" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39823008" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="5" visible="true" weight="0.39823008" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32869786" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.32869786" />
       <window_info anchor="bottom" id="sbt-shell-toolwindow" order="8" sideWeight="0.4985694" weight="0.32869786" />
@@ -685,36 +863,36 @@
       <window_info anchor="right" id="sbt" order="9" side_tool="true" weight="0.32929164" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48080808" visible="true" weight="0.1263561" />
-      <window_info id="Structure" order="1" sideWeight="0.5191919" side_tool="true" visible="true" weight="0.1263561" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4642857" visible="true" weight="0.1448628" />
+      <window_info id="Structure" order="1" sideWeight="0.53571427" side_tool="true" visible="true" weight="0.1448628" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="UI Designer" order="4" />
-      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info id="Favorites" order="5" sideWeight="0.5273109" side_tool="true" weight="0.13720486" />
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4975097" visible="true" weight="0.37420985" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39823008" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3294423" />
-      <window_info anchor="bottom" id="Build" order="7" weight="0.32905984" />
-      <window_info anchor="bottom" id="sbt-shell-toolwindow" order="8" sideWeight="0.4985694" weight="0.32905984" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49928468" weight="0.32905984" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32996207" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4975097" weight="0.3767383" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="5" visible="true" weight="0.39823008" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32869786" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.32869786" />
+      <window_info anchor="bottom" id="sbt-shell-toolwindow" order="8" sideWeight="0.4985694" weight="0.32869786" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49928468" weight="0.32869786" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50249034" side_tool="true" weight="0.3540856" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.3294423" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.32869786" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32743362" />
       <window_info anchor="bottom" id="SBT Console" order="13" sideWeight="0.4997233" weight="0.3294423" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.24952137" />
       <window_info anchor="right" id="Palette" order="2" />
-      <window_info anchor="right" id="Maven" order="3" weight="0.32982844" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Gradle" order="5" />
-      <window_info anchor="right" id="Palette&#9;" order="6" />
-      <window_info anchor="right" id="Theme Preview" order="7" />
-      <window_info anchor="right" id="Ant Build" order="8" weight="0.24958494" />
+      <window_info anchor="right" id="Ant Build" order="3" weight="0.24952137" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.32929164" />
+      <window_info anchor="right" id="Capture Analysis" order="5" />
+      <window_info anchor="right" id="Gradle" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info anchor="right" id="sbt" order="9" side_tool="true" weight="0.32929164" />
     </layout-to-restore>
   </component>
@@ -741,7 +919,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala</url>
-          <line>126</line>
+          <line>127</line>
           <properties />
           <option name="timeStamp" value="42" />
         </line-breakpoint>
@@ -783,69 +961,127 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
-          <line>45</line>
-          <properties />
-          <option name="timeStamp" value="296" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
-          <line>147</line>
-          <properties />
-          <option name="timeStamp" value="297" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
           <line>32</line>
           <properties />
           <option name="timeStamp" value="442" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
-          <line>34</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="444" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
-          <line>148</line>
+          <line>39</line>
           <properties />
-          <option name="timeStamp" value="445" />
+          <option name="timeStamp" value="505" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
-          <line>35</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="450" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala</url>
-          <line>170</line>
+          <line>72</line>
           <properties />
-          <option name="timeStamp" value="456" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala</url>
-          <line>172</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="457" />
+          <option name="timeStamp" value="506" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
-          <line>140</line>
+          <line>151</line>
           <properties />
-          <option name="timeStamp" value="458" />
+          <option name="timeStamp" value="511" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="scala-line">
           <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
-          <line>139</line>
+          <line>154</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="512" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
+          <line>161</line>
           <properties />
-          <option name="timeStamp" value="459" />
+          <option name="timeStamp" value="592" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
+          <line>160</line>
+          <properties />
+          <option name="timeStamp" value="606" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
+          <line>168</line>
+          <properties />
+          <option name="timeStamp" value="607" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala</url>
+          <line>309</line>
+          <properties />
+          <option name="timeStamp" value="610" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala</url>
+          <line>312</line>
+          <properties />
+          <option name="timeStamp" value="611" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
+          <line>188</line>
+          <properties />
+          <option name="timeStamp" value="612" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
+          <line>187</line>
+          <properties />
+          <option name="timeStamp" value="613" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala</url>
+          <line>147</line>
+          <properties />
+          <option name="timeStamp" value="618" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>69</line>
+          <properties />
+          <option name="timeStamp" value="623" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>48</line>
+          <properties />
+          <option name="timeStamp" value="625" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>68</line>
+          <properties />
+          <option name="timeStamp" value="626" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>61</line>
+          <properties />
+          <option name="timeStamp" value="628" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>63</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="629" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>50</line>
+          <properties />
+          <option name="timeStamp" value="630" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala</url>
+          <line>58</line>
+          <properties />
+          <option name="timeStamp" value="631" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -863,89 +1099,70 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
-        <expression-string>var i = ((RunTucker)this).matest.apply(0).apply(55203)</expression-string>
+        <expression-string>eigPair.eigenvalues</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = ((RunTucker)this).matest.apply(1).apply(55203)</expression-string>
+        <expression-string>((EigSym)eigPair).eigenvalues</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>project.core.v2.RunTucker</custom-info>
+        <custom-info>breeze.linalg.eigSym.EigSym</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = ((RunTucker)this).matest.apply(1).apply(55202)</expression-string>
+        <expression-string>matrixA</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = ((RunTucker)this).matest.apply(0).apply(55202)</expression-string>
+        <expression-string>eigPair</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = matest</expression-string>
+        <expression-string>eigPair.collect()</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>double[][],project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = matest.map{x =&gt; x(55202)}</expression-string>
+        <expression-string>result.count()</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>double[][],project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = matest.apply(0)</expression-string>
+        <expression-string>result.collect()</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>double[][],project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = matest.apply(0).take(5502)</expression-string>
+        <expression-string>finalmat</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>double[][],project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>var i = matest.apply(0)(5502)</expression-string>
+        <expression-string>finalmat.t</expression-string>
         <language-id>Scala</language-id>
-        <custom-info>double[][],project.core.v2.RunTucker</custom-info>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>var i = matest.apply(1)(5502)</expression-string>
-        <language-id>Scala</language-id>
-        <custom-info>double[][],project.core.v2.RunTucker</custom-info>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>(coreRDD.collect()).map{ x =&gt; x._2.sum}</expression-string>
+        <expression-string>finalRDD.collect()</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>(coreRDD.collect()).map{ x =&gt; x._2}</expression-string>
+        <expression-string>bcBasisMatrixArray.map{ x =&gt; x.value}</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>(coreRDD.collect()).map{ x =&gt; x}</expression-string>
+        <expression-string>bcBasisMatrixArray.collect()</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>coreRDD.map{x =&gt; x._2}</expression-string>
-        <language-id>Scala</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>coreRDD.map{x =&gt; x._2.sum}</expression-string>
+        <expression-string>coreTensors2.collect()</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -955,17 +1172,22 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>coreRDD.ollect()</expression-string>
+        <expression-string>tensorRDD.collect()</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prodsRDD.collect()</expression-string>
+        <expression-string>coreTensors.collect().map{ y =&gt; (y._2.rows, y._1.zipWithIndex.filter{ case(x,y) =&gt; y == 1 &amp;&amp; x == 0})}</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>finalRDD.collect()</expression-string>
+        <expression-string>coreTensors.collect().map{ y =&gt; y._1.zipWithIndex.filter{ case(x,y) =&gt; y == 1 &amp;&amp; x == 0}}</expression-string>
+        <language-id>Scala</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>coreTensors.collect().map{ y =&gt; (y._2.rows, y._1.zipWithIndex.filter{ case(x,y) =&gt; y == 1 &amp;&amp; x == 1})}</expression-string>
         <language-id>Scala</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -1047,14 +1269,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/matrix/block/part-00000">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="26" selection-start-column="26" selection-end-column="26" />
-        </state>
-      </provider>
       <provider editor-type-id="LargeFileEditor">
         <state>
           <caret column="1280000" selection-end-column="1280000" />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="26" selection-start-column="26" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -1163,16 +1385,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-529">
-          <caret line="24" column="30" lean-forward="true" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="30" />
-          <folding>
-            <element signature="e#75#97#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.apache.spark/spark-core_2.11/srcs/spark-core_2.11-2.4.0-sources.jar!/org/apache/spark/rdd/RDD.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="149">
@@ -1228,16 +1440,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14">
-          <caret line="478" column="23" selection-start-line="478" selection-start-column="6" selection-end-line="478" selection-end-column="28" />
-          <folding>
-            <element signature="e#75#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalanlp/breeze_2.11/srcs/breeze_2.11-0.13.2-sources.jar!/breeze/linalg/Tensor.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="149">
@@ -1245,40 +1447,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/Tensor.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="111" column="9" selection-start-line="111" selection-start-column="9" selection-end-line="111" selection-end-column="9" />
+        <state relative-caret-position="762">
+          <caret line="361" column="40" selection-start-line="361" selection-start-column="40" selection-end-line="362" selection-end-column="80" />
           <folding>
-            <element signature="e#69#91#0" expanded="true" />
+            <element signature="e#75#92#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/original/TensorTucker.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-66">
-          <caret line="243" column="28" selection-start-line="243" selection-start-column="28" selection-end-line="243" selection-end-column="28" />
+        <state relative-caret-position="-171">
+          <caret line="75" column="38" selection-start-line="75" selection-start-column="35" selection-end-line="75" selection-end-column="47" />
           <folding>
-            <element signature="e#25#58#0" expanded="true" />
+            <element signature="e#75#97#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/Tensor.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="158" column="36" selection-start-line="158" selection-start-column="36" selection-end-line="158" selection-end-column="36" />
+        <state relative-caret-position="42">
+          <caret line="447" column="7" lean-forward="true" selection-start-line="447" selection-start-column="7" selection-end-line="447" selection-end-column="7" />
           <folding>
             <element signature="e#69#86#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/KMeansClustering.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="146" selection-start-line="146" selection-end-line="146" />
+          <folding>
+            <element signature="e#25#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/TensorTucker.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+          <folding>
+            <element signature="e#69#91#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/project/core/v2/RunTucker.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="143" column="4" selection-start-line="143" selection-start-column="4" selection-end-line="143" selection-end-column="4" />
+        <state relative-caret-position="158">
+          <caret line="188" column="4" selection-start-line="188" selection-start-column="4" selection-end-line="188" selection-end-column="4" />
           <folding>
             <element signature="e#25#41#0" expanded="true" />
           </folding>
