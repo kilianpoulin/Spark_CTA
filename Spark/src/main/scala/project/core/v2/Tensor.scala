@@ -213,6 +213,35 @@ object Tensor
 
   }
 
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Read tensor block
+  //-----------------------------------------------------------------------------------------------------------------
+  def readClusterBlock ( inPath: String, blockRanks: Array[Int]): RDD[ Array[(CM.ArraySeq[Int], DMatrix)] ] =
+  {
+    val tensorDims = blockRanks.length
+
+    // Set Hadoop configuration
+    val hadoopJobConf = new JobConf( MySpark.sc.hadoopConfiguration )
+
+    val recordSize = ( blockRanks.product * 8 ) + ( tensorDims * 4 )
+
+    hadoopJobConf.set("mapred.min.split.size", recordSize.toString)
+
+    val blockPath = inPath + "block/"
+    FileInputFormat.setInputPaths( hadoopJobConf, blockPath)
+    MyFixedLengthInputFormat.setRecordLength( hadoopJobConf, recordSize )
+
+    // Read tensor block data from HDFS and convert to tuple2( blockSubIndex, DenseVector ) format
+    val bytesRdd = MySpark.sc.hadoopRDD( hadoopJobConf, classOf[MyFixedLengthInputFormat], classOf[LongWritable],
+      classOf[BytesWritable] )
+
+    val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Tuple( bytes.getBytes, tensorDims ) }
+
+    MySpark.sc.parallelize(Seq(blockRDD.collect()))
+
+  }
+
   //-----------------------------------------------------------------------------------------------------------------
   // Save basis matrices header
   //-----------------------------------------------------------------------------------------------------------------

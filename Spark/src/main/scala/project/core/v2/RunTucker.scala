@@ -93,11 +93,11 @@ object RunTucker extends App {
   //******************************************************************************************************************
   // Initialize variables
   //******************************************************************************************************************
-  var clusters: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])] = MySpark.sc.parallelize(Seq(null))
-  var clustersInfo: Tensor.TensorInfo = null
-  var coreTensors: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])] = MySpark.sc.parallelize(Seq(null))
-  var coreInfo: Tensor.TensorInfo = null
-  var basisMatrices: Array[Broadcast[DenseMatrix[Double]]] = null
+  var clusters: RDD[Array[(CM.ArraySeq[Int], DenseMatrix[Double])]] = MySpark.sc.parallelize(Seq(null))
+  var clustersInfo: Array[Tensor.TensorInfo] = Array.fill(cluNum)(null)
+  var coreTensors: Array[RDD[(CM.ArraySeq[Int], DenseMatrix[Double])]] = Array.fill(cluNum)(MySpark.sc.parallelize(Seq(null)))
+  var coreInfo: Array[Tensor.TensorInfo] = Array.fill(cluNum)(null)
+  var basisMatrices: Array[Array[Broadcast[DenseMatrix[Double]]]] = Array.fill(cluNum)(null)
   val deCompSeq2: Array[Int] = Array(1, 2, 3)
 
 
@@ -137,46 +137,62 @@ object RunTucker extends App {
     // convert Densevectors to DenseMatrix
     var clusteredRDDmat = clusteredRDD.map { x => (x.size, x(0).length, x.map { y => y.toArray }) }.collect()
     var clusteredRDDmat2 = clusteredRDDmat.map { x => new DenseMatrix(x._2, x._1, x._3.reduce((a, b) => a ++ b)) }.map { x => (CM.ArraySeq[Int](0, 0), x.t) }
-    var finalClusters: RDD[Array[(CM.ArraySeq[Int], DenseMatrix[Double])]] = null
-    val (finalClusters2, clustersInfo2) = TensorTucker.transformClusters(tensorRDD, MySpark.sc.parallelize(clusteredRDDmat2.map { case (x, y) => y }), clusterMembers, tensorInfo, coreRank.clone(), cluNum, 0)
 
-    finalClusters = finalClusters2
-    clustersInfo = clustersInfo2(2)
-    var test = finalClusters.zipWithIndex.filter { case (x, y) => y == 2 }.map { case (x, y) => x }.collect()
-    clusters = MySpark.sc.parallelize(test(0))
-      .reduceByKey( new MyPartitioner( clustersInfo.blockNum ), ( a, b ) => a + b )
 
-    // save clusters
-    Tensor.saveTensorHeader("data/clusters/", clustersInfo)
-    Tensor.saveTensorBlock("data/clusters/", clusters)
+    // use vector IDs to create clusters
+    val tuple = TensorTucker.transformClusters(tensorRDD, MySpark.sc.parallelize(clusteredRDDmat2.map{ case (x, y) => y }), clusterMembers,
+      tensorInfo, coreRank.clone(), cluNum, 0)
+
+    clusters = tuple._1
+    clustersInfo = tuple._2
+
+    for(c <- 0 to cluNum - 1){
+      val clInfo = clustersInfo(c)
+
+      val cluster = clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap{ x => x}
+        .reduceByKey( new MyPartitioner( clInfo.blockNum ), ( a, b ) => a + b )
+
+      // save cluster
+      Tensor.saveTensorHeader("data/clusters/" + c + "/", clInfo)
+      Tensor.saveTensorBlock("data/clusters/" + c + "/", cluster)
+    }
 
   } else {
-    val clustersInfo2 = Tensor.readTensorHeader(clustersPath)
 
+    for (c <- 0 to cluNum - 1) {
+      clustersInfo(c) = Tensor.readTensorHeader(clustersPath + c + "/")
 
-    clustersInfo = new Tensor.TensorInfo(4, Array(24,71,31,31), Array(50, 50, 14, 14), Array(1, 2, 3, 3), Array(24,21,3,3))
+      if (clustersInfo(c).blockRank(unfoldDim) < tensorInfo.blockRank(unfoldDim)) {
+        clustersInfo(c).blockRank(unfoldDim) = tensorInfo.blockRank(unfoldDim)
+      }
 
-    clusters = Tensor.readTensorBlock(clustersPath, clustersInfo2.blockRank).map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values))}
-
+      val oneCl = Tensor.readClusterBlock(clustersPath + c + "/", clustersInfo(c).blockRank)
+        .map{ s => s.map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values)) }}
+      if(c == 0)
+        clusters = oneCl
+      else
+      clusters = clusters.union(oneCl)
+    }
   }
 
-  if(basisPath == "" || corePath == ""){
-    clustersInfo = new Tensor.TensorInfo(4, Array(24,71,31,31), Array(50, 50, 14, 14), Array(1, 2, 3, 3), Array(24,21,3,3))
+  if(basisPath == "" || corePath == "") {
 
-    val (coreTensors2, coreInfo2, basisMatrices2, iterRecord) = TensorTucker.deComp2(clusters, clustersInfo, deCompSeq, coreRank, maxIter, epsilon)
-    coreTensors = coreTensors2
-    coreInfo = coreInfo2
-    basisMatrices = basisMatrices2
-    // save basis matrices
-    //val basisInfo: Tensor.BasisInfo = new Tensor.BasisInfo(basisMatrices.map{ x => x.value.rows}, basisMatrices.map{ x => x.value.cols})
-    //Tensor.saveBasisHeader("data/basisMatrices/", basisInfo)
-    //Tensor.saveBasisMatrices("data/basisMatrices/", basisMatrices.map{ x => MySpark.sc.broadcast(x.value.reshape(1, x.value.rows * x.value.cols))}, deCompSeq2)
-    Tensor.saveBasisMatrices("data/basisMatrices/", basisMatrices, deCompSeq)
+    for (c <- 0 to cluNum - 1) {
+      val tuple = TensorTucker.deComp2(clusters.zipWithIndex.filter{ case(x,y) => y == c}.map{ case(x,y) => x(0)}, clustersInfo(c), deCompSeq, coreRank, maxIter, epsilon)
+      coreTensors(c) = tuple._1
+      coreInfo(c) = tuple._2
+      basisMatrices(c) = tuple._3
 
-    // save core tensors
-    Tensor.saveTensorHeader("data/coreTensors/", coreInfo)
-    Tensor.saveTensorBlock("data/coreTensors/", coreTensors)
-  } else {
+      // save basis matrices
+      Tensor.saveBasisMatrices("data/basisMatrices/" + c + "/", basisMatrices(c), deCompSeq)
+
+      // save core tensors
+      Tensor.saveTensorHeader("data/coreTensors/" + c + "/", coreInfo(c))
+      Tensor.saveTensorBlock("data/coreTensors/" + c + "/", coreTensors(c))
+    }
+
+    println("")
+  }/* else {
 
     // start with previously calculated coreTensor and basisMatrices
     var basisMatrices2 = Tensor.readBasisMatrices(basisPath, deCompSeq).collect()
@@ -204,7 +220,7 @@ object RunTucker extends App {
       coreInfo = coreInfo2
       basisMatrices = basisMatrices2
     }
-
+*/
   println("CTA done")
 }
 
