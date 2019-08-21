@@ -424,36 +424,27 @@ object Tensor
   : DenseMatrix[Double] =
   {
     val covMatrix = getCovMatrix( tensorRDD, tensorInfo, extDim )
-    //*// Convert covariance matrix to MLlib RowMatrix format
-    //*var rowVectorList: List[ Vector ] = List()
-    //*for( i <- 0 to covMatrix.cols - 1 )
-    //*{
-    //*  // Set temp result
-    //*  val temp = List( Vectors.dense( covMatrix( ::, i ).toArray ) )
-    //*  rowVectorList = temp ++ rowVectorList
-    //*}
-    //*val rowMatrixRDD = new RowMatrix( MySpark.sc.parallelize( rowVectorList ) )
-    //*
-    //*// Do SVD from MLlib
-    //*val svd = rowMatrixRDD.computeSVD( extRank, false, 0 )
-    //*
-    //*// Return basis matrix
-    //*new DenseMatrix( covMatrix.rows, extRank, svd.V.toArray )
 
     val eigPair = eigSym( covMatrix )
     var basisMatrix = DenseMatrix.zeros[Double]( covMatrix.rows, extRank)
+    var eigenvalues = DenseVector.zeros[Double](extRank)
     if(covMatrix.rows < extRank){
       for(i <- 0 until covMatrix.rows){
-        basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
+        basisMatrix( ::, i) := eigPair.eigenvectors( ::, i )
+        eigenvalues(i) = eigPair.eigenvalues(i)
       }
       //add missing columns
       //basisMatrix = DenseMatrix.horzcat(basisMatrix, DenseMatrix.zeros[Double](covMatrix.rows, extRank - covMatrix.cols))
 
     } else {
       for (i <- 0 until extRank) {
-        basisMatrix( ::, i ) := eigPair.eigenvectors( ::, covMatrix.rows - 1 - i )
+        basisMatrix( ::, i ) := eigPair.eigenvectors( ::, i )
+        eigenvalues(i) = eigPair.eigenvalues(i)
       }
     }
+
+    var eigenVal = sqrt(DenseVector((eigenvalues).toArray.sortWith( _ > _)))
+
 
     basisMatrix
   }
@@ -484,6 +475,49 @@ object Tensor
     covMatrix
   }
 
+  //-----------------------------------------------------------------------------------------------------------------
+  // Project onto matrix
+  //-----------------------------------------------------------------------------------------------------------------
+  def projectOntoMatrix(matrixA: DenseMatrix[Double], matrixB: DenseMatrix[Double], TransFlagA: Boolean, TransFlagB: Boolean): DenseMatrix[Double] ={
+
+    var transMatA = matrixA
+    var transMatB = matrixB
+    var transSize = matrixB.rows
+    var projectionMat: DenseMatrix[Double] = DenseMatrix.zeros[Double](transSize, transSize)
+
+    if(TransFlagA && matrixB.cols != matrixA.rows) {
+      transMatA = matrixA.t
+    }
+
+    projectionMat = transMatB * transMatA
+
+    projectionMat
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
+  // Project onto matrix
+  //-----------------------------------------------------------------------------------------------------------------
+  def projectOntoMatrix(matrixA: Array[DenseMatrix[Double]], matAInfo: Tensor.TensorInfo, matrixB: DenseMatrix[Double], TransFlagA: Boolean, TransFlagB: Boolean): DenseMatrix[Double] ={
+
+    var transMatA = matrixA
+    var transMatB = matrixB
+    var transSize = matrixB.rows
+    var projectionMat: DenseMatrix[Double] = DenseMatrix.zeros[Double](transSize, transSize)
+
+    if(TransFlagA) {
+      transMatA = matrixA.map { x => x.t }
+    }
+
+    for(i <- 0 to matAInfo.blockNum.product){
+      if(i == 0){
+        projectionMat = transMatB * transMatA.apply(0)
+      } else{
+        projectionMat = projectionMat + transMatB * transMatA.apply(i)
+      }
+    }
+
+    projectionMat
+  }
 
   //-----------------------------------------------------------------------------------------------------------------
   // Convert matrix into binary format
@@ -1282,7 +1316,7 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Perform local matrix multiply
   //-----------------------------------------------------------------------------------------------------------------
-  private def localMMMany( blockSubIndex: CM.ArraySeq[Int], denseMatrix: DenseMatrix[Double], prodDim: Int,
+  def localMMMany( blockSubIndex: CM.ArraySeq[Int], denseMatrix: DenseMatrix[Double], prodDim: Int,
                            bcProdMatrix: Broadcast[DenseMatrix[Double]], blockRank: Array[Int], blockNum: Array[Int],
                            blockFinal: Array[Int] )
   : CM.ArraySeq[( CM.ArraySeq[Int], DenseMatrix[Double] )] =
