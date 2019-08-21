@@ -191,36 +191,42 @@ object RunTucker extends App {
       Tensor.saveTensorBlock("data/coreTensors/" + c + "/", coreTensors(c))
     }
 
-    println("")
-  }/* else {
+  } else {
 
-    // start with previously calculated coreTensor and basisMatrices
-    var basisMatrices2 = Tensor.readBasisMatrices(basisPath, deCompSeq).collect()
-    basisMatrices = basisMatrices2.map{ x => MySpark.sc.broadcast(x._2.reshape(x._1, x._2.rows / x._1))}.reverse
+    for(c <- 0 to cluNum - 1){
 
-    //val basisMatrices = Tensor.readBasisMatrices(basisPath, deCompSeq2).map{ x => MySpark.sc.broadcast(new DenseMatrix[Double](x.numRows, x.numCols, x.values))}
-    //var basisMatrices2 = Tensor.readBasisMatrices(basisPath, deCompSeq).map{ x => new DenseMatrix[Double](x.numRows, x.numCols, x.values)}.collect()
-    coreInfo = Tensor.readTensorHeader(corePath)
-    coreTensors = Tensor.readTensorBlock(corePath, coreInfo.blockRank).map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values))}
+      // start with previously calculated coreTensor and basisMatrices
+      basisMatrices(c) = Tensor.readBasisMatrices(basisPath + c + "/", deCompSeq)
+      coreInfo(c) = Tensor.readTensorHeader(corePath + c + "/")
+      coreTensors(c) = Tensor.readTensorBlock(corePath + c + "/", coreInfo(c).blockRank).map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values))}
+    }
 
   }
 
   val initTensor = tensorRDD.map{ case(x,y) => (x, new DenseMatrix[Double](y.numRows, y.numCols, y.values))}
 
   val approxErr: Array[Array[Double]] = Array.fill(cluNum, tensorInfo.tensorDims)(0.0)
-    for(iter <- 0 to maxIter){
-      // for each cluster
-      for(c <- cluNum to 1 by -1){
-        approxErr(c - 1) = TensorTucker.computeApprox(initTensor, tensorInfo, cluNum, coreTensors, coreInfo, basisMatrices, deCompSeq, 0)
-      }
-      // find max
-      var cluIDs = approxErr.transpose.map{ x => x.indexOf(x.max)}
-      val (coreTensors2, coreInfo2, basisMatrices2, iterRecord) = TensorTucker.deComp2(clusters, clustersInfo, deCompSeq, coreRank, maxIter, epsilon)
-      coreTensors = coreTensors2
-      coreInfo = coreInfo2
-      basisMatrices = basisMatrices2
+
+  for(iter <- 0 to maxIter){
+    // for each cluster
+    for(c <- 0 to cluNum - 1){
+      approxErr(c) = TensorTucker.computeApprox(initTensor, tensorInfo, cluNum, coreTensors(c), coreInfo(c), basisMatrices(c), deCompSeq, 0)
     }
-*/
+
+
+    // find max
+    var cluIDs = approxErr.transpose.map{ x => x.indexOf(x.max)}
+
+    println("")
+/*
+    for(c <- 0 to cluNum) {
+      val tuple = TensorTucker.deComp2(clusters, clustersInfo, deCompSeq, coreRank, maxIter, epsilon)
+      coreTensors(c) = tuple._1
+      coreInfo(c) = tuple._2
+      basisMatrices(c) = tuple._3
+    }*/
+  }
+
   println("CTA done")
 }
 

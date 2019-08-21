@@ -159,7 +159,7 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Read basis matrices
   //-----------------------------------------------------------------------------------------------------------------
-  def readBasisMatrices ( inPath: String, blockRanks: Array[Int]): RDD[ (Int, BMatrix[Double]) ] =
+  def readBasisMatrices ( inPath: String, blockRanks: Array[Int]): Array[Broadcast[BMatrix[Double]]] =
   {
     val tensorDims = blockRanks.length
 
@@ -181,7 +181,7 @@ object Tensor
 
     val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Matrix( bytes.getBytes, tensorDims ) }
 
-    blockRDD
+    blockRDD.map{ x => MySpark.sc.broadcast(x._2.reshape(x._1, x._2.rows / x._1))}.collect().reverse
 
   }
 
