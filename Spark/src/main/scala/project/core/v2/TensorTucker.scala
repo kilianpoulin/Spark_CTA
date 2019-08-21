@@ -11,6 +11,7 @@ import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}
 import project.core.v2
+import project.core.v2.Tensor.TensorInfo
 
 import scala.annotation.tailrec
 import scala.collection.{mutable => CM}
@@ -28,7 +29,8 @@ object TensorTucker {
 
   def h(index: Int, blkrank: Int, tensrank: Int, num: Int) = if (index == num) (tensrank - blkrank) % blkrank else blkrank
 
-  def computeApprox(tensorRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], tensorInfo: Tensor.TensorInfo, cluNum: Int, coreTensors: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], coreInfo: Tensor.TensorInfo, basisMatrices: Array[Broadcast[DenseMatrix[Double]]], deCompSeq: Array[Int], cluDim: Int): Array[Double] = {
+  def computeApprox(tensorRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], tensorInfo: Tensor.TensorInfo, cluNum: Int, coreTensors: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])],
+                    coreInfo: Tensor.TensorInfo, basisMatrices: Array[Broadcast[DenseMatrix[Double]]], deCompSeq: Array[Int], cluDim: Int): DenseVector[Double] = {
     // unfolding the block-wise core tensors
     var unfoldedCoreTensor: DenseMatrix[Double] = null
 
@@ -54,8 +56,16 @@ object TensorTucker {
       .filter{ x => x != null}
 
     val squareApprox = unfApprox.map{ case(x,y) => y * y.t}
-    val finalApprox = squareApprox.map{ x => calcNorm(x * reshapeBasis(dualbasis, x.rows), 0)}
-    finalApprox.collect()
+    val tmpApprox = squareApprox.map{ x => calcNorm(x * reshapeBasis(dualbasis, x.rows))}
+    val finalApprox = assembleBlock(tmpApprox, tensorInfo.tensorRank(cluDim), tensorInfo.blockRank(cluDim), tensorInfo.blockFinal(cluDim))
+    //val finalApprox = squareApprox.map{ x => calcNorm(x * reshapeBasis(dualbasis, x.rows))}
+    finalApprox
+  }
+
+  def assembleBlock(blocksRDD: RDD[DenseVector[Double]], blockRank: Int, blockNum: Int, blockFinal: Int): DenseVector[Double] ={
+    val finalvect: DenseVector[Double] = DenseVector.zeros[Double](blockRank * (blockNum - 1) + blockFinal)
+
+      tmp.map{ x => x.reduce((a,b) => a + b)}.reduce((a,b) => DenseVector.vertcat(a,b))
   }
 
   def reshapeBasis(basis: DenseMatrix[Double], size: Int): DenseMatrix[Double] ={
@@ -68,13 +78,22 @@ object TensorTucker {
     newBasis
   }
 
+  def calcNorm(matrix: DenseMatrix[Double]): DenseVector[Double] ={
+    var normMatrix: DenseVector[Double] = DenseVector.zeros[Double](matrix.cols)
+    for(i <- 0 to matrix.cols - 1){
+      normMatrix(i) = norm(matrix(::,i))
+    }
+    normMatrix
+  }
 
+
+/*
   def calcNorm(matrix: DenseMatrix[Double], i: Int): Double ={
    if(i == matrix.rows - 1)
      norm(matrix(::, i))
    else
      norm(matrix(::, i)) + calcNorm(matrix, i + 1)
-  }
+  }*/
 
   def deComp2(tensorRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], tensorInfo: Tensor.TensorInfo,
               deCompSeq: Array[Int], coreRank: Array[Int], maxIter: Int, epsilon: Double)
