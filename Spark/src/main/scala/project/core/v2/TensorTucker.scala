@@ -57,15 +57,16 @@ object TensorTucker {
 
     val squareApprox = unfApprox.map{ case(x,y) => y * y.t}
     val tmpApprox = squareApprox.map{ x => calcNorm(x * reshapeBasis(dualbasis, x.rows))}
-    val finalApprox = assembleBlock(tmpApprox, tensorInfo.tensorRank(cluDim), tensorInfo.blockRank(cluDim), tensorInfo.blockFinal(cluDim))
+    val finalApprox = assembleBlock(tmpApprox, tensorInfo.blockRank(cluDim), tensorInfo.blockNum(cluDim), tensorInfo.blockFinal(cluDim))
     //val finalApprox = squareApprox.map{ x => calcNorm(x * reshapeBasis(dualbasis, x.rows))}
     finalApprox
   }
 
   def assembleBlock(blocksRDD: RDD[DenseVector[Double]], blockRank: Int, blockNum: Int, blockFinal: Int): DenseVector[Double] ={
-    val finalvect: DenseVector[Double] = DenseVector.zeros[Double](blockRank * (blockNum - 1) + blockFinal)
-
-      tmp.map{ x => x.reduce((a,b) => a + b)}.reduce((a,b) => DenseVector.vertcat(a,b))
+    var length = (blockNum - 1) * blockRank
+    var block1 = blocksRDD.filter{ x => x.length == length}.reduce((a,b) => a + b)
+    var block2 = blocksRDD.filter{ x => x.length == blockFinal}.reduce((a,b) => a + b)
+    DenseVector.vertcat(block1, block2)
   }
 
   def reshapeBasis(basis: DenseMatrix[Double], size: Int): DenseMatrix[Double] ={
@@ -321,7 +322,7 @@ object TensorTucker {
   }
 
 
-  def transformClusters(tensorRDD: RDD[(CM.ArraySeq[Int], DMatrix)], clusterRDD: RDD[DenseMatrix[Double]], clusterMembers: Array[Int],
+  def transformClusters(tensorRDD: RDD[(CM.ArraySeq[Int], DMatrix)], clusterRanks: Array[Int], clusterMembers: Array[Int],
                         tensorInfo: Tensor.TensorInfo, coreRank: Array[Int], cluNum: Int, deCompDim: Int):
   (RDD[Array[(CM.ArraySeq[Int], DenseMatrix[Double])]], Array[Tensor.TensorInfo]) = {
     var outBlockMod = tensorInfo.tensorRank.map {
@@ -366,7 +367,7 @@ object TensorTucker {
     for (i <- cluNum to 1 by -1) {
       // rank of the cluster (number of rows)
 
-      outRank(deCompDim) = clusterRDD.take(i).apply(i - 1).rows
+      outRank(deCompDim) = clusterRanks(i - 1)
 
       // for each block of each dimension -- initialize vector IDs
       for (d <- 0 to (tensorInfo.tensorDims - 1)) {

@@ -140,7 +140,7 @@ object RunTucker extends App {
 
 
     // use vector IDs to create clusters
-    val tuple = TensorTucker.transformClusters(tensorRDD, MySpark.sc.parallelize(clusteredRDDmat2.map{ case (x, y) => y }), clusterMembers,
+    val tuple = TensorTucker.transformClusters(tensorRDD, clusteredRDDmat2.map{ case (x, y) => y.rows }, clusterMembers,
       tensorInfo, coreRank.clone(), cluNum, 0)
 
     clusters = tuple._1
@@ -203,9 +203,13 @@ object RunTucker extends App {
 
   }
 
+  //******************************************************************************************************************
+  // Section to perform tensor approximation
+  //******************************************************************************************************************
+
   val initTensor = tensorRDD.map{ case(x,y) => (x, new DenseMatrix[Double](y.numRows, y.numCols, y.values))}
 
-  val approxErr: DenseMatrix[Double] = DenseMatrix.zeros[Double](cluNum, tensorInfo.tensorDims)
+  val approxErr: DenseMatrix[Double] = DenseMatrix.zeros[Double](tensorInfo.tensorRank(unfoldDim), cluNum)
 
   for(iter <- 0 to maxIter){
     // for each cluster
@@ -213,52 +217,43 @@ object RunTucker extends App {
       approxErr(::, c) := TensorTucker.computeApprox(initTensor, tensorInfo, cluNum, coreTensors(c), coreInfo(c), basisMatrices(c), deCompSeq, 0)
     }
 
-
     // find max
-    var cluIds = approxErr.argmax
-    //var cluIDs = approxErr.transpose.map{ x => x.indexOf(x.max)}
+    var cluIds: Array[Int] = Array.fill(tensorInfo.tensorRank(unfoldDim))(0)
+    val TapproxErr = approxErr.t
+    for(i <- 0 to tensorInfo.tensorRank(unfoldDim) - 1){
+      cluIds(i) = TapproxErr(::, i).argmax
+    }
 
-    println("")
-/*
-    for(c <- 0 to cluNum) {
+    val cluRanks = cluIds.groupBy(x => x).map{ x => (x._1, x._2.size)}.toArray.sortBy(x => x._1).map{ x => x._2}
+
       // get new clusters
+      // use vector IDs to create clusters
+      val cluTuple = TensorTucker.transformClusters(tensorRDD, cluRanks, cluIds,
+        tensorInfo, coreRank.clone(), cluNum, 0)
 
+      clusters = cluTuple._1
+      clustersInfo = cluTuple._2
 
-      val tuple = TensorTucker.deComp2(clusters, clustersInfo, deCompSeq, coreRank, maxIter, epsilon)
-      coreTensors(c) = tuple._1
-      coreInfo(c) = tuple._2
-      basisMatrices(c) = tuple._3
-    }*/
-  }
+      for(c <- 0 to cluNum - 1){
+        val clInfo = clustersInfo(c)
 
-  println("CTA done")
+        val cluster = clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap{ x => x}
+          .reduceByKey( new MyPartitioner( clInfo.blockNum ), ( a, b ) => a + b )
+
+        // save cluster
+       // Tensor.saveTensorHeader("data/clusters/" + c + "/", clInfo)
+        //Tensor.saveTensorBlock("data/clusters/" + c + "/", cluster)
+
+        val tuple = TensorTucker.deComp2(clusters.zipWithIndex.filter{ case(x,y) => y == c}.map{ case(x,y) => x}.flatMap{x => x}, clustersInfo(c), deCompSeq, coreRank, maxIter, epsilon)
+        coreTensors(c) = tuple._1
+        coreInfo(c) = tuple._2
+        basisMatrices(c) = tuple._3
+      }
+
+    }
+
 }
 
-
-//******************************************************************************************************************
-// Section to do tensor Tucker approximation
-//******************************************************************************************************************
-//saveTmpBlock()
-// Read tensor header
-//val tensorInfo = Tensor.readTensorHeader( tensorPath + "header/part-00000" )
-
-
-
-// Run tensor Tucker approximation
-/*
-    val( coreRDD, coreInfo, bcBasisMatrixArray, iterRecord ) =
-      TensorTucker.deComp ( tensorRDD, tensorInfo, deCompSeq, coreRank, maxIter, epsilon )
-
-    println(" ------------------------ this is ok ----------------------------------")
-    println(s"iterRecord, $iterRecord")
-
-    // Save block header and core block
-    Tensor.saveTensorHeader( approxPath, coreInfo )
-    Tensor.saveTensorBlock( approxPath, coreRDD )
-    // Save basis matrices
-    Tensor.saveBasisMatrices( approxPath + "Basis/", bcBasisMatrixArray, deCompSeq )
-
-*/
 
 //******************************************************************************************************************
 // Section to do tensor Tucker reconstruction
