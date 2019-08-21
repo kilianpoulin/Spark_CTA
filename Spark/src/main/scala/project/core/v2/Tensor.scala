@@ -29,6 +29,12 @@ import scala.collection.immutable.{Vector => IVector}
 import scala.{Vector => Vect}
 object Tensor
 {
+  var sc: SparkContext = null
+
+  def setSparkContext(inSC: SparkContext): Unit = {
+    sc = inSC
+    //    Tensor.setSparkContext( sc )
+  }
   //-----------------------------------------------------------------------------------------------------------------
   // Class to store tensor information
   //-----------------------------------------------------------------------------------------------------------------
@@ -159,7 +165,7 @@ object Tensor
   //-----------------------------------------------------------------------------------------------------------------
   // Read basis matrices
   //-----------------------------------------------------------------------------------------------------------------
-  def readBasisMatrices ( inPath: String, blockRanks: Array[Int]): Array[Broadcast[BMatrix[Double]]] =
+  def readBasisMatrices ( inPath: String, blockRanks: Array[Int]): Array[BMatrix[Double]] =
   {
     val tensorDims = blockRanks.length
 
@@ -181,8 +187,7 @@ object Tensor
 
     val blockRDD = bytesRdd.map{ case( _, bytes ) => convertBytes2Matrix( bytes.getBytes, tensorDims ) }
 
-    blockRDD.map{ x => MySpark.sc.broadcast(x._2.reshape(x._1, x._2.rows / x._1))}.collect().reverse
-
+    blockRDD.map{ x => x._2.reshape(x._1, x._2.rows / x._1)}.collect().reverse
   }
 
   //-----------------------------------------------------------------------------------------------------------------

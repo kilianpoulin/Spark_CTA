@@ -26,7 +26,7 @@ object MySpark{
 
   val sc = new SparkContext( conf )
   TensorTucker.setSparkContext( sc )
-  //Tensor.setSparkContext( sc )
+  Tensor.setSparkContext( sc )
 
 
   val Spark = SparkSession
@@ -196,7 +196,7 @@ object RunTucker extends App {
     for(c <- 0 to cluNum - 1){
 
       // start with previously calculated coreTensor and basisMatrices
-      basisMatrices(c) = Tensor.readBasisMatrices(basisPath + c + "/", deCompSeq)
+      basisMatrices(c) = Tensor.readBasisMatrices(basisPath + c + "/", deCompSeq).map{ x => MySpark.sc.broadcast(x)}
       coreInfo(c) = Tensor.readTensorHeader(corePath + c + "/")
       coreTensors(c) = Tensor.readTensorBlock(corePath + c + "/", coreInfo(c).blockRank).map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values))}
     }
