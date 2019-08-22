@@ -1,16 +1,9 @@
 package project.core.v2
 
 import java.lang.Math.{pow, sqrt}
-
 import org.apache.spark.rdd.RDD
-
-import scala.math.Ordering
 import scala.collection.{mutable => CM}
-import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}
-
-import scala.util.Random
 import scala.{Vector => Vect}
-//import project.core.v2.RunTucker.{tensorInfo, tensorRDD}
 import breeze.linalg.{DenseVector, sum, DenseMatrix => BMatrix}
 class KMeansClustering (
                          private var k: Int,
@@ -121,9 +114,6 @@ class KMeansClustering (
         var blockValueSize = data.filter { case (x, y) => x == CM.ArraySeq[Int](0, 0) }.map { case (x, y) => y.cols }.collect()
         //var blockIds = data.map{ case(ids, values) => ids(1)}.collect()
         centroids = createCentroidsFromSample(centroidsPath, blockValueSize(0))
-
-      /*case "random" =>
-        centroids = data.map{ case(ids, mat) => (ids, createRandomCentroids(mat, "default"))}.collect()*/
     }
     /*
     } else {

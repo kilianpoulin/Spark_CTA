@@ -1,7 +1,5 @@
 package project.core.v2
 
-import java.util
-
 import breeze.linalg.{DenseMatrix, DenseVector}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.storage.StorageLevel._
@@ -12,7 +10,6 @@ import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 
 import scala.collection.{mutable => CM}
-import project.core.original.Tensor
 import project.core.v2.Tensor.MyPartitioner
 
 /**.
@@ -55,6 +52,7 @@ object RunTucker extends App {
   var basisPath = ""
   var corePath = ""
   var clustersPath = ""
+  var finalPath = ""
 
   // Read input argument
   for (argCount <- 0 until args.length by 2) {
@@ -84,10 +82,12 @@ object RunTucker extends App {
       case "--CorePath" =>
         corePath = args(argCount + 1)
       case "--BasisPath" =>
-       basisPath = args(argCount + 1)
+        basisPath = args(argCount + 1)
       case "--ClustersPath" =>
         clustersPath = args(argCount + 1)
-     }
+      case "--FinalPath" =>
+        finalPath = args(argCount + 1)
+    }
   }
 
   //******************************************************************************************************************
@@ -99,29 +99,30 @@ object RunTucker extends App {
   var coreInfo: Array[Tensor.TensorInfo] = Array.fill(cluNum)(null)
   var basisMatrices: Array[Array[Broadcast[DenseMatrix[Double]]]] = Array.fill(cluNum)(null)
   val deCompSeq2: Array[Int] = Array(1, 2, 3)
-
+  var reconstTensor: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])] = MySpark.sc.parallelize(Seq(null))
 
 
   //******************************************************************************************************************
   // Section to do data pre-processing
   //******************************************************************************************************************
 
-    val tensorInfo = Tensor.readTensorHeader(tensorPath)
-    println(" (1) [OK] Read Tensor header ")
+  val tensorInfo = Tensor.readTensorHeader(tensorPath)
+  println(" (1) [OK] Read Tensor header ")
 
-    // Read tensor block and transform into RDD
-    val tensorRDD = Tensor.readTensorBlock(tensorPath, tensorInfo.blockRank)
-    println(" (2) [OK] Read Tensor block ")
+  // Read tensor block and transform into RDD
+  val tensorRDD = Tensor.readTensorBlock(tensorPath, tensorInfo.blockRank)
+  println(" (2) [OK] Read Tensor block ")
 
-    val dmat = tensorRDD.map { case (x, y) => y }.take(1)
+  val dmat = tensorRDD.map { case (x, y) => y }.take(1)
 
-    // Unfold the tensor -- pre-process before applying K-Means
-    val tensorBlocks = Tensor.TensorUnfoldBlocks2(tensorRDD, unfoldDim, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
-    println(" (3) [OK] Block-wise tensor unfolded along dimension " + unfoldDim)
+  // Unfold the tensor -- pre-process before applying K-Means
+  val tensorBlocks = Tensor.TensorUnfoldBlocks2(tensorRDD, unfoldDim, tensorInfo.tensorRank, tensorInfo.blockRank, tensorInfo.blockNum)
+  println(" (3) [OK] Block-wise tensor unfolded along dimension " + unfoldDim)
 
-    tensorRDD.unpersist()
-    tensorBlocks.persist(MEMORY_AND_DISK)
-  if(clustersPath == "") {
+  tensorRDD.unpersist()
+  tensorBlocks.persist(MEMORY_AND_DISK)
+
+  if (clustersPath == "") {
     //******************************************************************************************************************
     // Section to perform K-Means
     //******************************************************************************************************************
@@ -131,7 +132,7 @@ object RunTucker extends App {
 
 
     //************************************************** ****************************************************************
-    // Section to perform CTA
+    // Section to perform initial tensor decomposition
     //******************************************************************************************************************
 
     // convert Densevectors to DenseMatrix
@@ -140,17 +141,17 @@ object RunTucker extends App {
 
 
     // use vector IDs to create clusters
-    val tuple = TensorTucker.transformClusters(tensorRDD, clusteredRDDmat2.map{ case (x, y) => y.rows }, clusterMembers,
+    val tuple = TensorTucker.transformClusters(tensorRDD, clusteredRDDmat2.map { case (x, y) => y.rows }, clusterMembers,
       tensorInfo, coreRank.clone(), cluNum, 0)
 
     clusters = tuple._1
     clustersInfo = tuple._2
 
-    for(c <- 0 to cluNum - 1){
+    for (c <- 0 to cluNum - 1) {
       val clInfo = clustersInfo(c)
 
-      val cluster = clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap{ x => x}
-        .reduceByKey( new MyPartitioner( clInfo.blockNum ), ( a, b ) => a + b )
+      val cluster = clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap { x => x }
+        .reduceByKey(new MyPartitioner(clInfo.blockNum), (a, b) => a + b)
 
       // save cluster
       Tensor.saveTensorHeader("data/clusters/" + c + "/", clInfo)
@@ -167,18 +168,18 @@ object RunTucker extends App {
       }
 
       val oneCl = Tensor.readClusterBlock(clustersPath + c + "/", clustersInfo(c).blockRank)
-        .map{ s => s.map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values)) }}
-      if(c == 0)
+        .map { s => s.map { x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values)) } }
+      if (c == 0)
         clusters = oneCl
       else
-      clusters = clusters.union(oneCl)
+        clusters = clusters.union(oneCl)
     }
   }
 
-  if(basisPath == "" || corePath == "") {
+  if (basisPath == "" || corePath == "") {
 
     for (c <- 0 to cluNum - 1) {
-      val tuple = TensorTucker.deComp2(clusters.zipWithIndex.filter{ case(x,y) => y == c}.map{ case(x,y) => x}.flatMap{x => x}, clustersInfo(c), deCompSeq, coreRank, maxIter, epsilon)
+      val tuple = TensorTucker.deComp2(clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap { x => x }, clustersInfo(c), deCompSeq, coreRank, maxIter, epsilon)
       coreTensors(c) = tuple._1
       coreInfo(c) = tuple._2
       basisMatrices(c) = tuple._3
@@ -193,12 +194,12 @@ object RunTucker extends App {
 
   } else {
 
-    for(c <- 0 to cluNum - 1){
+    for (c <- 0 to cluNum - 1) {
 
       // start with previously calculated coreTensor and basisMatrices
-      basisMatrices(c) = Tensor.readBasisMatrices(basisPath + c + "/", deCompSeq).map{ x => MySpark.sc.broadcast(x)}
+      basisMatrices(c) = Tensor.readBasisMatrices(basisPath + c + "/", deCompSeq).map { x => MySpark.sc.broadcast(x) }
       coreInfo(c) = Tensor.readTensorHeader(corePath + c + "/")
-      coreTensors(c) = Tensor.readTensorBlock(corePath + c + "/", coreInfo(c).blockRank).map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values))}
+      coreTensors(c) = Tensor.readTensorBlock(corePath + c + "/", coreInfo(c).blockRank).map { x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values)) }
     }
 
   }
@@ -207,26 +208,26 @@ object RunTucker extends App {
   // Section to perform tensor approximation
   //******************************************************************************************************************
 
-  val initTensor = tensorRDD.map{ case(x,y) => (x, new DenseMatrix[Double](y.numRows, y.numCols, y.values))}
-
   val approxErr: DenseMatrix[Double] = DenseMatrix.zeros[Double](tensorInfo.tensorRank(unfoldDim), cluNum)
 
-  for(iter <- 0 to maxIter){
-    // for each cluster
-    for(c <- 0 to cluNum - 1){
-      approxErr(::, c) := TensorTucker.computeApprox(initTensor, tensorInfo, cluNum, coreTensors(c), coreInfo(c), basisMatrices(c), deCompSeq, 0)
-    }
+  if (finalPath == "") {
+    val initTensor = tensorRDD.map { case (x, y) => (x, new DenseMatrix[Double](y.numRows, y.numCols, y.values)) }
 
-    // find max
-    var cluIds: Array[Int] = Array.fill(tensorInfo.tensorRank(unfoldDim))(0)
-    val TapproxErr = approxErr.t
-    for(i <- 0 to tensorInfo.tensorRank(unfoldDim) - 1){
-      cluIds(i) = TapproxErr(::, i).argmax
-    }
+    for (iter <- 0 to maxIter - 1) {
 
-    val cluRanks = cluIds.groupBy(x => x).map{ x => x._2.size}.toArray
-   // val cluRanks = cluIds.groupBy(x => x).map{ x => (x._1, x._2.size)}.toArray.sortBy(x => x._1).map{ x => x._2}
-   // val finalCluIDs = cluIds.map{ x => x}
+      for (c <- 0 to cluNum - 1) {
+        approxErr(::, c) := TensorTucker.computeApprox(initTensor, tensorInfo, cluNum, coreTensors(c), coreInfo(c), basisMatrices(c), deCompSeq, 0)
+      }
+
+      // find cluster with best approximation for each slice
+      var cluIds: Array[Int] = Array.fill(tensorInfo.tensorRank(unfoldDim))(0)
+      val TapproxErr = approxErr.t
+      for (i <- 0 to tensorInfo.tensorRank(unfoldDim) - 1) {
+        cluIds(i) = TapproxErr(::, i).argmax
+      }
+
+      val cluRanks = cluIds.groupBy(x => x).map { x => x._2.size }.toArray
+
       // get new clusters
       // use vector IDs to create clusters
       val cluTuple = TensorTucker.transformClusters(tensorRDD, cluRanks, cluIds,
@@ -235,17 +236,13 @@ object RunTucker extends App {
       clusters = cluTuple._1
       clustersInfo = cluTuple._2
 
-      for(c <- 0 to cluNum - 1){
+      for (c <- 0 to cluNum - 1) {
         val clInfo = clustersInfo(c)
 
-        val cluster = clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap{ x => x}
-          .reduceByKey( new MyPartitioner( clInfo.blockNum ), ( a, b ) => a + b )
+        val cluster = clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap { x => x }
+          .reduceByKey(new MyPartitioner(clInfo.blockNum), (a, b) => a + b)
 
-        // save cluster
-       // Tensor.saveTensorHeader("data/clusters/" + c + "/", clInfo)
-        //Tensor.saveTensorBlock("data/clusters/" + c + "/", cluster)
-
-        val tuple = TensorTucker.deComp2(clusters.zipWithIndex.filter{ case(x,y) => y == c}.map{ case(x,y) => x}.flatMap{x => x}, clustersInfo(c), deCompSeq, coreRank, maxIter, epsilon)
+        val tuple = TensorTucker.deComp2(clusters.zipWithIndex.filter { case (x, y) => y == c }.map { case (x, y) => x }.flatMap { x => x }, clustersInfo(c), deCompSeq, coreRank, maxIter, epsilon)
         coreTensors(c) = tuple._1
         coreInfo(c) = tuple._2
         basisMatrices(c) = tuple._3
@@ -253,23 +250,66 @@ object RunTucker extends App {
 
     }
 
+    for (c <- 0 to cluNum - 1) {
+      // save basis matrices
+      Tensor.saveBasisMatrices("data/basisMatrices/final/" + c + "/", basisMatrices(c), deCompSeq)
+
+      // save core tensors
+      Tensor.saveTensorHeader("data/coreTensors/final/" + c + "/", coreInfo(c))
+      Tensor.saveTensorBlock("data/coreTensors/final/" + c + "/", coreTensors(c))
+    }
+  }
+
+
+  // Shut down Spark context
+  MySpark.sc.stop
+}
+
+  //******************************************************************************************************************
+  // Section to do tensor Tucker reconstruction
+  //******************************************************************************************************************
+/*
+    // Reconstruct input tensor
+    if( reconstFlag == 1 )
+    {
+
+      if(finalPath != ""){
+
+        for(c <- 0 to cluNum - 1){
+
+          // start with previously calculated coreTensor and basisMatrices
+          basisMatrices(c) = Tensor.readBasisMatrices(basisPath + finalPath + c + "/", deCompSeq).map{ x => MySpark.sc.broadcast(x)}
+          coreInfo(c) = Tensor.readTensorHeader(corePath + finalPath + c + "/")
+          coreTensors(c) = Tensor.readTensorBlock(corePath + finalPath + c + "/", coreInfo(c).blockRank).map{ x => (x._1, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values))}
+        }
+
+      }
+
+      reconstTensor = tensorRDD.map{ x => (x._1, Tensor.reshapeBlock(x._1, unfoldDim, tensorInfo, new DenseMatrix[Double](x._2.numRows, x._2.numCols, x._2.values)))}
+      // find cluster with best approximation for each slice
+      var cluIds: Array[Int] = Array.fill(tensorInfo.tensorRank(unfoldDim))(0)
+      val TapproxErr = approxErr.t
+      for(i <- 0 to tensorInfo.tensorRank(unfoldDim) - 1){
+        cluIds(i) = TapproxErr(::, i).argmax
+      }
+
+      // perform reconstruction inside each cluster
+      for(c <- 0 to cluNum - 1){
+        val clIds = cluIds.filter{ x => x == c}
+        val( reconstRDD, reconstInfo ) = TensorTucker.reConst2 ( reconstTensor, clIds, coreTensors(c), coreInfo(c), deCompSeq, basisMatrices(c) )
+        if(c == 0){
+          reconstTensor = reconstRDD
+        }/* else{
+         // reconstTensor = reconstTensor + reconstRDD
+        }*/
+      }
+      /*
+      // Save reconst block header and reconst block
+      Tensor.saveTensorHeader( reconstPath, reconstInfo )
+      Tensor.saveTensorBlock( reconstPath, reconstRDD )*/
+    }
+
 }
 
 
-//******************************************************************************************************************
-// Section to do tensor Tucker reconstruction
-//******************************************************************************************************************
-/*
-  // Reconstruct input tensor
-  if( reconstFlag == 1 )
-  {
-    val( reconstRDD, reconstInfo ) = TensorTucker.reConst ( coreRDD, coreInfo, deCompSeq, bcBasisMatrixArray )
-
-    // Save reconst block header and reconst block
-    Tensor.saveTensorHeader( reconstPath, reconstInfo )
-    Tensor.saveTensorBlock( reconstPath, reconstRDD )
-  }
-
-  // Shut down Spark context
-  sc.stop
-  */
+*/

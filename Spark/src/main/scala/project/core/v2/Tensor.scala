@@ -297,6 +297,16 @@ object Tensor
   }
 
   //-----------------------------------------------------------------------------------------------------------------
+  // Reshape a block with cols and rows
+  //-----------------------------------------------------------------------------------------------------------------
+  def reshapeBlock(index: CM.ArraySeq[Int], dim: Int, info: TensorInfo, block: BMatrix[Double]): BMatrix[Double] ={
+    val size = index.zipWithIndex.map{ x => if(x._1 + 1 == info.blockNum(x._2)) info.blockFinal(x._2) else info.blockRank(x._2)}
+    val odims = size.zipWithIndex.filter{ _._2 != dim }.map{ _._1 }
+    block.reshape(size(dim), odims.product)
+  }
+
+
+  //-----------------------------------------------------------------------------------------------------------------
   // Save tensor block
   //-----------------------------------------------------------------------------------------------------------------
   def saveTmpBlock ( ) =

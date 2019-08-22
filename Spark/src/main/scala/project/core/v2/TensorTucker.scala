@@ -302,6 +302,29 @@ object TensorTucker {
   }
 
   //-----------------------------------------------------------------------------------------------------------------
+  // Reconst
+  //-----------------------------------------------------------------------------------------------------------------
+  def reConst2(tensorRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], cluIDs: Array[Int], coreRDD: RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], coreInfo: Tensor.TensorInfo,
+              reContSeq: Array[Int], bcBasisMatrixArray: Array[Broadcast[DenseMatrix[Double]]])
+  : (RDD[(CM.ArraySeq[Int], DenseMatrix[Double])], Tensor.TensorInfo) = {
+    val tensorDims = coreInfo.tensorDims
+    val bcBasisMatrixTransArray = new Array[Broadcast[DenseMatrix[Double]]](tensorDims)
+    for (i <- 0 to tensorDims - 1) {
+      if (bcBasisMatrixArray(i) != null) {
+        val tempMatrix = bcBasisMatrixArray(i).value.t
+        bcBasisMatrixTransArray(i) = sc.broadcast(tempMatrix)
+      }
+    }
+    var (reconstRDD, reconstInfo) = Tensor.modeNProducts(coreRDD, coreInfo, reContSeq, bcBasisMatrixTransArray)
+
+
+    reconstRDD = reconstRDD.map{ case(x,y) => (x, Tensor.reshapeBlock(x, 0, reconstInfo, y))}
+
+
+    (reconstRDD, reconstInfo)
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------
   // Check previous basis matrix and current basis matrix is converge or not
   //-----------------------------------------------------------------------------------------------------------------
   def checkBasisMatrixConverge(matrixA: DenseMatrix[Double], matrixB: DenseMatrix[Double], threshold: Double)
@@ -487,20 +510,7 @@ object TensorTucker {
           // row data IDs that will not be used in this cluster
           var newIndex2 = (0 to decompBlk - 1 by 1).filter { x => indexCell(deCompDim).contains(x) == false }
 
-
-          // building a new matrice by deleting row with the IDs found above in this tensor block
-          //var newmat = reshapedblock.delete(newIndex2.toSeq, Axis._0)
-          // instead of deleting them, we replace them by 0 vectors
-          /*val zerolist: Array[Double] = Array.fill(currBlockIndices.product)(0.0)
-          val zerovect = DenseVector[Double](zerolist)
-          for (g <- 0 to newIndex2.length - 1) {
-            reshapedblock(newIndex2(g), ::) := zerovect.t
-          }*/
-
           var newmat = DenseMatrix.zeros[Double](outRank(deCompDim), currBlockIndices.product)
-          /*var lookforind = subIndex.clone()
-          lookforind(deCompDim) = (subIndex(deCompDim) - 1)*/
-          //if(newclusters.map{ p => p.map{ case(x,y) => x.zipWithIndex.filter{ case(a,b) => b != deCompDim}.map{ case(a,b) => a} == outSubIndex.zipWithIndex.filter{ case(a,b) => b != deCompDim}.map{ case(a,b) => a}}}.length > 0){
 
           if(u != 0 && (newclusters.toArray).apply(i - 1).apply(u - 1)._1 == outSubIndex){
 
@@ -517,21 +527,8 @@ object TensorTucker {
             }
           }
 
-
-
-          /*
-          // first we delete the vectors that are not part of the cluster
-          var newmat = reshapedblock.delete(newIndex2, Axis._0)
-          // then we add zero vectors
-          for (g <- 0 to newIndex2.length - 1) {
-            reshapedblock(newIndex2(g), ::) := zerovect.t
-          }*/
-
           // reshape the matrix into only one row
           var lastmat = newmat.reshape(1, newmat.rows * newmat.cols)
-              /*println("(" + (i - 1) + ", " + u + ")")
-      println("outsubindex = " + outSubIndex.toList)
-      println("subindex = " + subIndex.toList)*/
 
           // saving this matrix in the corresponding block cluster
           newclusters(i - 1)(u) = (outSubIndex.clone(), lastmat)
