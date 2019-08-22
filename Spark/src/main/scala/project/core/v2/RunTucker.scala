@@ -224,8 +224,9 @@ object RunTucker extends App {
       cluIds(i) = TapproxErr(::, i).argmax
     }
 
-    val cluRanks = cluIds.groupBy(x => x).map{ x => (x._1, x._2.size)}.toArray.sortBy(x => x._1).map{ x => x._2}
-
+    val cluRanks = cluIds.groupBy(x => x).map{ x => x._2.size}.toArray
+   // val cluRanks = cluIds.groupBy(x => x).map{ x => (x._1, x._2.size)}.toArray.sortBy(x => x._1).map{ x => x._2}
+   // val finalCluIDs = cluIds.map{ x => x}
       // get new clusters
       // use vector IDs to create clusters
       val cluTuple = TensorTucker.transformClusters(tensorRDD, cluRanks, cluIds,

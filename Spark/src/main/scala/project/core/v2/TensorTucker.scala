@@ -501,7 +501,7 @@ object TensorTucker {
           /*var lookforind = subIndex.clone()
           lookforind(deCompDim) = (subIndex(deCompDim) - 1)*/
           //if(newclusters.map{ p => p.map{ case(x,y) => x.zipWithIndex.filter{ case(a,b) => b != deCompDim}.map{ case(a,b) => a} == outSubIndex.zipWithIndex.filter{ case(a,b) => b != deCompDim}.map{ case(a,b) => a}}}.length > 0){
-          println("")
+
           if(u != 0 && (newclusters.toArray).apply(i - 1).apply(u - 1)._1 == outSubIndex){
 
             var tmp = ((newclusters.toArray).apply(i - 1).apply(u - 1)._2).copy
