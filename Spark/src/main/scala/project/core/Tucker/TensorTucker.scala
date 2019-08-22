@@ -48,10 +48,6 @@ object TensorTucker {
       (x, new (org.apache.spark.mllib.linalg.DenseMatrix)(y.rows, y.cols, y.valuesIterator.toArray))}, cluDim, approxInfo.tensorRank, approxInfo.blockRank, approxInfo.blockNum)
       .filter{ x => x != null}
 
-   /* val squareApprox = unfApprox.map{ case(x,y) => y * y.t}
-    val tmpApprox = squareApprox.map{ x => calcNorm(reshapeBasis(dualbasis, x.rows) * x)}*/
-  //  val finalApprox = assembleBlock(tmpApprox, tensorInfo.blockRank(cluDim), tensorInfo.blockNum(cluDim), tensorInfo.blockFinal(cluDim))
-    //val finalApprox = squareApprox.map{ x => calcNorm(x * reshapeBasis(dualbasis, x.rows))}
     var test = unfApprox.map{ x => reshapeBasis(dualbasis, x._2.rows) * x._2}
     val tmpApprox = unfApprox.map{ x => calcNorm(reshapeBasis(dualbasis, x._2.rows) * x._2)}
     val finalApprox = assembleBlock(tmpApprox, tensorInfo.blockRank(cluDim), tensorInfo.blockNum(cluDim), tensorInfo.blockFinal(cluDim))

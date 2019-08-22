@@ -95,7 +95,7 @@ object RunKMeans extends App {
     // Section to perform K-Means
     //******************************************************************************************************************
 
-    val kmeans = new KMeansClustering(cluNum, centroidsInit, centroidsPath, maxIter, tensorInfo.tensorDims, tensorInfo)
+    val kmeans = new KMeansClustering(cluNum, centroidsInit, centroidsPath, maxIter, unfoldDim, tensorInfo.tensorDims, tensorInfo)
     val (clusteredRDD, clusterMembers) = kmeans.train(tensorBlocks)
 
 

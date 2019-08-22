@@ -3,7 +3,6 @@ package project.core.TensorPack
 import project.core.Tucker.Tensor
 import breeze.linalg.DenseMatrix
 import org.apache.spark.rdd.RDD
-import org.apache.spark.storage.StorageLevel.MEMORY_AND_DISK
 import scala.collection.{mutable => CM}
 import breeze.linalg.DenseMatrix
 import org.apache.spark.mllib.linalg.{DenseMatrix => DMatrix}

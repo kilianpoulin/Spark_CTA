@@ -1,4 +1,0 @@
-TensorDims 4 
-TensorRank 453,151,32,32
-BlockRank 151,151,16,16
-BlockNumber 3,1,2,2

@@ -15,6 +15,7 @@ class KMeansClustering(
                          private var centroidsInit: String,
                          private var centroidsPath: String,
                          private var maxIter: Int,
+                         private var unfoldDim: Int,
                          private var tensorDim: Int,
                          private var tensorInfo: Tensor.TensorInfo) extends Serializable {
 
@@ -75,8 +76,6 @@ class KMeansClustering(
     * */
   def combinePartialDistances(list: List[Array[(Vect[Double], Array[Double])]]) ={
     list.toArray.map{ case(x) => x.map{ case (y, z) => z.toList}.zipWithIndex.toList}.toList.flatMap(s => s).groupBy(e => e._2).map(_._2).map{ case(x) => getTupleList(x)}
-    //map{case(a) => a.toArray.map(_._1).flatten}.transpose.map(_.sum)
-    //.map(_._1)
   }
 
   /** -----------------------------------------------------------------------------------------------------------------
@@ -213,7 +212,7 @@ class KMeansClustering(
       var partdist = data.map { case (ids, values) => (ids, getPartialDistances(ids, centroids.map { case (x) => x.zipWithIndex.filter { case (cvalues, cids) => cids == ids(1) }.map { case (cvalues, cids) => cvalues } }.flatMap { x => x }, Tensor.blockTensorAsVectors(values))) }.collect()
 
       // Step 3 : Add partial distances and get full vector distances
-      var distances2x1 = partdist.groupBy { case (ids, values) => ids(0) }.map { x => x._2.map(y => y._2) }.toArray
+      var distances2x1 = partdist.groupBy { case (ids, values) => ids(unfoldDim) }.map { x => x._2.map(y => y._2) }.toArray
       var fulldist = distances2x1.map { x => getFullDistances(x.transpose) }
 
       // Step 4 : Distributing cluster IDs to tensor vectors based on shortest distance to centroids
@@ -222,15 +221,15 @@ class KMeansClustering(
       // Step 5 : Updating cluster centroids
       for (i <- 0 until k) {
         var members = clusters.zipWithIndex.filter { case (x, y) => x == i }.map { case (x, y) => y }
-        var membersv2 = members.filter { x => x > tensorInfo.blockRank(0) - 1 }.map { x => x % tensorInfo.blockRank(0) }
+        var membersv2 = members.filter { x => x > tensorInfo.blockRank(unfoldDim) - 1 }.map { x => x % tensorInfo.blockRank(unfoldDim) }
 
         members.map{ x => allmembers(x) = i}
 
         // get vectors with the corresponding member ids  (transform matrix into vector) for each part (x 34116 and x 34115)
-        var tmpvectorsdim1 = data.filter { case (ids, values) => ids(0) == 0 }
+        var tmpvectorsdim1 = data.filter { case (ids, values) => ids(unfoldDim) == 0 }
           .map { case (ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex }.map { case (x) => x.filter { case (a, b) => members.contains(b) }.map { case (a, b) => a } }.collect()
 
-        var tmpvectorsdim2 = data.filter { case (ids, values) => ids(0) == 1 }
+        var tmpvectorsdim2 = data.filter { case (ids, values) => ids(unfoldDim) == 1 }
           .map { case (ids, values) => Tensor.blockTensorAsVectors(values).zipWithIndex }.map { case (x) => x.filter { case (a, b) => membersv2.contains(b) }.map { case (a, b) => a } }.collect()
 
         var fullvectorsdim = (tmpvectorsdim1 zip tmpvectorsdim2).map { case (x) => x._1 ++ x._2 }
@@ -242,17 +241,32 @@ class KMeansClustering(
 
     }
 
-    val newdata = data.collect()
-
     // Create RDD containing clustered tensor (combining partial vectors to become full vectors)
-    var clustersdim1 = allmembers.zipWithIndex.filter{ case(nb, index) => index < tensorInfo.blockRank(0)}.map{ case(nb, index) => (nb, newdata.filter{ case(x, y) => x(0) == 0}.map{ case(id, arr) => (arr.t)(::, index)})}
-      .groupBy{ case(x,y) => x}.map{ case (x, y) => y.map{ case(i,j) => j.reduce((a,b) => DenseVector.vertcat(a, b))}}
+    var clusters: Array[Array[DenseVector[Double]]] = Array.ofDim(allmembers.length)
+    for(dimCount <- 0 to tensorInfo.blockNum(unfoldDim) - 1){
+      var minRange = 0
+      var maxRange = 0
+      var maxId = 0
+      if(dimCount == tensorInfo.blockFinal(unfoldDim) - 1){
+        maxId = (tensorInfo.blockNum(unfoldDim) - 1) * tensorInfo.blockRank(unfoldDim)
+        minRange = dimCount * tensorInfo.blockRank(unfoldDim) - (dimCount) - 1
+        maxRange = (dimCount * tensorInfo.blockRank(unfoldDim) + tensorInfo.blockFinal(unfoldDim)) - (dimCount) + 2
+      } else {
+        maxId = tensorInfo.blockRank(unfoldDim)
+        minRange = (dimCount * tensorInfo.blockRank(unfoldDim) - dimCount)
+        maxRange = ((dimCount + 1) * tensorInfo.blockRank(unfoldDim) - (dimCount + 1)) + 1
+      }
 
-    var clustersdim2 = allmembers.zipWithIndex.filter{ case(nb, index) => index > tensorInfo.blockRank(0) - 1}.map{ case(nb, index) => (nb, newdata.filter{ case(x, y) => x(0) == 1}.map{ case(id, arr) => (arr.t)(::, index % 50)})}
-      .groupBy{ case(x,y) => x}.map{ case (x, y) => y.map{ case(i,j) => j.reduce((a,b) => DenseVector.vertcat(a, b))}}
+      val clustersdim1 = allmembers.zipWithIndex.filter{ _._2 > minRange}.filter{ _._2 < maxRange}
+        .map{ case(nb, index) => (nb, data.filter{ _._1(0) == dimCount}
+          .map{ case(id, arr) => (arr.t)(::, index % maxId)})}
+        .groupBy{ _._1 }.map{ _._2.map{ _._2.reduce((a,b) => DenseVector.vertcat(a, b))}}
 
-    var clusters = (clustersdim1 zip clustersdim2).map{ case(x) => x._1 ++ x._2}
-
+      if(dimCount == 0)
+        clusters = clustersdim1.toArray
+      else
+        clusters = (clusters zip clustersdim1).map{ case(x) => x._1 ++ x._2}
+    }
     (MySpark.sc.parallelize(clusters.toSeq), allmembers)
   }
 }

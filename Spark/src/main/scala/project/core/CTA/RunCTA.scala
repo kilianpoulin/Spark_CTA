@@ -222,7 +222,6 @@ object RunCTA extends App {
 
       }
 
-
       for (c <- 0 to cluNum - 1) {
         // save basis matrices
         Tensor.saveBasisMatrices("data/basisMatrices/final/" + c + "/", basisMatrices(c), deCompSeq)
